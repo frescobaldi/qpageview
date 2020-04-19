@@ -1,0 +1,10 @@
+ChangeLog
+=========
+
+
+2020-04-19: qpageview 0.5.0
+
+Initial release. The qpageview module was developed by me, Wilbert Berendsen,
+as a replacement of the qpopplerview module inside Frescobaldi, the LilyPond
+sheet music text editor. I decided that it would be best if qpageview became
+its own project, to make it easier to use this package in other applications.

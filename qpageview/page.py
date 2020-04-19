@@ -46,30 +46,42 @@ class AbstractPage(util.Rectangular):
     View. Although there is no mechanism to enforce it, a Page is normally only
     used in one PageLayout at a time.
 
-    A Page has instance attributes...
+    A Page has instance attributes:
 
-    ...that normally do not change during its lifetime:
+    * that normally do not change during its lifetime:
 
-        `pageWidth`     the original width  (by default in points, `dpi` is 72.0
-        `pageHeight`    the original height   but can be changed at class level)
+        `pageWidth`
+            the original width  (by default in points, `dpi` is 72.0
+        `pageHeight`
+            the original height   but can be changed at class level)
 
-    ... that can be modified by the user (having defaults at the class level):
+    * that can be modified by the user (having defaults at the class level):
 
-        `scaleX`        the scale in X-direction of the original page (1.0)
-        `scaleY`        the scale in Y-direction of the original page (1.0)
-        `rotation`      the rotation (Rotate_0)
-        `z`             the z-index (0) (only relevant when pages overlap)
-        `paperColor`    the paper color (None). If None, the renderer's
-                        paperColor is used.
+        `scaleX`
+            the scale in X-direction of the original page (1.0)
+        `scaleY`
+            the scale in Y-direction of the original page (1.0)
+        `rotation`
+            the rotation (Rotate_0)
+        `z`
+            the z-index (0) (only relevant when pages overlap)
+        `paperColor`
+            the paper color (None). If None, the renderer's
+            paperColor is used.
 
-    ... and that are set by the layout when computing the size and positioning
-        the pages:
+    * and that are set by the layout when computing the size and positioning
+      the pages:
 
-        `x`             the position x-coordinate
-        `y`             the position y-coordinate
-        `width`         the width in pixels
-        `height`        the height in pixels
-        `computedRotation` the rotation in which finally to render
+        `x`
+            the position x-coordinate
+        `y`
+            the position y-coordinate
+        `width`
+            the width in pixels
+        `height`
+            the height in pixels
+        `computedRotation`
+            the rotation in which finally to render
 
     The class variable `dpi` is 72.0 by default but can be set to a different
     value depending on the page type. E.g. for Svg pages 90 or 96 makes sense.

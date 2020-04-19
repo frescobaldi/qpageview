@@ -19,14 +19,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-"""
+r"""
 A simple module using CUPS to send a document directly to a printer described
 by a QPrinter. This is especially useful with PDF documents.
 
 Uses the `cups` module, although it elegantly fails when that module is not
-present. The cups module can be found in the pycups package at[1]
-
-    [1] https://pypi.org/project/pycups/
+present. The cups module can be found in the pycups package at
+https://pypi.org/project/pycups/ .
 
 There are two methods to send a document to a printer:
 
@@ -40,7 +39,7 @@ Use `CmdHandle.create()` to get a CmdHandle, if `lp` is available, or use
 connection to the server can be established.
 
 A function `handle()` is available; that tries first to get an IppHandle and
-then a LprHandle. Usage of this module is this simple:
+then a LprHandle. Usage of this module is this simple::
 
     import qpageview.cupsprinter
 
@@ -48,7 +47,9 @@ then a LprHandle. Usage of this module is this simple:
     if h:
         h.printFile('/path/to/document.pdf')
 
-You can supply a QPrinter instance (that'd be the normal workflow :-) :
+You can supply a QPrinter instance (that'd be the normal workflow :-)
+
+::
 
     h = qpageview.cupsprinter.handle(printer)
     if h:
@@ -58,7 +59,7 @@ In this case all options that are set in the QPrinter object will be used
 when sending the document to the printer.
 
 If `printFile()` returns True, printing is considered successful. If False,
-you can read the `status` and `error` attributes:
+you can read the `status` and `error` attributes::
 
     if not h.printFile('/path/to/document.pdf'):
         QMessageBox.warning(None, "Printing failure",

@@ -6,6 +6,7 @@ This manual documents `qpageview` version |release|.
    :maxdepth: 2
    :caption: Contents:
 
+   modoverview.rst
 
 
 Indices and tables

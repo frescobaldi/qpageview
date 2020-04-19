@@ -39,15 +39,15 @@ class AbstractExporter:
 
     You instantiate a subclass with a Page and a rectangle. The rectangle may
     be None, to specify the full page. After instantiation, you can set
-    attributes to configure the export. The following attributes are supported:
+    attributes to configure the export. The following attributes are supported::
 
-    resolution = 300
-    autocrop = False
-    oversample = 1
-    grayscale = False
-    paperColor = None
-    forceVector = True  # force the render backend to be Arthur for exporting
-                        # PDF pages to vector-based formats
+        resolution = 300
+        autocrop = False
+        oversample = 1
+        grayscale = False
+        paperColor = None
+        forceVector = True  # force the render backend to be Arthur for
+                            # exporting PDF pages to vector-based formats
 
     After setting the attributes, you call one or more of save(), copyData(),
     copyFile(), mimeData() or tempFileMimeData(), which will trigger the export
