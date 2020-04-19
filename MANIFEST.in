@@ -1,0 +1,5 @@
+global-exclude *~
+include README.rst ChangeLog LICENSE
+graft docs
+prune docs/build
+recursive-include tests *.py
