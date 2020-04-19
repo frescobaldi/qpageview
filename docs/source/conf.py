@@ -21,6 +21,11 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 import qpageview.pkginfo
 
+autodoc_mock_imports = [
+    'sip',
+    'PyQt5', 'PyQt5.QtGui', 'PyQt5.QtCore', 'PyQt5.QtWidgets',
+    'popplerqt5',
+]
 
 # -- General configuration ------------------------------------------------
 
