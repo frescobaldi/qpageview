@@ -16,16 +16,17 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+
+autodoc_mock_imports = [
+    'sip',
+    'PyQt5',
+    'popplerqt5',
+]
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 import qpageview.pkginfo
-
-autodoc_mock_imports = [
-    'sip',
-    'PyQt5', 'PyQt5.QtGui', 'PyQt5.QtCore', 'PyQt5.QtWidgets',
-    'popplerqt5',
-]
 
 # -- General configuration ------------------------------------------------
 
