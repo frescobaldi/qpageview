@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -48,9 +50,9 @@ class ShadowViewMixin:
 
     def drawDropShadow(self, page, painter, width):
         """Draw a drop shadow of width pixels around the Page.
-        
+
         The painter is already translated to the topleft corner of the Page.
-        
+
         """
         width = round(width)
         rect = page.rect().adjusted(width / 2, width / 2, 0, 0)

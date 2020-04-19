@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -65,6 +67,8 @@ from . import highlight
 from . import shadow
 from . import view
 from . import util
+from .pkginfo import version, version_string
+
 
 
 class View(

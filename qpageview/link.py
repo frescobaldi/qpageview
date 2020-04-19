@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -58,9 +60,9 @@ class Link:
 
 class Links(rectangles.Rectangles):
     """Manages a list of Link objects.
-    
+
     See the rectangles documentation for how to access the links.
-    
+
     """
     def get_coords(self, link):
         return link.area
@@ -68,7 +70,7 @@ class Links(rectangles.Rectangles):
 
 class LinkViewMixin:
     """Mixin class to enhance view.View with link capabilities."""
-    
+
     linkHovered = pyqtSignal(page.AbstractPage, Link)
     linkLeft = pyqtSignal()
     linkClicked = pyqtSignal(QEvent, page.AbstractPage, Link)
@@ -80,25 +82,25 @@ class LinkViewMixin:
         self._currentLinkId = None
         self._linkHighlighter = None
         super().__init__(parent, **kwds)
-    
+
     def setLinkHighlighter(self, highlighter):
         """Sets a Highlighter (see highlight.py) to highlight a link on hover.
-        
+
         Use None to remove an active Highlighter. By default no highlighter is
         set to highlight links on hover.
-        
+
         To be able to actually *use* highlighting, be sure to also mix in the
         HighlightViewMixin class from the highlight module.
-        
+
         """
         self._linkHighlighter = highlighter
-    
+
     def linkHighlighter(self):
         """Return the currently set Highlighter, if any.
-        
+
         By default no highlighter is set to highlight links on hover, and None
         is returned in that case.
-        
+
         """
         return self._linkHighlighter
 
@@ -126,9 +128,9 @@ class LinkViewMixin:
 
     def linkAt(self, pos):
         """If the pos (in the viewport) is over a link, return a (page, link) tuple.
-        
+
         Otherwise returns (None, None).
-        
+
         """
         pos = pos - self.layoutPosition()
         page = self._pageLayout.pageAt(pos)
@@ -137,7 +139,7 @@ class LinkViewMixin:
             if links:
                 return page, links[0]
         return None, None
-        
+
     def linkHoverEnter(self, page, link):
         """Called when the mouse hovers over a link.
 
@@ -145,7 +147,7 @@ class LinkViewMixin:
         sets a pointing hand mouse cursor, and, if a Highlighter was set using
         setLinkHighlighter(), highlights the link. You can reimplement this
         method to do something different.
-        
+
         """
         self.setCursor(Qt.PointingHandCursor)
         self.linkHovered.emit(page, link)

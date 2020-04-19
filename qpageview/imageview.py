@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen

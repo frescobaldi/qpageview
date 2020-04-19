@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -68,13 +70,13 @@ class Job(QThread):
 
     def work(self):
         """Implement this to get the work done.
-        
+
         If you have long tasks you can Qt's isInterruptionRequested()
         functionality.
-        
+
         Instead of implementing this method, you can put the work function in
         the work instance attribute.
-        
+
         """
         pass
 
@@ -131,10 +133,10 @@ class SingleRun:
 
 def run(func, callback=None):
     """Run specified function in a background thread.
-    
+
     The thread is immediately started. If a callback is specified, it is called
     in the main thread with the result when the function is ready.
-    
+
     """
     j = Job()
     j.work = func

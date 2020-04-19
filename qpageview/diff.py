@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -37,7 +39,7 @@ class DiffPage(page.ImagePrintPageMixin, multipage.MultiPage):
     DiffPage inherits from MultiPage; the pages are to be added in the pages
     attribute. The first page is considered to be the "default" page, shown
     the normal way; the others are added in configurable colors and intensity.
-    
+
     """
     opaquePages = False
 
@@ -72,17 +74,17 @@ class DiffDocument(multipage.MultiPageDocument):
 
 class DiffRenderer(multipage.MultiPageRenderer):
     """Renders the pages by calling their own renderer.
-    
+
     How the difference is displayed can be configured using this renderer.
     Up to four different pages can be displayed, the colors to render them
     are taken from the colors instance variable, which is a list.
-    
-    The alpha channel of each color determines the visiblity of the 
+
+    The alpha channel of each color determines the visiblity of the
     corresponding sub page.
-    
+
     This renderer works best with pages that are mostly black on a white
     background.
-    
+
     """
     def __init__(self):
         # we don't use a cache so no need to call super init
@@ -92,7 +94,7 @@ class DiffRenderer(multipage.MultiPageRenderer):
             QColor(Qt.green),
             QColor(Qt.blue),
         ]
-    
+
     def combine(self, painter, images):
         """Paint images on the painter.
 
@@ -108,7 +110,7 @@ class DiffRenderer(multipage.MultiPageRenderer):
             color = color.rgb()
             color |= 0x010101 * intensity
             color |= 0xFF000000
-            
+
             p = QPainter(image)
             p.setCompositionMode(QPainter.CompositionMode_Lighten)
             p.fillRect(image.rect(), QColor(color))

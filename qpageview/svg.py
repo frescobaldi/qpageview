@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -43,7 +45,7 @@ class SvgPage(page.AbstractRenderedPage):
     """A page that can display a SVG document."""
 
     dpi = 90.0
-    
+
     def __init__(self, svgrenderer, renderer=None):
         super().__init__(renderer)
         self._svg = svgrenderer

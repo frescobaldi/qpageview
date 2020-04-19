@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -121,7 +123,7 @@ class ImagePage(page.AbstractRenderedPage):
     """A Page that displays an image in any file format supported by Qt."""
     autoTransform = True    # whether to automatically apply exif transformations
     dpi = 96   # TODO: maybe this can be image dependent.
-    
+
     def __init__(self, container, renderer=None):
         super().__init__(renderer)
         self.setPageSize(container.size())
@@ -180,7 +182,7 @@ class ImagePage(page.AbstractRenderedPage):
 
     def group(self):
         return self._ic
-    
+
     def mutex(self):
         return self._ic
 

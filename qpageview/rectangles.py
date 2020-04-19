@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2010 - 2019 by Wilbert Berendsen
@@ -47,14 +49,14 @@ class Rectangles:
     You should inherit from this class and implement the method get_coords(obj)
     to get the rectangle of the object (x, y, x2, y2). These are requested only
     once. x should be < x2 and y should be < y2.
-    
+
     """
     def __init__(self, objects=None):
         """Initializes the Rectangles object.
 
         objects should, if given, be an iterable of rectangular objects, and
         bulk_add() is called on those objects.
-        
+
         """
         self._items = {} # maps object to the result of func(object)
         self._index = {} # maps side to indices, objects (index=coordinate of that side)
@@ -63,14 +65,14 @@ class Rectangles:
 
     def get_coords(self, obj):
         """You should implement this method.
-        
+
         The result should be a four-tuple with the coordinates of the rectangle
         the object represents (x, y, x2, y2). These are requested only once.
         x should be < x2 and y should be < y2.
-        
+
         """
         return (0, 0, 0, 0)
-    
+
     def add(self, obj):
         """Adds an object to our list. Keeps the index intact."""
         if obj in self._items:
@@ -173,20 +175,20 @@ class Rectangles:
 
     def nearest(self, x, y):
         """Return the object with the shortest distance to the point x, y.
-        
-        The point (x, y) is outside the object. Use at() to get objects that 
+
+        The point (x, y) is outside the object. Use at() to get objects that
         touch the point (x, y). If there are no objects, None is returned.
-        
+
         """
         i = self._items
-        
+
         left = self._larger(Left, x)            # closest one is first
         right = self._smaller(Right, x)         # closest one is last
         top = self._larger(Top, y)              # closest one is first
         bottom = self._smaller(Bottom, y)       # closest one is last
-        
+
         result = []
-        
+
         # first find adjacent rectangles. For each side, as soon as one is
         # found, don't look further for that side. Only save rectangles that are
         # closer but not adjacent, they could be closer on another side.
@@ -228,7 +230,7 @@ class Rectangles:
         if bottom_over and right_over:
             for o in set(bottom[bottom_over:]).intersection(right[right_over:]):
                 result.append((y - i[o][Bottom] + x - i[o][Right], o))
-        
+
         if result:
             return min(result, key=operator.itemgetter(0))[1]
 

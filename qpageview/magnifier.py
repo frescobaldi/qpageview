@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2010 - 2019 by Wilbert Berendsen
@@ -156,7 +158,7 @@ class Magnifier(QWidget):
 
     def moveEvent(self, ev):
         """Called on move, updates the contents."""
-        # we also update on paint events, but they are not generated if the 
+        # we also update on paint events, but they are not generated if the
         # magnifiers fully covers the viewport
         self.update()
 
@@ -278,13 +280,13 @@ class Magnifier(QWidget):
 
         # the virtual position of the whole scaled-up layout
         ev_rect = ev.rect().translated(our_rect.topLeft())
-        
+
         # draw shadow border?
         shadow = False
         if hasattr(view, "drawDropShadow") and view.dropShadowEnabled:
             shadow = True
             shadow_width = layout.spacing * scale // 2
-        
+
         painter = QPainter(self)
         for p in layout.pagesAt(region.boundingRect()):
             # get a (reused) the copy of the page

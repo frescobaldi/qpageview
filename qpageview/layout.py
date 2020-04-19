@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2010 - 2019 by Wilbert Berendsen
@@ -71,10 +73,10 @@ class PageLayout(util.Rectangular, list):
     level defaults as a tuple, but they are converted to a QMargins object for
     the layout instance when first accessed via the margins() and pageMargins()
     methods.
-        
+
         _margins = (6, 6, 6, 6)
         _pageMargins = (0, 0, 0, 0)
-        
+
         spacing = 8             # pixels between pages
 
         x = 0                   # x, y, width and height are set by update()
@@ -128,7 +130,7 @@ class PageLayout(util.Rectangular, list):
         except AttributeError:
             self._m = QMargins(*self._margins)
             return self._m
-    
+
     def setPageMargins(self, margins):
         """Sets our page margins to a QMargins object."""
         self._pm = margins
@@ -140,7 +142,7 @@ class PageLayout(util.Rectangular, list):
         except AttributeError:
             self._pm = QMargins(*self._pageMargins)
             return self._pm
-    
+
     def _pageRects(self):
         """(Internal) Return the PageRects object for quickly finding pages."""
         if self._rects:
@@ -308,7 +310,7 @@ class PageLayout(util.Rectangular, list):
                 s += count * length
                 return slice(s, s + length)
         return slice(0, self.count())
-        
+
     def pageSets(self):
         """Return a list of (count, length) tuples.
 

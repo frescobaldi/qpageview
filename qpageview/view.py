@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -60,17 +62,17 @@ Position = collections.namedtuple("Position", "pageNumber x y")
 
 class View(scrollarea.ScrollArea):
     """View is a generic scrollable widget to display Pages in a layout.
-    
+
     Using setPageLayout() you can set a PageLayout to the View, and you can
     add Pages to the layout using a list-like api. (PageLayout derives from
     list). A simple PageLayout is set by default. Call updatePageLayout() after
     every change to the layout (like adding or removing pages).
-    
+
     You can also add a Magnifier to magnify parts of a Page, and a Rubberband
     to enable selecting a rectangular region.
-    
+
     View emits the following signals:
-    
+
     `pageCountChanged`          When the number of pages changes.
 
     `currentPageNumberChanged`  When the current page number changes.
@@ -82,20 +84,20 @@ class View(scrollarea.ScrollArea):
                         Rotate_90, Rotate_180, Rotate_270)
 
     `zoomFactorChanged` When the zoomfactor changes
-    
+
     `pageLayoutUpdated` When the page layout is updated (e.g. after adding
                         or removing pages, but also zoom and rotation cause a
                         layout update)
 
     `continuousModeChanged` When the user toggle the continuousMode() setting.
-    
+
     `pageLayoutModeChanged` When the page layout mode is changed. The page
                             layout mode is set using setPageLayoutMode() and
                             internally implemented by using different qpageview
                             LayoutEngine classes.
 
     The following instance variables can be set, and default to:
-    
+
     MIN_ZOOM = 0.05
     MAX_ZOOM = 64.0
 
@@ -175,14 +177,14 @@ class View(scrollarea.ScrollArea):
     def currentPageNumber(self):
         """Return the current page number in view (starting with 1)."""
         return self._currentPageNumber
-    
+
     def setCurrentPageNumber(self, num):
         """Scrolls to the specified page number (starting with 1).
-        
+
         If the page is already in view, the view is not scrolled, otherwise
-        the view is scrolled to center the page. (If the page is larger than 
+        the view is scrolled to center the page. (If the page is larger than
         the view, the top-left corner is positioned top-left in the view.)
-        
+
         """
         self.updateCurrentPageNumber(num)
         page = self.currentPage()
@@ -192,7 +194,7 @@ class View(scrollarea.ScrollArea):
                 self.ensureVisible(page.geometry(), margins, self.kineticPagingEnabled)
             if self.isScrolling():
                 self._scrollingToPage = True
-    
+
     def updateCurrentPageNumber(self, num):
         """Set the current page number without scrolling the view."""
         count = self.pageCount()
@@ -206,7 +208,7 @@ class View(scrollarea.ScrollArea):
         num = self.currentPageNumber()
         if num < self.pageCount():
             self.setCurrentPageNumber(num + 1)
-    
+
     def gotoPreviousPage(self):
         """Convenience method to go to the previous page."""
         num = self.currentPageNumber()
@@ -250,11 +252,11 @@ class View(scrollarea.ScrollArea):
 
     def setPageLayout(self, layout):
         """Set our current PageLayout instance.
-        
+
         The dpiX and dpiY attributes of the layout are set to the physical
         resolution of the widget, which should result in a natural size of 100%
         at zoom factor 1.0.
-        
+
         """
         if self._pageLayout:
             self._unschedulePages(self._pageLayout)
@@ -572,11 +574,11 @@ class View(scrollarea.ScrollArea):
 
     def setContinuousMode(self, continuous):
         """Sets whether the layout should display all pages.
-        
+
         If True, the layout shows all pages. If False, only the page set
         containing the current page is displayed. If the pageLayout() does not
         support the PageSetLayoutMixin methods, this method does nothing.
-        
+
         """
         layout = self._pageLayout
         oldcontinuous = layout.continuousMode
@@ -594,16 +596,16 @@ class View(scrollarea.ScrollArea):
                 layout.currentPageSet = layout.pageSet(index)
                 self.fitPageLayout()
             self.continuousModeChanged.emit(False)
-    
+
     def continuousMode(self):
         """Return True if the layout displays all pages."""
         return self._pageLayout.continuousMode
 
     def displayPageSet(self, what):
         """Try to display a page set (if the layout is not in continuous mode).
-        
+
         `what` can be:
-        
+
             "next":     go to the next page set
             "previous": go to the previous page set
             "first":    go to the first page set
@@ -689,7 +691,7 @@ class View(scrollarea.ScrollArea):
             yield
         finally:
             self._scrollingToPage = old
-        
+
     def scrollContentsBy(self, dx, dy):
         """Reimplemented to move the rubberband and adjust the mouse cursor."""
         if self._rubberband:
@@ -701,7 +703,7 @@ class View(scrollarea.ScrollArea):
                 self.adjustCursor(pos)
         self.viewport().update()
 
-        # keep track of current page. If the scroll wasn't initiated by the 
+        # keep track of current page. If the scroll wasn't initiated by the
         # setCurrentPage() call, check # whether the current page number needs
         # to be updated
         if self.pagingOnScrollEnabled and not self._scrollingToPage and self.pageCount() > 0:
@@ -722,7 +724,7 @@ class View(scrollarea.ScrollArea):
         pos = self.viewport().mapFromGlobal(QCursor.pos())
         if pos in self.viewport().rect() and not self.viewport().childAt(pos):
             self.adjustCursor(pos)
-            
+
     def fitPageLayout(self):
         """Fit the layout according to the view mode.
 
@@ -935,10 +937,10 @@ class View(scrollarea.ScrollArea):
 
     def lazyUpdate(self, page=None):
         """Lazily repaint page (if visible) or all visible pages.
-        
+
         Defers updating the viewport for a page until all rendering tasks for
         that page have finished. This reduces flicker.
-        
+
         """
         viewport = self.viewport()
         full = True
@@ -960,10 +962,10 @@ class View(scrollarea.ScrollArea):
 
     def rerender(self, page=None):
         """Schedule the specified page or all pages for rerendering.
-        
+
         Call this when you have changed render options or page contents.
         Repaints the page or visible pages lazily, reducing flicker.
-        
+
         """
         renderers = collections.defaultdict(list)
         pages = (page,) if page else self._pageLayout
@@ -977,11 +979,11 @@ class View(scrollarea.ScrollArea):
     def _unschedulePages(self, pages):
         """(Internal.)
         Unschedule rendering of pages that are pending but not needed anymore.
-        
+
         Called inside paintEvent, on zoomFactor change and some other places.
         This prevents rendering jobs hogging the cpu for pages that are deleted
         or out of view.
-        
+
         """
         unschedule = collections.defaultdict(set)
         for page in pages:
@@ -989,15 +991,15 @@ class View(scrollarea.ScrollArea):
                 unschedule[page.renderer].add(page)
         for renderer, pages in unschedule.items():
             renderer.unschedule(pages, self.repaintPage)
-        
+
     def pagesToPaint(self, rect, painter):
         """Yield (page, rect) to paint in the specified rectangle.
-        
+
         The specified rect is in viewport coordinates, as in the paint event.
         The returned rect describes the part of the page actually to draw, in
         page coordinates. (The full rect can be found in page.rect().)
         Translates the painter to the top left of each page.
-        
+
         The pages are sorted with largest area last.
 
         """
@@ -1020,7 +1022,7 @@ class View(scrollarea.ScrollArea):
     def handleGestureEvent(self, event):
         """Gesture event handler.
 
-        Return False if event is not accepted. Currently only cares about 
+        Return False if event is not accepted. Currently only cares about
         PinchGesture. Could also handle Swipe and Pan gestures.
 
         """
@@ -1033,7 +1035,7 @@ class View(scrollarea.ScrollArea):
     def pinchGesture(self, gesture):
         """Pinch gesture event handler.
 
-        Return False if event is not accepted. Currently only cares about 
+        Return False if event is not accepted. Currently only cares about
         ScaleFactorChanged and not RotationAngleChanged.
 
         """
@@ -1126,7 +1128,7 @@ class View(scrollarea.ScrollArea):
     def keyPressEvent(self, ev):
         """Reimplemented to go to next or previous page set if possible."""
         # ESC clears the selection, if any.
-        if (ev.key() == Qt.Key_Escape and not ev.modifiers() 
+        if (ev.key() == Qt.Key_Escape and not ev.modifiers()
             and self.rubberband() and self.rubberband().hasSelection()):
             self.rubberband().clearSelection()
             return

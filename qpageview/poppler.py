@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -62,7 +64,7 @@ class Link(link.Link):
     def __init__(self, linkobj):
         self.linkobj = linkobj
         self.area = link.Area(*linkobj.linkArea().normalized().getCoords())
-    
+
     @property
     def url(self):
         if isinstance(self.linkobj, popplerqt5.Poppler.LinkBrowse):
@@ -105,8 +107,8 @@ class PopplerPage(page.AbstractRenderedPage):
     def load(cls, filename, renderer=None):
         """Load a Poppler document, and yield of instances of this class.
 
-        The filename can also be a QByteArray or a popplerqt5.Poppler.Document 
-        instance. The specified Renderer is used, or else the global poppler 
+        The filename can also be a QByteArray or a popplerqt5.Poppler.Document
+        instance. The specified Renderer is used, or else the global poppler
         renderer.
 
         """
@@ -116,11 +118,11 @@ class PopplerPage(page.AbstractRenderedPage):
     def mutex(self):
         """No two pages of same Poppler document are rendered at the same time."""
         return self.document
-    
+
     def group(self):
         """Reimplemented to return the Poppler document our page displays a page from."""
         return self.document
-    
+
     def ident(self):
         """Reimplemented to return the page number of this page."""
         return self.pageNumber
@@ -131,7 +133,7 @@ class PopplerPage(page.AbstractRenderedPage):
         with locking.lock(self.document):
             page = self.document.page(self.pageNumber)
             return page.text(rect)
-    
+
     def links(self):
         """Reimplemented to use a different caching mechanism."""
         document, pageNumber = self.document, self.pageNumber
@@ -184,7 +186,7 @@ class PopplerRenderer(render.AbstractRenderer):
         renderBackend = printRenderBackend = 0
 
     oversampleThreshold = 96
-    
+
     def render(self, page, key, tile, paperColor=None):
         """Generate an image for the Page referred to by key."""
         if paperColor is None:

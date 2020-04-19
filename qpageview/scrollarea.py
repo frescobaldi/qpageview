@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -46,7 +48,7 @@ class ScrollArea(QAbstractScrollArea):
         draggingEnabled (True):
             If enabled, the user can drag the contents of the scrollarea to
             move it with the mouse.
-            
+
     """
 
     alignment = Qt.AlignCenter
@@ -109,10 +111,10 @@ class ScrollArea(QAbstractScrollArea):
 
     def areaPos(self):
         """Return the position of the area relative to the viewport.
-        
+
         The alignment attribute is taken into account when the area is smaller
         than the viewport (horizontally and/or vertically).
-        
+
         """
         w, h = self._areaSize
         vw = self.viewport().width()
@@ -123,13 +125,13 @@ class ScrollArea(QAbstractScrollArea):
         if top < 0:
             top = -self.verticalScrollBar().value()
         return QPoint(left, top)
-    
+
     def visibleArea(self):
         """Return a rectangle describing the part of the area that is visible."""
         pos = self.areaPos()
         r = self.viewport().rect() & QRect(pos, self.areaSize())
         return r.translated(-pos)
-        
+
     def offsetToEnsureVisible(self, rect):
         """Return an offset QPoint with the minimal scroll to make rect visible.
 
@@ -153,12 +155,12 @@ class ScrollArea(QAbstractScrollArea):
 
     def ensureVisible(self, rect, margins=None, allowKinetic=True):
         """Performs the minimal scroll to make rect visible.
-        
+
         If the rect is not completely visible it is scrolled into view, adding
         the margins if given (a QMargins instance). If allowKinetic is False,
         immediately jumps to the position, otherwise scrolls smoothly (if
         kinetic scrolling is enabled).
-        
+
         """
         if rect not in self.visibleArea():
             if margins is not None:
@@ -171,9 +173,9 @@ class ScrollArea(QAbstractScrollArea):
 
     def _updateScrollBars(self):
         """Internal. Adjust the range of the scrollbars to the area size.
-        
+
         Called in setAreaSize() and resizeEvent().
-        
+
         """
         w, h = self._areaSize
         maxsize = self.maximumViewportSize()
@@ -189,7 +191,7 @@ class ScrollArea(QAbstractScrollArea):
             vbar.setPageStep(viewport.height() * .9)
             hbar.setRange(0, w - viewport.width())
             hbar.setPageStep(viewport.width() * .9)
-        
+
     def scrollOffset(self):
         """Return the current scroll offset."""
         x = self.horizontalScrollBar().value()
@@ -307,7 +309,7 @@ class ScrollArea(QAbstractScrollArea):
     def isScrolling(self):
         """Return True if a scrolling movement is active."""
         return self._scroller is not None
-    
+
     def remainingScrollTime(self):
         """If a kinetic scroll is active, return how many msecs the scroll wil last.
 
@@ -375,7 +377,7 @@ class ScrollArea(QAbstractScrollArea):
             self._dragTime = None
             self._dragSpeed = None
         super().mouseReleaseEvent(ev)
-        
+
 
 class Scroller:
     """Abstract base class, encapsulates scrolling behaviour.

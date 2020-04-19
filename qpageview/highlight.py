@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2010 - 2019 by Wilbert Berendsen
@@ -33,17 +35,17 @@ from PyQt5.QtWidgets import QApplication
 class Highlighter:
     """A Highlighter can draw rectangles to highlight e.g. links in a View.
 
-    An instance represents a certain type of highlighting, e.g. of a particular 
-    style. The paintRects() method is called with a list of rectangles that 
+    An instance represents a certain type of highlighting, e.g. of a particular
+    style. The paintRects() method is called with a list of rectangles that
     need to be drawn.
 
-    To implement different highlighting behaviour just inherit paintRects(). 
-    The default implementation of paintRects() uses the `color` attribute to get 
-    the color to use and the `lineWidth` (default: 2) and `radius` (default: 3) 
+    To implement different highlighting behaviour just inherit paintRects().
+    The default implementation of paintRects() uses the `color` attribute to get
+    the color to use and the `lineWidth` (default: 2) and `radius` (default: 3)
     attributes.
 
-    `lineWidth` specifies the thickness in pixels of the border drawn, `radius` 
-    specifies the distance in pixels the border is drawn (by default with 
+    `lineWidth` specifies the thickness in pixels of the border drawn, `radius`
+    specifies the distance in pixels the border is drawn (by default with
     rounded corners) around the area to be highlighted. `color` is set to None
     by default, causing the paintRects method to choose the application's
     palette highlight color.

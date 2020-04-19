@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2016 - 2019 by Wilbert Berendsen
@@ -146,11 +148,11 @@ class AbstractRenderer:
 
     def map(self, key, box):
         """Return a QTransform converting from Key coordinates to a box.
-        
+
         The box should be a QRectF or QRect, and describes the original area of
         the page.  The returned matrix can be used to convert e.g. tile
         coordinates to the position on the original page.
-        
+
         """
         t = QTransform()
         t.translate(box.x(), box.y())
@@ -182,17 +184,17 @@ class AbstractRenderer:
 
     def render(self, page, key, tile, paperColor=None):
         """Generate a QImage for tile of the Page.
-        
+
         The width, height and rotation to render at should be taken from the
         key, as the page could be resized or rotated in the mean time.
-        
+
         The default implementation prepares the image, a painter and then
         calls draw() to actually draw the contents.
-        
+
         If the paperColor is not specified, it will be read from the Page's
         paperColor attribute (if not None) or else from the renderer's
         paperColor attribute.
-        
+
         """
         if paperColor is None:
             paperColor = page.paperColor or self.paperColor
@@ -200,7 +202,7 @@ class AbstractRenderer:
         i = QImage(tile.w, tile.h, self.imageFormat)
         i.fill(paperColor)
         painter = QPainter(i)
-        
+
         # rotate the painter accordingly
         util.rotate(painter, key.rotation, tile.w, tile.h, True)
 

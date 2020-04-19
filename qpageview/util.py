@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -80,11 +82,11 @@ class MapToPage:
     """Simple class wrapping a QTransform to map rect and point to page coordinates."""
     def __init__(self, transform):
         self.t = transform
-    
+
     def rect(self, rect):
         """Convert QRect or QRectF to a QRect in page coordinates."""
         return self.t.mapRect(QRectF(rect)).toRect()
-    
+
     def point(self, point):
         """Convert QPointF or QPoint to a QPoint in page coordinates."""
         return self.t.map(QPointF(point)).toPoint()
@@ -95,7 +97,7 @@ class MapFromPage(MapToPage):
     def rect(self, rect):
         """Convert QRect or QRectF to a QRectF in original coordinates."""
         return self.t.mapRect(QRectF(rect))
-    
+
     def point(self, point):
         """Convert QPointF or QPoint to a QPointF in original coordinates."""
         return self.t.map(QPointF(point))

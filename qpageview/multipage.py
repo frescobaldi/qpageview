@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -46,7 +48,7 @@ class MultiPage(page.AbstractRenderedPage):
     The position and size of the embedded pages is set in the updateSize()
     method, which is inherited from AbstractPage. By default all sub pages
     are centered in their natural size.
-    
+
     Rotation of sub pages is relative to the MultiPage.
 
     The `scalePages` instance attribute can be used to multiply the zoomfactor

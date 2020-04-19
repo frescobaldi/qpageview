@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This file is part of the qpageview package.
 #
 # Copyright (c) 2019 - 2019 by Wilbert Berendsen
@@ -42,17 +44,17 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
     Automatically displays all pages in a view in small size, and makes it
     easier to browse large documents. Use connectView() to connect a View, and
     it automatically shows the pages, also when the view is changed.
-    
+
     """
-    
+
     MAX_ZOOM = 1.0
     pagingOnScrollEnabled = False
     wheelZoomingEnabled = False
     firstPageNumber = 1
     scrollupdatespersec = 100
-    
+
     autoOrientationEnabled = True
-    
+
     def __init__(self, parent=None, **kwds):
         super().__init__(parent, **kwds)
         self._view = None
@@ -62,7 +64,7 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
         self.pageLayout().setPageMargins(QMargins(4, 4, 4, 20))
         self.setLayoutFontHeight()
         self.currentPageNumberChanged.connect(self.viewport().update)
-    
+
     def setOrientation(self, orientation):
         """Reimplemented to also set the corresponding view mode."""
         super().setOrientation(orientation)
@@ -100,9 +102,9 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
 
     def slotCurrentPageNumberChanged(self, num):
         """Called when the page number in the connected view changes.
-        
+
         Does not scroll but updates the current page mark in our View.
-        
+
         """
         self._currentPageNumber = num
         self.viewport().update()
