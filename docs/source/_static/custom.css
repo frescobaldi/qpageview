@@ -1,0 +1,48 @@
+/*
+ * Some css adaptions to the alabaster theme for parce.info.
+ */
+
+/* make font size in source code view smaller */
+div.body > div.highlight {
+    font-size: 14px;
+}
+
+/* add extra spacing above class and function definitions */
+@media screen {
+    div.section > dl.class {
+        margin-top: 40px;
+    }
+
+    div.section > dl.function {
+        margin-top: 30px;
+    }
+}
+
+/* decrease font size in sidebar */
+div.sphinxsidebar ul li.toctree-l1 > a {
+    font-size: 100%;
+}
+
+div.sphinxsidebar ul li.toctree-l2 > a {
+    font-size: 90%;
+}
+
+/* make sidebar contents scrollable */
+div.sphinxsidebar {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+/* hide the image but show a home link. */
+@media screen and (max-width: 875px) {
+    div.sphinxsidebar p.logo {
+        display: unset;
+    }
+    div.sphinxsidebar p.logo ::after {
+        content: "[home]";
+        font-size: 20px;
+    }
+    div.sphinxsidebar p.logo img {
+        display: none;
+    }
+}
