@@ -31,7 +31,6 @@ Overview of all modules
    selector.rst
    shadow.rst
    sidebarview.rst
-   stubs.rst
    svg.rst
    util.rst
    viewactions.rst
