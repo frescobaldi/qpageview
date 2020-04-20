@@ -4,9 +4,9 @@ Basic usage
 Create the View widget
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Just import :mod:`qpageview` and create a View. As the :class:`qpageview.View`
-is a QWidget, you need to create a QApplication object, just as for all
-Qt-based applications::
+Just import :mod:`qpageview` and create a View. As the
+:class:`~qpageview.view.View` is a QWidget, you need to create a QApplication
+object, just as for all Qt-based applications::
 
     from PyQt5.QtWidgets import QApplication
     import qpageview
@@ -39,8 +39,8 @@ To clear the View again::
     v.clear()
 
 
-Display options
-~~~~~~~~~~~~~~~
+Controlling the display
+~~~~~~~~~~~~~~~~~~~~~~~
 
 You can interact in the normal way with the widget, scrolling and zooming.
 Note the almost infinite zoom, thanks to the tile-based rendering engine.
