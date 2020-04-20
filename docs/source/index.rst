@@ -3,10 +3,11 @@
 This manual documents `qpageview` version |release|.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   modoverview.rst
+    usage.rst
+    modoverview.rst
 
 
 Indices and tables
