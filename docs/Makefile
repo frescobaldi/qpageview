@@ -14,6 +14,12 @@ help:
 
 .PHONY: help Makefile
 
+# Upload (added by WB)
+upload: html
+	rsync -ave ssh --exclude '*~' \
+		build/html/* \
+		wilbertb@qpageview.org:/home/wilbertb/domains/qpageview.org/public_html/
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile

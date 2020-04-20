@@ -1,6 +1,12 @@
 The qpageview module
 ====================
 
+*qpageview* provides a page based document viewer widget for Qt5/PyQt5.
+
+It has a flexible architecture potentionally supporting many formats.
+Currently, it supports SVG documents, images, and, using the Poppler-Qt5
+binding, PDF documents.
+
 ::
 
     import qpageview
@@ -13,16 +19,11 @@ The qpageview module
     v.loadPdf("path/to/afile.pdf")
 
 
+`Homepage       <https://qpageview.org/>`_                      •
 `Development    <https://github.com/frescobaldi/qpageview>`_    •
 `Download       <https://pypi.org/project/qpageview/>`_         •
-`Documentation  <https://qpageview.readthedocs.io/>`_           •
+`Documentation  <https://qpageview.org/>`_                      •
 `License        <https://www.gnu.org/licenses/gpl-3.0>`_
-
-qpageview provides a page based document viewer widget for Qt5/PyQt5.
-
-It has a flexible architecture potentionally supporting many formats.
-Currently, it supports SVG documents, images, and, using the Poppler-Qt5
-binding, PDF documents.
 
 Features
 ~~~~~~~~

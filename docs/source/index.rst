@@ -1,4 +1,8 @@
+Welcome to qpageview!
+=====================
+
 .. include:: ../../README.rst
+    :start-line: 2
 
 This manual documents `qpageview` version |release|.
 
