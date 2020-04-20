@@ -34,10 +34,12 @@ from . import backgroundjob
 class PrintJob(backgroundjob.Job):
     """Performs a print job in the background.
 
-    Emits:
+    Emits the following signals:
 
-    progress(pageNumber, num, total)        # before each Page
-    finished()                              # when done
+        ``progress(pageNumber, num, total)``
+            before each Page
+        ``finished()``
+            when done
 
     """
     progress = pyqtSignal(int, int, int)

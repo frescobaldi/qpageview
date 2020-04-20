@@ -67,6 +67,7 @@ class Link(link.Link):
 
     @property
     def url(self):
+        """The url the link points to."""
         if isinstance(self.linkobj, popplerqt5.Poppler.LinkBrowse):
             return self.linkobj.url()
         return ""

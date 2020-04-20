@@ -25,20 +25,20 @@ Constant values.
 
 
 # rotation:
-Rotate_0   = 0
-Rotate_90  = 1
-Rotate_180 = 2
-Rotate_270 = 3
+Rotate_0   = 0      #: normal
+Rotate_90  = 1      #: 90° rotated clockwise
+Rotate_180 = 2      #: 180° rotated
+Rotate_270 = 3      #: 270° rotated (90° couter clockwise)
 
 
 # viewModes:
-FixedScale = 0
-FitWidth   = 1
-FitHeight  = 2
-FitBoth    = FitHeight | FitWidth
+FixedScale = 0      #: the scale is not adjusted to the widget size
+FitWidth   = 1      #: scale so that the page's width fits in the widget
+FitHeight  = 2      #: scale so that the page's height fits in the widget
+FitBoth    = FitHeight | FitWidth   #: fit the whole page
 
 
 # orientation:
-Horizontal = 1
-Vertical   = 2
+Horizontal = 1      #: arrange the pages in horizontal order
+Vertical   = 2      #: arrange the pages in vertical order
 

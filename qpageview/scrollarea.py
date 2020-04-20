@@ -36,18 +36,18 @@ class ScrollArea(QAbstractScrollArea):
 
     Instance attributes:
 
-        alignment (Qt.AlignCenter):
-            how to align the scrolled area if smaller than the viewport
+    ``alignment`` (Qt.AlignCenter):
+        how to align the scrolled area if smaller than the viewport
 
-        scrollupdatespersec (50):
-            how many scroll updates to draw per second (50 is recommended).
+    ``scrollupdatespersec`` (50):
+        how many scroll updates to draw per second (50 is recommended).
 
-        kineticScrollingEnabled (True):
-            whether the wheel and pgup/pgdn keys etc use kinetic scrolling
+    ``kineticScrollingEnabled`` (True):
+        whether the wheel and pgup/pgdn keys etc use kinetic scrolling
 
-        draggingEnabled (True):
-            If enabled, the user can drag the contents of the scrollarea to
-            move it with the mouse.
+    ``draggingEnabled`` (True):
+        If enabled, the user can drag the contents of the scrollarea to
+        move it with the mouse.
 
     """
 

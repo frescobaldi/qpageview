@@ -133,7 +133,7 @@ class Rectangles:
         """Return the width of the specified object.
 
         This can be used for sorting a set returned by at(), inside() or
-        intersecting(). For example:
+        intersecting(). For example::
 
             for r in sorted(rects.at(10, 20), key=rects.width):
                 # ...

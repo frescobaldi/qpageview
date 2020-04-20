@@ -50,14 +50,16 @@ class Rubberband(QWidget):
 
     Instance variables:
 
-        showbutton (Qt.RightButton), the button used to drag a new rectangle
+    ``showbutton`` (Qt.RightButton)
+        the button used to drag a new rectangle
 
-        dragbutton (Qt.LeftButton), the button to alter an existing rectangle
+    ``dragbutton`` (Qt.LeftButton)
+        the button to alter an existing rectangle
 
-        trackSelection (False), whether to continuously emit selectionChanged().
-                When True, selectionChanged() is emitted on every change, when
-                False, the signal is only emitted when the mouse button is
-                released.
+    ``trackSelection`` (False)
+        whether to continuously emit selectionChanged(). When True,
+        ``selectionChanged()`` is emitted on every change, when False, the signal
+        is only emitted when the mouse button is released.
 
     """
     selectionChanged = pyqtSignal(QRect)
@@ -346,10 +348,10 @@ class Rubberband(QWidget):
     def eventFilter(self, viewport, ev):
         """Act on events in the viewport:
 
-        - keep on the same place when the viewport resizes
-        - start dragging the selection if showbutton clicked (preventing the
+        * keep on the same place when the viewport resizes
+        * start dragging the selection if showbutton clicked (preventing the
           contextmenu if the showbutton is the right button)
-        - end a drag on mousebutton release, if that button would have shown
+        * end a drag on mousebutton release, if that button would have shown
           the context menu, show it on button release.
 
         """

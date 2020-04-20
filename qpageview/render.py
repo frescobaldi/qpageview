@@ -64,16 +64,16 @@ class AbstractRenderer:
 
     Instance attributes:
 
-        `paperColor`    Paper color. If possible this background color is used
-                        when rendering the pages, also for temporary drawings
-                        when a page has to be rendered. If a Page specifies its
-                        own paperColor, that color prevails.
+        ``paperColor``   Paper color. If possible this background color is used
+                         when rendering the pages, also for temporary drawings
+                         when a page has to be rendered. If a Page specifies
+                         its own paperColor, that color prevails.
 
-        `imageFormat`   QImage format to use (if possible). Default is
-                        QImage.Format_ARGB32_Premultiplied
+        ``imageFormat``  QImage format to use (if possible). Default is
+                         QImage.Format_ARGB32_Premultiplied
 
-        `antialiasing`  True by default. Whether to antialias graphics. (Most
-                        Renderers antialias anyway, even if this is False.)
+        ``antialiasing`` True by default. Whether to antialias graphics. (Most
+                         Renderers antialias anyway, even if this is False.)
 
     """
 
@@ -115,11 +115,16 @@ class AbstractRenderer:
         The cache can store the group object using a weak reference.
         The tuple contains the following values:
 
-        group       the object returned by group()
-        ident       the value returned by ident()
-        rotation    self.computedRotation
-        width       self.width * ratio
-        height      self.height * ratio
+        ``group``
+            the object returned by ``group()``
+        ``ident``
+            the value returned by ``ident()``
+        ``rotation``
+            ``self.computedRotation``
+        ``width``
+            ``self.width * ratio``
+        ``height``
+            ``self.height * ratio``
 
         """
         return Key(
@@ -279,16 +284,20 @@ class AbstractRenderer:
     def paint(self, page, painter, rect, callback=None):
         """Paint a page, using images from the cache.
 
-        page: the Page to draw
+        ``page``:
+            the Page to draw
 
-        painter:  the QPainter to use to draw
+        ``painter``:
+            the QPainter to use to draw
 
-        rect: the region to draw, relative to the topleft of the page.
+        ``rect``:
+            the region to draw, relative to the topleft of the page.
 
-        callback: if specified, a callable accepting the `page` argument.
-        Typically this should be used to trigger a repaint of the view.
+        ``callback``:
+            if specified, a callable accepting the `page` argument.
+            Typically this should be used to trigger a repaint of the view.
 
-        The Page calls this method by default in the paint() method.
+        The Page calls this method by default in its paint() method.
         This method tries to fetch an image from the cache and paint that.
         If no image is available, render() is called in the background to
         generate one. If it is ready, the callback is called with the Page

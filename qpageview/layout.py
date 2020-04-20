@@ -59,7 +59,8 @@ class PageLayout(util.Rectangular, list):
 
     You can iterate over the layout itself, which yields all Page instances.
 
-    The following instance attributes are used, with these class-level defaults:
+    The following instance attributes are used, with these class-level
+    defaults::
 
         zoomFactor = 1.0
         dpiX = 72.0
@@ -72,7 +73,7 @@ class PageLayout(util.Rectangular, list):
     margins around the whole layout, accessible via margins(). Both have class
     level defaults as a tuple, but they are converted to a QMargins object for
     the layout instance when first accessed via the margins() and pageMargins()
-    methods.
+    methods::
 
         _margins = (6, 6, 6, 6)
         _pageMargins = (0, 0, 0, 0)
