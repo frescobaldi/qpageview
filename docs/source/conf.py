@@ -119,7 +119,7 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-#    'logo': 'qpageview-logo.png',
+    'logo': 'qp.png',
     'fixed_sidebar': 'true',
     'github_user': 'frescobaldi',
     'github_repo': 'qpageview',
