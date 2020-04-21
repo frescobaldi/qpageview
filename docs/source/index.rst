@@ -11,6 +11,7 @@ This manual documents `qpageview` version |release|.
     :caption: Contents:
 
     usage.rst
+    advanced.rst
     modoverview.rst
 
 

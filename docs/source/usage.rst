@@ -1,12 +1,15 @@
 Basic usage
 ===========
 
-Create the View widget
-~~~~~~~~~~~~~~~~~~~~~~
+.. currentmodule:: qpageview
 
-Just import :mod:`qpageview` and create a View. As the
-:class:`~qpageview.view.View` is a QWidget, you need to create a QApplication
-object, just as for all Qt-based applications::
+
+Creating the View widget
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Just import :mod:`qpageview` and create a View. As the :class:`~view.View` is a
+QWidget, you need to create a QApplication object, just as for all Qt-based
+applications::
 
     from PyQt5.QtWidgets import QApplication
     import qpageview
@@ -18,8 +21,8 @@ object, just as for all Qt-based applications::
     v.show()
 
 
-Load contents
-~~~~~~~~~~~~~
+Loading contents
+~~~~~~~~~~~~~~~~
 
 Load a PDF file with::
 
@@ -32,11 +35,27 @@ or images, or SVG files::
     v.loadSvgs(glob.glob("*.svg"))
 
 It is also possible to display pages originating from different sources
-at the same time in a View, more about that later.
+at the same time in a View, see :doc:`advanced`.
 
 To clear the View again::
 
     v.clear()
+
+
+Navigating in the View
+~~~~~~~~~~~~~~~~~~~~~~
+
+The View numbers pages starting from 1, like printed documents do.
+You can programmatically navigate through the View::
+
+    v.pageCount()               # get the number of pages
+    v.setCurrentPageNumber(11)  # go to page 11
+    v.currentPageNumber()       # get the current page number
+    v.gotoNextPage()            # go to the next page
+    v.gotoPreviousPage()        # go to the previous page
+
+If the page you want to go to is not completely visible, it is scrolled into
+View.
 
 
 Controlling the display
@@ -83,10 +102,10 @@ Change the *layout mode*::
     v.setPageLayoutMode("single")       # Single pages
     v.setPageLayoutMode("raster")       # Shows pages in a grid
 
-(The method :meth:`~qpageview.view.View.pageLayoutModes` returns a dictionary
-of available layout modes and their corresponding layout engines. By making new
-:class:`~qpageview.layout.LayoutEngine` subclasses, you can implement more
-layout modes, and you can reimplement ``pageLayoutModes()`` to include them.)
+(The method :meth:`~view.View.pageLayoutModes` returns a dictionary of
+available layout modes and their corresponding layout engines. By making new
+:class:`~layout.LayoutEngine` subclasses, you can implement more layout modes,
+and you can reimplement ``pageLayoutModes()`` to include them.)
 
 All these properties have "getter" couterparts, like ``viewMode()``,
 ``orientation()``, etc.
@@ -112,10 +131,10 @@ Now you can only get it away with::
 :kbd:`Ctrl+Wheel` in the magnifier zooms the magnifier instead of the whole
 View. :kbd:`Shift+Ctrl+Wheel` resizes the magnifier.
 
-Rubberband Selection
-~~~~~~~~~~~~~~~~~~~~
+The Rubberband
+~~~~~~~~~~~~~~
 
-You can add a :class:`~qpageview.rubberband.Rubberband`, to select a square
+You can add a :class:`~rubberband.Rubberband`, to select a square
 range::
 
     from qpageview.rubberband import Rubberband
