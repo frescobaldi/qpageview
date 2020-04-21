@@ -17,11 +17,11 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 
-autodoc_mock_imports = [
-    'sip',
-    'PyQt5',
-    'popplerqt5',
-]
+#autodoc_mock_imports = [
+#    'sip',
+#    'PyQt5',
+#    'popplerqt5',
+#]
 
 import os
 import sys

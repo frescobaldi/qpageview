@@ -71,11 +71,20 @@ class Links(rectangles.Rectangles):
 class LinkViewMixin:
     """Mixin class to enhance view.View with link capabilities."""
 
+    #: (page, link) emitted when the user hovers a link
     linkHovered = pyqtSignal(page.AbstractPage, Link)
+
+    #: (no args) emitted when the user does not hover a link anymore
     linkLeft = pyqtSignal()
+
+    #: (event, page, link) emitted when the user clicks a link
     linkClicked = pyqtSignal(QEvent, page.AbstractPage, Link)
+
+    #: (event, page, link) emitted when a What's This or Toolip is requested.
+    #: The event's type determines the type of this help event.
     linkHelpRequested = pyqtSignal(QEvent, page.AbstractPage, Link)
 
+    #: whether to actually enable Link handling
     linksEnabled = True
 
     def __init__(self, parent=None, **kwds):
