@@ -144,7 +144,7 @@ This is a list of the currently available View Mixin classes:
 :class:`selector.SelectorViewMixin`
     Adds functionality to make pages selectable with a checkbox
 
-:class:`widgetoverlay.WidgetOverlayMixin`
+:class:`widgetoverlay.WidgetOverlayViewMixin`
     Adds functionality to display QWidgets on Pages that scroll and optionally
     zoom along and the user can interact with
 
