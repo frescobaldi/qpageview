@@ -78,11 +78,87 @@ those in a menu or toolbar.  The *qpageview* packages provides the
 If you create a :class:`~viewactions.ViewActions` object and connect it to a
 View, all actions can readily be used to control the View, and they
 automatically update their state according to the View's state.
+The actions (QAction objects) are in the attributes of the ViewActions object.
 
-For example::
+For example, to add some actions to a menu::
 
     import qpageview.viewactions
     a = qpageview.viewactions.ViewActions()
 
     a.setView(v)
+
+    menu = Qmenu()
+    menu.addAction(a.fit_width)
+    menu.addAction(a.fit_height)
+    menu.addAction(a.fit_both)
+    menu.addSeparator()
+    menu.addAction(a.zoom_in)
+    menu.addAction(a.zoom_out)
+
+    menu.popup(QCursor.pos())
+
+The ``pager`` action fits well in a toolbar, it displays a spinbox where you
+can cycle through the pages, and the ``zoomer`` action displays a combobox
+with different zoom levels.
+
+The full list of available action names is returned by the
+:meth:`~viewactions.ViewActions.names` classmethod. You can set icons to the
+actions as you like, and replace the texts. It is also easy to inherit from
+ViewActions and add actions or change existing actions.
+
+*Lazy View instantiation:* It is possible to create a ViewActions object first
+and populate menus and toolbars with the actions, while the View is not yet
+created (e.g. when the View is in a dock widget that's only created when first
+shown). In this case, you want to instantiate the dock widget and View as soon
+as an action is triggered. To do this, connect to the :meth:`viewRequested`
+signal of the ViewActions object. The connected method must create widgets as
+needed and then call :meth:`~viewactions.ViewActions.setView()` on the
+ViewActions object, to the action can be performed.
+
+
+Using View Mixins
+~~~~~~~~~~~~~~~~~
+
+The View as defined in the :mod:`qpageview` module is a class composed
+of the basic View class in :class:`view.View` and some View Mixin classes
+that extend the functionality of the basic View.
+
+This is a list of the currently available View Mixin classes:
+
+:class:`link.LinkViewMixin`
+    Adds functionality to click on links, e.g. in PDF pages
+
+:class:`highlight.HighlightViewMixin`
+    Adds functionality to highlight rectangular regions
+
+:class:`shadow.ShadowViewMixin`
+    Draws a nice shadow border around the pages
+
+:class:`util.LongMousePressMixin`
+    Handles long mouse presses (can be mixed in with any QWidget)
+
+:class:`imageview.ImageViewMixin`
+    A View targeted to the display of one single image (see also the
+    :class:`~imageview.ImageView`)
+
+:class:`selector.SelectorViewMixin`
+    Adds functionality to make pages selectable with a checkbox
+
+:class:`widgetoverlay.WidgetOverlayMixin`
+    Adds functionality to display QWidgets on Pages that scroll and optionally
+    zoom along and the user can interact with
+
+
+Specialized View subclasses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are already some specialized View subclasses available, those
+are:
+
+:class:`~imageview.ImageView`
+    A View that is tailored to show one image (from file, data or a QImage)
+
+:class:`~sidebarview.SidebarView`
+    A View that shows selectable thumbnails of all pages in a connected View,
+    usable as a sidebar for a normal View.
 
