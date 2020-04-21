@@ -34,6 +34,10 @@ really loaded until you request the
 some Page types only load themselves really when their content is requested to
 be rendered in the View.
 
+The list of individual Page objects in a document is returned by the
+:meth:`~document.AbstractSourceDocument.pages` method of the Document class.
+
+
 Page and PageLayout
 ~~~~~~~~~~~~~~~~~~~
 

@@ -108,17 +108,16 @@ class LongMousePressMixin:
 
     To handle a long mouse press event, implement longMousePressEvent().
 
-    The following instance variables can be altered:
-
-    longMousePressEnabled = True    # set to False to disable
-    longMousePressTolerance = 3     # number of pixels moving allowed
-    longMousePressTime = 800        # msec a mouse press is considered long
-
     """
 
-    longMousePressEnabled = True    # set to False to disable
-    longMousePressTolerance = 3     # number of pixels moving allowed
-    longMousePressTime = 800        # msec a mouse press is considered long
+    #: Whether to enable handling of long mouse presses; set to False to disable
+    longMousePressEnabled = True
+
+    #: Allow moving some pixels before a long mouse press is considered a drag
+    longMousePressTolerance = 3
+
+    #: How long to presse a mouse button (in msec) for a long press
+    longMousePressTime = 800
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -183,10 +182,10 @@ class LongMousePressMixin:
 def rotate(matrix, rotation, width, height, dest=False):
     """Rotate matrix inside a rectangular area of width x height.
 
-    The matrix can be a QPainter or a QTransform.
-    Rotation is 0, 1, 2 or 3, etc. (Rotate_0, Rotate_90, etc...).
-    If dest is True, width and height refer to the destination, otherwise
-    to the source.
+    The ``matrix`` can be a either a QPainter or a QTransform. The ``rotation``
+    is 0, 1, 2 or 3, etc. (``Rotate_0``, ``Rotate_90``, etc...). If ``dest`` is
+    True, ``width`` and ``height`` refer to the destination, otherwise to the
+    source.
 
     """
     if rotation & 3:
