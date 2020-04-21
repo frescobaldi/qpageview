@@ -6,13 +6,14 @@ Advanced usage
 Document
 ~~~~~~~~
 
-A :class:`~view.View` displays :class:`Page <page.AbstractPage>` objects.
+A :class:`~view.View` displays :class:`Page <page.AbstractPage>` objects. Page
+objects can optionally belong to a :class:`~document.Document` object.
 
 The convenience methods :meth:`View.loadPdf() <view.View.loadPdf>`,
 :meth:`View.loadImages() <view.View.loadImages>` and :meth:`View.loadSvgs()
-<view.View.loadSvgs>`, create :class:`~document.Document` objects containing
-the pages, and then call :meth:`View.setDocument() <view.View.setDocument>` to
-display the pages in the view.
+<view.View.loadSvgs>`, create Document objects containing the pages, and then
+call :meth:`View.setDocument() <view.View.setDocument>` to display the pages in
+the view.
 
 You can also use the module global functions like :func:`loadPdf` which return
 a Document, and then load that Document in the View::
@@ -113,7 +114,7 @@ shown). In this case, you want to instantiate the dock widget and View as soon
 as an action is triggered. To do this, connect to the :meth:`viewRequested`
 signal of the ViewActions object. The connected method must create widgets as
 needed and then call :meth:`~viewactions.ViewActions.setView()` on the
-ViewActions object, to the action can be performed.
+ViewActions object, so the action can be performed.
 
 
 Using View Mixins
