@@ -50,3 +50,42 @@ QPoints and QRects from and to original page coordinates. These matrices take
 into account the page's scaling and current rotation.
 
 
+Page position and Layout position
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Many methods neatly hide the computations between mouse cursor position
+and position in original page coordinates on a particular page, but it is
+still nice to understand it a bit.
+
+A PageLayout is just a large rectangular (virtual) area, large enough so that
+all Pages in the layout can be set to a position and size so tha they do
+not overlap. Every Page is assigned a ``pos()`` on the layout. The geometry() of
+the layout is the rectangle encompassing all visible pages on the layout.
+
+View.layoutPosition() returns the position of the layout relative to the
+top-left corner of the View's viewport. You can find the pages that are currently
+visible using View.visiblePages(). To find the Page the mouse cursor points at,
+use::
+
+    # pos is mouse position in viewport
+    pos_on_layout = pos - view.layoutPosition()
+    page = view.pageLayout().pageAt(pos)
+    pos_on_page = pos_on_layout - page.pos()
+
+    # translate the pixel position to original page coordinates
+    pos = page.mapFromPage().point(pos_on_page)
+
+
+Links on a page
+~~~~~~~~~~~~~~~
+
+A Page can contain clickable links, which are collected in a Links object
+that is available under the :meth:`~AbstractPage.links` method of Page.
+
+Every Link has at least an ``url`` property and an ``area`` property, which
+contains the rectangle of the clickable area in four coordinates in the 0..1
+range.
+
+You could use the above logic to access links on the page, but if you
+use the LinkViewMixin class in your View class, there are simple methods::
+
