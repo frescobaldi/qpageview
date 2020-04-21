@@ -73,76 +73,84 @@ class View(scrollarea.ScrollArea):
 
     View emits the following signals:
 
-    `pageCountChanged`          When the number of pages changes.
+    :attr:`pageCountChanged` (int)
+        emitted when the total amount of pages has changed
 
-    `currentPageNumberChanged`  When the current page number changes.
+    :attr:`currentPageNumberChanged` (int)
+        emitted when the current page number has changed (starting with 1)
 
-    `viewModeChanged`   When the user changes the view mode (one of FixedScale,
-                        FitWidth, FitHeight and FitBoth)
+    :attr:`viewModeChanged` (int)
+        emitted when the ``viewMode`` has changed
 
-    `rotationChanged`   When the user changes the rotation (one of Rotate_0,
-                        Rotate_90, Rotate_180, Rotate_270)
+    :attr:`rotationChanged` (int)
+        emitted when the ``rotation`` has changed
 
-    `zoomFactorChanged` When the zoomfactor changes
+    :attr:`orientationChanged` (int)
+        emitted when the ``orientation`` has changed
 
-    `pageLayoutUpdated` When the page layout is updated (e.g. after adding
-                        or removing pages, but also zoom and rotation cause a
-                        layout update)
+    :attr:`zoomFactorChanged` (float)
+        emitted when the ``zoomFactor`` has changed
 
-    `continuousModeChanged` When the user toggle the continuousMode() setting.
+    :attr:`continuousModeChanged` (bool)
+        emitted when the ``continuousMode`` has changed
 
-    `pageLayoutModeChanged` When the page layout mode is changed. The page
-                            layout mode is set using setPageLayoutMode() and
-                            internally implemented by using different qpageview
-                            LayoutEngine classes.
+    :attr:`pageLayoutModeChanged` (str)
+        emitted when the ``pageLayoutMode`` has changed
 
-    The following instance variables can be set, and default to:
-
-    MIN_ZOOM = 0.05
-    MAX_ZOOM = 64.0
-
-    wheelZoomingEnabled = True
-        zoom the View using the mouse wheel
-
-    kineticPagingEnabled = True
-        scroll smoothly on setCurrentPageNumber
-
-    pagingOnScrollEnabled = True
-        keep track of current page while scrolling
-
-    clickToSetCurrentPageEnabled = True
-        any mouseclick on a page sets it the current page
-
-    strictPagingEnabled = False
-        PageUp, PageDown and wheel call setCurrentPageNumber i.s.o. scroll
-
-    documentPropertyStore
-        can be set to a DocumentPropertyStore object. If set, the object is
-        used to store certain View settings on a per-document basis.
-        (This happens in the clear() and setDocument() methods.)
+    :attr:`pageLayoutUpdated` ()
+        emitted whenever the page layout has been updated (redraw/resize)
 
     """
 
     MIN_ZOOM = 0.05
     MAX_ZOOM = 64.0
 
+    #: whether to enable mouse wheel zooming
     wheelZoomingEnabled = True
-    kineticPagingEnabled = True  # scroll smoothly on setCurrentPageNumber
-    pagingOnScrollEnabled = True # keep track of current page while scrolling
-    clickToSetCurrentPageEnabled = True  # any mouseclick on a page sets it the current page
-    strictPagingEnabled = False  # PageUp and PageDown call setCurrentPageNumber i.s.o. scroll
 
+    #: whether to enable kinetic scrolling while paging (setCurrentPageNumber)
+    kineticPagingEnabled = True
+
+    #: whether to keep track of current page while scrolling
+    pagingOnScrollEnabled = True
+
+    #: whether a mouse click in a page makes it the current page
+    clickToSetCurrentPageEnabled = True
+
+    #: whether PageUp and PageDown call setCurrentPageNumber instead of scroll
+    strictPagingEnabled = False
+
+    #: can be set to a DocumentPropertyStore object. If set, the object is
+    #: used to store certain View settings on a per-document basis.
+    #: (This happens in the :meth:`clear` and :meth:`setDocument` methods.)
     documentPropertyStore = None
 
+    #: (int) emitted when the total amount of pages has changed
     pageCountChanged = pyqtSignal(int)
+
+    #: (int) emitted when the current page number has changed (starting with 1)
     currentPageNumberChanged = pyqtSignal(int)
+
+    #: (int) emitted when the ``viewMode`` has changed
     viewModeChanged = pyqtSignal(int)
+
+    #: (int) emitted when the ``rotation`` has changed
     rotationChanged = pyqtSignal(int)
+
+    #: (int) emitted when the ``orientation`` has changed
     orientationChanged = pyqtSignal(int)
+
+    #: (float) emitted when the ``zoomFactor`` has changed
     zoomFactorChanged = pyqtSignal(float)
-    pageLayoutUpdated = pyqtSignal()
+
+    #: (bool) emitted when the ``continuousMode`` has changed
     continuousModeChanged = pyqtSignal(bool)
+
+    #: (str) emitted when the ``pageLayoutMode`` has changed
     pageLayoutModeChanged = pyqtSignal(str)
+
+    #: emitted whenever the page layout has been updated (redraw/resize)
+    pageLayoutUpdated = pyqtSignal()
 
     def __init__(self, parent=None, **kwds):
         super().__init__(parent, **kwds)
