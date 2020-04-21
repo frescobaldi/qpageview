@@ -12,6 +12,7 @@ This manual documents `qpageview` version |release|.
 
     usage.rst
     advanced.rst
+    interacting.rst
     modoverview.rst
 
 

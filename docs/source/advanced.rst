@@ -3,11 +3,12 @@ Advanced usage
 
 .. currentmodule:: qpageview
 
+
 Document
 ~~~~~~~~
 
-A :class:`~view.View` displays :class:`Page <page.AbstractPage>` objects. Page
-objects can optionally belong to a :class:`~document.Document` object.
+A :class:`~view.View` displays :class:`Page <page.AbstractPage>` objects, which
+optionally can belong to a :class:`~document.Document` object.
 
 The convenience methods :meth:`View.loadPdf() <view.View.loadPdf>`,
 :meth:`View.loadImages() <view.View.loadImages>` and :meth:`View.loadSvgs()
@@ -37,6 +38,9 @@ be rendered in the View.
 The list of individual Page objects in a document is returned by the
 :meth:`~document.AbstractSourceDocument.pages` method of the Document class.
 
+The current Page object (the current page number points to) is available
+through :meth:`View.currentPage <view.View.currentPage>`.
+
 
 Page and PageLayout
 ~~~~~~~~~~~~~~~~~~~
@@ -44,11 +48,12 @@ Page and PageLayout
 The View does not do very much with the Document it displays, rather it cares
 for the Page objects that are displayed.
 
-Those pages are in the :class:`~qpageview.layout.PageLayout` of the View, which
-inherits from the Python :class:`list <python:list>` type. Using the regular
-``list`` methods you can add or remove Page objects to the layout. Then you
-need to call :meth:`View.updatePageLayout() <view.View.updatePageLayout>` to
-update the PageLayout, which will adjust size and position of the Pages.
+The pages are in the PageLayout of the View, which inherits from the Python
+:class:`list <python:list>` type. Get the :class:`~qpageview.layout.PageLayout`
+of a View using :meth:`View.pageLayout <view.View.pageLayout>`. Using the
+regular ``list`` methods you can add or remove Page objects to the layout. Then
+you need to call :meth:`View.updatePageLayout() <view.View.updatePageLayout>`
+to update the PageLayout, which will adjust size and position of the Pages.
 
 Instead of the above, and maybe even better and easier, you can use the
 :meth:`~view.View.modifyPages` context manager of View, which will

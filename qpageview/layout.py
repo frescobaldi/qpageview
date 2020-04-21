@@ -351,7 +351,7 @@ class LayoutEngine:
     You can override grid() to implement a different behaviour, and you
     can override pageSets() to get a different behaviour in non-continuous mode.
 
-    If there are multiple rows or columns, every row is as heigh as the
+    If there are multiple rows or columns, every row is as high as the
     highest page it contains, and every column is as wide as its widest page.
     You can set the attributes evenWidths and/or evenHeights to True if you
     want all columns to have the same width, and/or respectively, the rows the
