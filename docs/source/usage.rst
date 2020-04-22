@@ -102,10 +102,11 @@ Change the *layout mode*::
     v.setPageLayoutMode("single")       # Single pages
     v.setPageLayoutMode("raster")       # Shows pages in a grid
 
-(The method :meth:`~view.View.pageLayoutModes` returns a dictionary of
-available layout modes and their corresponding layout engines. By making new
-:class:`~layout.LayoutEngine` subclasses, you can implement more layout modes,
-and you can reimplement ``pageLayoutModes()`` to include them.)
+(The method :meth:`~view.View.pageLayoutModes` returns a dictionary mapping the
+available layout mode names to the constructors of their corresponding layout
+engines. By making new :class:`~layout.LayoutEngine` subclasses, you can
+implement more layout modes, and you can reimplement ``pageLayoutModes()`` to
+include them.)
 
 All these properties have "getter" couterparts, like ``viewMode()``,
 ``orientation()``, etc.

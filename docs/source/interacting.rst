@@ -60,14 +60,15 @@ and position in original page coordinates on a particular page, but it is
 still nice to understand it a bit.
 
 A PageLayout is just a large rectangular (virtual) area, large enough so that
-all Pages in the layout can be set to a position and size so tha they do
+all Pages in the layout can be set to a position and size so that they do
 not overlap. Every Page is assigned a ``pos()`` on the layout. The geometry() of
 the layout is the rectangle encompassing all visible pages on the layout.
 
-View.layoutPosition() returns the position of the layout relative to the
-top-left corner of the View's viewport. You can find the pages that are currently
-visible using View.visiblePages(). To find the Page the mouse cursor points at,
-use::
+:meth:`View.layoutPosition() <qpageview.view.View.layoutPosition>` returns the
+position of the layout relative to the top-left corner of the View's viewport.
+You can find the pages that are currently visible using
+:meth:`View.visiblePages() <qpageview.view.View.visiblePages>`. To find the
+Page the mouse cursor points at, use::
 
     # pos is mouse position in viewport
     pos_on_layout = pos - view.layoutPosition()
