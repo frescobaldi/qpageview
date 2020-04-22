@@ -52,21 +52,26 @@ class Magnifier(QWidget):
 
     Instance attributes:
 
-        showmodifier: the modifier to popup (Qt.ControlModifier)
+    ``showmodifier``:
+        the modifier to popup (Qt.ControlModifier)
 
-        zoommodifier: the modifier to wheel zoom (Qt.ControlModifier)
+    ``zoommodifier``:
+        the modifier to wheel zoom (Qt.ControlModifier)
 
-        resizemodifier: the key to press for wheel resizing (Qt.ShiftModifier)
+    ``resizemodifier``:
+        the key to press for wheel resizing (Qt.ShiftModifier)
 
-        showbutton: the mouse button causing the magnifier to popup (by default
-                    Qt.LeftButton)
+    ``showbutton``:
+        the mouse button causing the magnifier to popup (by default
+        Qt.LeftButton)
 
-        resizebutton: the extra mouse button to be pressed when resizing the
-                    magnifier (by default Qt.RightButton)
+    ``resizebutton``:
+        the extra mouse button to be pressed when resizing the
+        magnifier (by default Qt.RightButton)
 
-        MAX_EXTRA_ZOOM: the maximum zoom (relative to the View's maximum zoom
-                    level)
-
+    ``MAX_EXTRA_ZOOM``:
+        the maximum zoom (relative to the View's maximum zoom
+        level)
 
     """
 
