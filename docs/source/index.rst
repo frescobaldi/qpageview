@@ -8,7 +8,7 @@ This manual documents `qpageview` version |release|.
 
 .. toctree::
     :maxdepth: 2
-    :caption: Contents:
+    :caption: Contents
 
     usage.rst
     advanced.rst
@@ -17,9 +17,8 @@ This manual documents `qpageview` version |release|.
     modoverview.rst
 
 .. toctree::
-    :hidden:
     :maxdepth: 1
-    :caption: About:
+    :caption: About
 
     changelog.rst
     license.rst
