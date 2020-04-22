@@ -64,16 +64,18 @@ class AbstractRenderer:
 
     Instance attributes:
 
-        ``paperColor``   Paper color. If possible this background color is used
-                         when rendering the pages, also for temporary drawings
-                         when a page has to be rendered. If a Page specifies
-                         its own paperColor, that color prevails.
+    ``paperColor``
+        Paper color. If possible this background color is used when rendering
+        the pages, also for temporary drawings when a page has to be rendered.
+        If a Page specifies its own paperColor, that color prevails.
 
-        ``imageFormat``  QImage format to use (if possible). Default is
-                         QImage.Format_ARGB32_Premultiplied
+    ``imageFormat``
+        QImage format to use (if possible). Default is
+        QImage.Format_ARGB32_Premultiplied
 
-        ``antialiasing`` True by default. Whether to antialias graphics. (Most
-                         Renderers antialias anyway, even if this is False.)
+    ``antialiasing``
+        True by default. Whether to antialias graphics. (Most Renderers
+        antialias anyway, even if this is False.)
 
     """
 
@@ -116,15 +118,15 @@ class AbstractRenderer:
         The tuple contains the following values:
 
         ``group``
-            the object returned by ``group()``
+            the object returned by ``page.group()``
         ``ident``
-            the value returned by ``ident()``
+            the value returned by ``page.ident()``
         ``rotation``
-            ``self.computedRotation``
+            ``page.computedRotation``
         ``width``
-            ``self.width * ratio``
+            ``page.width * ratio``
         ``height``
-            ``self.height * ratio``
+            ``page.height * ratio``
 
         """
         return Key(
