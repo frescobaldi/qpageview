@@ -149,11 +149,62 @@ intersections with those objects and a point or rectangle.
 
 
 Links in a Document
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 All links in a Document can be requested with :meth:`Document.urls()
 <document.Document.urls>`. This method returns a dictionary where the url is
 the key, and the value is a dictionary mapping page number to a list of
 rectangular areas of all links with that url on that page.
 
+
+Getting text from a page
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Besides links, depending on the Page type, a page can also contain text, such
+as PDF pages do. You can get the text with the :meth:`Page.text()
+<page.AbstractPage.text>` method, which returns the text in a rectangle in page
+coordinates::
+
+    page = view.currentPage()
+
+    # get the text in some rectangle
+    text = page.text(some_rect)
+
+    # get the full text by using the page's rectangle
+    full_text = page.text(page.rect())
+
+    # using the rubberband selection
+    text = view.rubberband().selectedText()
+
+
+Getting image data from a page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can get pixel data using :meth:`Page.image() <page.AbstractPage.image>`::
+
+    image = page.image()
+
+See the documentation for the arguments to this function, to adjust the
+resolution and the area (which defaults to the whole page).
+
+You can also get graphic data in :meth:`PDF <page.AbstractPage.pdf>`,
+:meth:`EPS <page.AbstractPage.eps>` or :meth:`SVG <page.AbstractPage.svg>`
+format. For document formats that are vector based, this graphic data wil also
+be vector based. For example::
+
+    page.pdf("filename.pdf")
+    page.svg("filename.svg")
+    page.eps("filename.eps")
+
+    # using the rubberband selection:
+    page, rect = view.rubberband.selectedPage()
+    if page:
+        page.pdf("filename.pdf", rect)
+
+See the method's documentation for more information about possible arguments
+to these functions. Instead of a filename, you can also give a QIODevice object.
+All these functions return True if they were successful.
+
+For more advanced methods to get image data, see the :mod:`~qpageview.export`
+module.
 

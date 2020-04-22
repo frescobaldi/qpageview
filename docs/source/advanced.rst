@@ -116,7 +116,10 @@ The full list of available action names is returned by the
 actions as you like, and replace the texts. It is also easy to inherit from
 ViewActions and add actions or change existing actions.
 
-*Lazy View instantiation:* It is possible to create a ViewActions object first
+Lazy View instantiation
+-----------------------
+
+It is possible to create a ViewActions object first
 and populate menus and toolbars with the actions, while the View is not yet
 created (e.g. when the View is in a dock widget that's only created when first
 shown). In this case, you want to instantiate the dock widget and View as soon
@@ -124,6 +127,71 @@ as an action is triggered. To do this, connect to the :meth:`viewRequested`
 signal of the ViewActions object. The connected method must create widgets as
 needed and then call :meth:`~viewactions.ViewActions.setView()` on the
 ViewActions object, so the action can be performed.
+
+
+Managing View settings
+~~~~~~~~~~~~~~~~~~~~~~
+
+All display settings (preferences) of a View can be stored in a QSettings
+object using :meth:`View.writeProperties() <view.View.writeProperties>`, and
+read with :meth:`View.readProperties() <view.View.readProperties>`. These
+properties are: ``position``, ``rotation``, ``zoomFactor``, ``viewMode``,
+``orientation``, ``continuousMode`` and ``pageLayoutMode``.
+
+Under the hood, this is done using a :class:`~view.ViewProperties` object,
+which handles the saving and loading of properties, and getting/setting them
+from/to a View.
+
+If you want the View to remember the position, zoom factor etc. on a
+per-document basis, you can install a :class:`~view.DocumentPropertyStore` in
+the View. This automatically stores the view properties for the current
+Document as soon as you load a different Document (using
+:meth:`View.setDocument() <view.View.setDocument>`). If you switch back to the
+former document, the View restores its position and other display settings for
+that document.
+
+To use a DocumentPropertyStore::
+
+    v = qpageview.View()
+    store = qpageview.view.DocumentPropertyStore()
+    v.documentPropertyStore = store
+
+By setting a mask it is possible to influence which properties are remembered.
+In this example, only zoom factor and position are remembered when switching
+documents::
+
+    store.mask = ['position', 'zoomFactor']
+
+*Lazy View instantiation*: It is also possible to initialize the *ViewActions*
+from your settings, even if you have not yet created a View (for example, when
+the View is in a not yet created dock widget that is lazily instantiated). This
+way, you application's user interface already reflects the corrent settings for
+the yet-not-created view. Use the View.properties() static method to get an
+uninitialized ViewProperties object, set some defaults and then add settings
+read from a QSettings object. Finally update the state of the actions in the
+ViewActions object, *before* connecting to the ``ViewActions.viewRequested``
+signal.
+
+All methods of ViewProperties return self, so these calls can be easily
+chained::
+
+    settings = QSettings()
+    props = qpageview.View.properties().setdefaults().load(settings)
+    actions = qpageview.viewactions.ViewActions()
+    actions.updateFromProperties(props)
+    actions.viewRequested.connect(createView)
+
+Later, when you really instantiate the View, you should also load the View
+settings; the ViewActions object does not actively update the View when
+connecting (rather, the actions are adjusted to the View when connecting)::
+
+    def createView():
+        # creating the View....
+        v = qpageview.View()
+        settings = QSettings()
+        v.readProperties(settings)
+        actions.setView(v)
+
 
 
 Using View Mixins
@@ -157,6 +225,22 @@ This is a list of the currently available View Mixin classes:
 :class:`widgetoverlay.WidgetOverlayViewMixin`
     Adds functionality to display QWidgets on Pages that scroll and optionally
     zoom along and the user can interact with
+
+
+So, depending on your needs, you can create your own View subclass, mixing in
+only the functionality you need. Put the main View class at the end, for
+example::
+
+    class View(
+        qpageview.link.LinkViewMixin,
+        # other mixins here
+        qpageview.view.View):
+        """My View with some enhancements."""
+        pass
+
+        # my own extensions and new funcionality
+        def myMethod(self):
+            pass
 
 
 Specialized View subclasses
