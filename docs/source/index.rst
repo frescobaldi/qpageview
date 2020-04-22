@@ -16,11 +16,17 @@ This manual documents `qpageview` version |release|.
     rendering.rst
     modoverview.rst
 
+.. toctree::
+    :hidden:
+    :maxdepth: 1
+    :caption: About:
+
+    changelog.rst
+    license.rst
+
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :doc:`changelog`
-* :doc:`license`

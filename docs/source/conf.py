@@ -100,7 +100,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+#pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
@@ -112,25 +112,62 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 #html_theme = 'alabaster'
-html_theme = 'alabaster'
+
+import sphinx_rtd_theme
+
+extensions.extend([
+    "sphinx_rtd_theme",
+])
+
+html_theme = "sphinx_rtd_theme"
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
+#html_theme_options = {
+#    'logo': 'qp.png',
+#    'fixed_sidebar': 'true',
+#    'github_user': 'frescobaldi',
+#    'github_repo': 'qpageview',
+##    'show_related': 'true',
+#    'show_relbar_bottom': 'true',
+#    'description': pkginfo["description"],
+#    'extra_nav_links': {
+#        'qpageview@Github': 'https://github.com/frescobaldi/qpageview',
+#        'qpageview@PyPi': 'https://pypi.org/project/qpageview',
+#    },
+#}
+
+
+html_logo = '_static/qp.png'
+
 html_theme_options = {
-    'logo': 'qp.png',
-    'fixed_sidebar': 'true',
-    'github_user': 'frescobaldi',
-    'github_repo': 'qpageview',
-#    'show_related': 'true',
-    'show_relbar_bottom': 'true',
-    'description': pkginfo["description"],
-    'extra_nav_links': {
-        'qpageview@Github': 'https://github.com/frescobaldi/qpageview',
-        'qpageview@PyPi': 'https://pypi.org/project/qpageview',
-    },
+    'canonical_url': 'https://qpageview.org/',
+#    'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
+    'logo_only': True,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    #'style_nav_header_background': 'white',
+    'style_nav_header_background': 'firebrick',
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False,
 }
+
+html_context = {
+  'display_github': True,
+  'github_user': 'frescobaldi',
+  'github_repo': 'qpageview',
+  'github_version': 'master',
+  'conf_py_path': '/docs/source/',
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
