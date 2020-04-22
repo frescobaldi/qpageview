@@ -2,4 +2,5 @@ global-exclude *~
 include README.rst ChangeLog LICENSE
 graft docs
 prune docs/build
+prune docs/web/build
 recursive-include tests *.py

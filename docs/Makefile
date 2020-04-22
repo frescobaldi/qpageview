@@ -4,9 +4,10 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = quickly
+SPHINXPROJ    = qpageview
 SOURCEDIR     = source
 BUILDDIR      = build
+
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -14,10 +15,17 @@ help:
 
 .PHONY: help Makefile
 
-# Upload (added by WB)
-upload: html
+# Website and Upload targets (added by WB)
+# This uses the conf.py in the web/ directory
+WEBDIR        = web
+WEBBUILDDIR   = web/build
+website:
+	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(WEBBUILDDIR)" -c "$(WEBDIR)" $(SPHINXOPTS) $(O)
+	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(WEBBUILDDIR)" -c "$(WEBDIR)" $(SPHINXOPTS) $(O)
+
+upload: website
 	rsync -ave ssh --exclude '*~' \
-		build/html/* \
+		"$(WEBBUILDDIR)"/html/* \
 		wilbertb@qpageview.org:/home/wilbertb/domains/qpageview.org/public_html/
 
 # Catch-all target: route all unknown targets to Sphinx using the new
