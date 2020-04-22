@@ -455,6 +455,12 @@ class PagerAction(QWidgetAction):
         w.valueChanged[int].connect(self.setCurrentPageNumber)
         return w
 
+    def setButtonSymbols(self, buttonSymbols):
+        """Set the ``buttonSymbols`` property, and update already existing widgets."""
+        self.buttonSymbols = buttonSymbols
+        for w in self.createdWidgets():
+            w.setButtonSymbols(buttonSymbols)
+
     def displayFormat(self):
         """Return the currently active display format string."""
         return self._displayFormat
@@ -465,6 +471,7 @@ class PagerAction(QWidgetAction):
         The default is "{num} of {total}".
 
         """
+        assert "{num}" in displayFormat
         if displayFormat != self._displayFormat:
             self._displayFormat = displayFormat
             self._updateDisplay()
