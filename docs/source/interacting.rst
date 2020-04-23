@@ -184,8 +184,9 @@ You can get pixel data using :meth:`Page.image() <page.AbstractPage.image>`::
 
     image = page.image()
 
-See the documentation for the arguments to this function, to adjust the
-resolution and the area (which defaults to the whole page).
+This method returns a QImage. See the documentation for the arguments to this
+function, to adjust the resolution and the area (which defaults to the whole
+page).
 
 You can also get graphic data in :meth:`PDF <page.AbstractPage.pdf>`,
 :meth:`EPS <page.AbstractPage.eps>` or :meth:`SVG <page.AbstractPage.svg>`
