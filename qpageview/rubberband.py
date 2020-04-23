@@ -148,10 +148,7 @@ class Rubberband(QWidget):
             cursor = Qt.SizeBDiagCursor
         elif edge is _INSIDE:
             cursor = Qt.SizeAllCursor
-        if cursor and cursor != self.cursor():
-            self.setCursor(cursor)
-        else:
-            self.unsetCursor()
+        self.setCursor(cursor)
 
     def hasSelection(self):
         """Return True when there is a selection."""
