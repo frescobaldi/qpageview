@@ -148,3 +148,43 @@ rectangle of every page the selection touches, or the selected square as an
 image or, depending on the underlying page type, the text or clickable links
 that fall in the selected region.
 
+
+Controlling the behaviour
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Scrolling
+---------
+
+By default, the View has smooth and kinetic scrolling. Kinetic scrolling
+means that the View does not move the pages at once, but always scrolls with
+a decreasing speed to the desired location, which is easier on the eyes.
+
+If you want to disable kinetic scrolling altogether, set the
+:attr:`~scrollarea.ScrollArea.kineticScrollingEnabled` attribute of the View to
+False.
+
+If you only want to disable kinetic scrolling when paging through the document
+using the methods mentioned under `Navigating in the View`_, you can leave
+:attr:`~scrollarea.ScrollArea.kineticScrollingEnabled` to True, but set
+:attr:`~view.View.kineticPagingEnabled` to False.
+
+Zooming
+-------
+
+The user can zoom in and out with Ctrl+Mousewheel, which is expected behaviour.
+You can disable wheel zooming by setting the :attr:`~view.View.wheelZoomingEnabled`
+attribute of View to False.
+
+The minimum and maximum zoom factor can be set in the
+:attr:`~view.View.MIN_ZOOM` and :attr:`~view.View.MAX_ZOOM` attributes. By
+default you can zoom out to 5% and zoom in to 6400%.
+
+Paging
+------
+
+By default, the :kbd:`PageUp` and :kbd:`PageDown` keys just scroll the View up
+or down ca. 90%. If you set the :attr:`~view.View.strictPagingEnabled`
+attribute to True, in non-continuous mode those keys call the
+:meth:`~view.View.gotoPreviousPage` and :meth:`~view.View.gotoNextPage`
+methods, respectively.
+

@@ -83,7 +83,7 @@ Controlling a view with ViewActions
 
 Normally, in a Qt application, you create QActions to perform tasks and put
 those in a menu or toolbar.  The *qpageview* package provides the
-:mod:`viewactions` module to help you with that.
+:mod:`qpageview.viewactions` module to help you with that.
 
 If you create a :class:`~viewactions.ViewActions` object and connect it to a
 View, all actions can readily be used to control the View, and they
@@ -115,6 +115,110 @@ The full list of available action names is returned by the
 :meth:`~viewactions.ViewActions.names` classmethod. You can set icons to the
 actions as you like, and replace the texts. It is also easy to inherit from
 ViewActions and add actions or change existing actions.
+
+This is the list of actions that are currently available in the
+:mod:`qpageview.viewactions` module:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 10 80
+
+   * - Name
+     - Text
+     - Action
+
+   * - ``print``
+     - Print
+     - Open a print dialog
+
+   * - ``fit_width``
+     - Fit Width
+     - Zoom to fit pages in the width of the View
+
+   * - ``fit_height``
+     - Fit Height
+     - Zoom to fit pages in the height of the View
+
+   * - ``fit_both``
+     - Fit Both
+     - Zoom to fit the full page in the View
+
+   * - ``zoom_natural``
+     - Natural Size
+     - Zoom to a "natural" size (Page dpi/screen dpi)
+
+   * - ``zoom_original``
+     - Original Size
+     - Set zoom factor to 1.0
+
+   * - ``zoom_in``
+     - Zoom in
+     -
+
+   * - ``zoom_out``
+     - Zoom out
+     -
+
+   * - ``zoomer``
+     - (none)
+     - Display a :class:`zoom widget <viewactions.ZoomerAction>` in a toolbar
+
+   * - ``rotate_left``
+     - Rotate Left
+     - Rotate the pages 90° counter-clockwise
+
+   * - ``rotate_right``
+     - Rotate Right
+     - Rotate the pages 90° clockwise
+
+   * - ``layout_single``
+     - Single Pages
+     - Show single pages in a row
+
+   * - ``layout_double_right``
+     - Two Pages (first page right)
+     - Show page 1 alone, to the right, then the rest two by two
+
+   * - ``layout_double_left``
+     - Two Pages (first page left)
+     - Show pages two by two
+
+   * - ``layout_raster``
+     - Raster
+     - Show pages in a grid
+
+   * - ``vertical``
+     - Vertical
+     - Show the pages in a vertical row
+
+   * - ``horizontal``
+     - Horizontal
+     - Show the pages in a horizontal row
+
+   * - ``continuous``
+     - Continuous
+     - Checkbox, if checked shows all pages
+
+   * - ``reload``
+     - Reload
+     - Reload pages from their files if possible
+
+   * - ``previous_page``
+     - Previous Page
+     - Go to the previous page
+
+   * - ``next_page``
+     - Next Page
+     - Go to the next page
+
+   * - ``pager``
+     - (none)
+     - Display a :class:`pager widget <viewactions.PagerAction>` in a toolbar
+
+   * - ``magnifier``
+     - Magnifier
+     - Toggle the Magnifier visibility
+
 
 Lazy View instantiation
 -----------------------
