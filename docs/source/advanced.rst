@@ -116,8 +116,8 @@ The full list of available action names is returned by the
 actions as you like, and replace the texts. It is also easy to inherit from
 ViewActions and add actions or change existing actions.
 
-This is the list of actions that are currently available in the
-:mod:`qpageview.viewactions` module:
+This is the list of actions that are currently available in a
+:class:`~viewactions.ViewActions` object:
 
 .. list-table::
    :header-rows: 1
