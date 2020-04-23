@@ -125,13 +125,13 @@ class Rubberband(QWidget):
         if point not in rect:
             return _OUTSIDE
         edge = 0
-        if point.x() <= rect.left() + 4:
+        if point.x() <= rect.left() + 8:
             edge |= _LEFT
-        elif point.x() >= rect.right() - 4:
+        elif point.x() >= rect.right() - 8:
             edge |= _RIGHT
-        if point.y() <= rect.top() + 4:
+        if point.y() <= rect.top() + 8:
             edge |= _TOP
-        elif point.y() >= rect.bottom() - 4:
+        elif point.y() >= rect.bottom() - 8:
             edge |= _BOTTOM
         return edge or _INSIDE
 
