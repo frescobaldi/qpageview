@@ -83,7 +83,7 @@ Controlling a view with ViewActions
 
 Normally, in a Qt application, you create QActions to perform tasks and put
 those in a menu or toolbar.  The *qpageview* package provides the
-:mod:`qpageview.viewactions` module to help you with that.
+:mod:`~qpageview.viewactions` module to help you with that.
 
 If you create a :class:`~viewactions.ViewActions` object and connect it to a
 View, all actions can readily be used to control the View, and they

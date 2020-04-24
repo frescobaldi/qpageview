@@ -84,6 +84,8 @@ drawing work. Also :meth:`Page.print() <page.AbstractRenderedPage.print>` calls
 :meth:`Renderer.render() <render.AbstractRenderer.render>`, which in turns
 calls :meth:`Renderer.draw() <render.AbstractRenderer.draw>`.
 
-But, depending on the characteristics of the underlying graphics type,
-other strategies may be combined to achieve a well-working Page type.
+So you actually only need to implement :meth:`Renderer.draw()
+<render.AbstractRenderer.draw>` :-) But, depending on the characteristics of
+the underlying graphics type, other strategies may be combined to achieve a
+well-working Page type.
 
