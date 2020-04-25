@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+2020-04-25: qpageview 0.5.1
+
+* Many documentation updates
+* Add PagerAction.setButtonSymbols()
+* fix flickering mouse cursor on rubberband
+* make it easier to manipulate the edge/corner of the rubberband
+
 
 2020-04-19: qpageview 0.5.0
 
