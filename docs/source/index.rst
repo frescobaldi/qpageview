@@ -20,6 +20,7 @@ This manual documents `qpageview` version |release|.
     :maxdepth: 1
     :caption: About
 
+    installing.rst
     changelog.rst
     license.rst
 
