@@ -2,7 +2,7 @@ ChangeLog
 =========
 
 
-current:
+current: qpageview 0.6.0
 
 * added view.View.pages() method (#2)
 
