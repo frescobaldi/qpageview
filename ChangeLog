@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+
+current:
+
+* added view.View.pages() method (#2)
+
+
 2020-04-25: qpageview 0.5.1
 
 * Many documentation updates

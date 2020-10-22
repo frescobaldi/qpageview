@@ -233,6 +233,10 @@ class View(scrollarea.ScrollArea):
         if 0 < num <= self._pageCount:
             return self._pageLayout[num-1]
 
+    def pages(self):
+        """Return a list of all Pages in the page layout."""
+        return list(self._pageLayout)
+
     def position(self):
         """Return a three-tuple Position(pageNumber, x, y).
 
