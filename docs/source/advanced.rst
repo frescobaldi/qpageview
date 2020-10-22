@@ -39,7 +39,7 @@ The list of individual Page objects in a document is returned by the
 :meth:`~document.AbstractSourceDocument.pages` method of the Document class.
 
 The current Page object (the current page number points to) is available
-through :meth:`View.currentPage <view.View.currentPage>`.
+through :meth:`View.currentPage() <view.View.currentPage>`.
 
 
 Page and PageLayout
@@ -50,7 +50,7 @@ for the Page objects that are displayed.
 
 The pages are in the PageLayout of the View, which inherits from the Python
 :class:`list <python:list>` type. Get the :class:`~qpageview.layout.PageLayout`
-of a View using :meth:`View.pageLayout <view.View.pageLayout>`. Using the
+of a View using :meth:`View.pageLayout() <view.View.pageLayout>`. Using the
 regular ``list`` methods you can add or remove Page objects to the layout. Then
 you need to call :meth:`View.updatePageLayout() <view.View.updatePageLayout>`
 to update the PageLayout, which will adjust size and position of the Pages.
