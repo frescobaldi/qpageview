@@ -42,7 +42,7 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
     """A special View with miniatures to use as a sidebar for a View.
 
     Automatically displays all pages in a view in small size, and makes it
-    easier to browse large documents. Use connectView() to connect a View, and
+    easier to browse large documents. Use setView() to connect a View, and
     it automatically shows the pages, also when the view is changed.
 
     """
