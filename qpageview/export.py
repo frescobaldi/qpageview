@@ -352,9 +352,12 @@ class EpsExporter(AbstractExporter):
 def pdf(filename, pageList, resolution=72, paperColor=None):
     """Export the pages in pageList to a PDF document.
 
-    filename can be a string or any QIODevice. Normally vector graphics are
-    rendered, but in cases where that is not possible, the resolution will
-    be used to determine the DPI for the generated rendering.
+    filename can be a string or any QIODevice. The pageList is a list of the
+    Page objects to export.
+
+    Normally vector graphics are rendered, but in cases where that is not
+    possible, the resolution will be used to determine the DPI for the
+    generated rendering.
 
     The computedRotation attribute of the pages is used to determine the
     rotation.
