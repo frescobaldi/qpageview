@@ -5,6 +5,7 @@ ChangeLog
 current: qpageview 0.6.0
 
 * added view.View.pages() method (#2)
+* added view.View.setPages() method (inspired by #4)
 
 
 2020-04-25: qpageview 0.5.1

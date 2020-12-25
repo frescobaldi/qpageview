@@ -404,11 +404,19 @@ class View(scrollarea.ScrollArea):
 
     def clear(self):
         """Convenience method to clear the current layout."""
+        self.setPages([])
+
+    def setPages(self, pages):
+        """Load the iterable of pages into the View.
+
+        Existing pages are removed, and the document is set to None.
+
+        """
         if self.documentPropertyStore and self._document:
             self.documentPropertyStore.set(self._document, self.properties().get(self))
         self._document = None
-        with self.modifyPages() as pages:
-            pages.clear()
+        with self.modifyPages() as pgs:
+            pgs[:] = pages
 
     def setDocument(self, document):
         """Set the Document to display (see document.Document)."""
