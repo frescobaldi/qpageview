@@ -1,4 +1,4 @@
-include README.rst ChangeLog LICENSE
+include README.rst INSTALL.rst ChangeLog LICENSE
 graft docs
 prune docs/build
 prune docs/web/build
