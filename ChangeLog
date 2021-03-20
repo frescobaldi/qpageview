@@ -2,6 +2,12 @@ ChangeLog
 =========
 
 
+current:
+
+* View.strictPagingEnabled always lets PgUp/PgDn scroll a page instead
+  of a screenful
+
+
 2021-01-07: qpageview 0.6.0
 
 * added view.View.pages() method (#2)

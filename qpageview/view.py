@@ -1156,10 +1156,20 @@ class View(scrollarea.ScrollArea):
         # Paging through page sets?
         sb = self.verticalScrollBar()
         sp = self.strictPagingEnabled
-        if ev.key() == Qt.Key_PageUp and sb.value() == 0:
-            self.gotoPreviousPage() if sp else self.displayPageSet("previous")
-        elif ev.key() == Qt.Key_PageDown and sb.value() == sb.maximum():
-            self.gotoNextPage() if sp else self.displayPageSet("next")
+        if ev.key() == Qt.Key_PageUp:
+            if sp:
+                self.gotoPreviousPage()
+            elif sb.value() == 0:
+                self.displayPageSet("previous")
+            else:
+                super().keyPressEvent(ev)
+        elif ev.key() == Qt.Key_PageDown:
+            if sp:
+                self.gotoNextPage()
+            elif sb.value() == sb.maximum():
+                self.displayPageSet("next")
+            else:
+                super().keyPressEvent(ev)
         elif ev.key() == Qt.Key_Home and ev.modifiers() == Qt.ControlModifier:
             self.setCurrentPageNumber(1) if sp else self.displayPageSet("first")
         elif ev.key() == Qt.Key_End and ev.modifiers() == Qt.ControlModifier:
