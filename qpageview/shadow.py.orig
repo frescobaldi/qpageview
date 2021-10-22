@@ -42,7 +42,7 @@ class ShadowViewMixin:
             width = self._pageLayout.spacing / 2
             # make the rect slightly larger, so we "see" shadow of pages that
             # would be outside view normally.
-            rect = ev.rect().adjusted(int(-width), int(-width), int(width / 2), int(width / 2))
+            rect = ev.rect().adjusted(-width, -width, width / 2, width / 2)
             painter = QPainter(self.viewport())
             for page, rect in self.pagesToPaint(rect, painter):
                 self.drawDropShadow(page, painter, width)
