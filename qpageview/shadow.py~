@@ -55,7 +55,7 @@ class ShadowViewMixin:
 
         """
         width = round(width)
-        rect = page.rect().adjusted(int(width / 2), int(width / 2), 0, 0)
+        rect = page.rect().adjusted(width / 2, width / 2, 0, 0)
         color = QColor(Qt.black)
         pen = QPen()
         pen.setWidth(1)
