@@ -144,9 +144,9 @@ class ScrollArea(QAbstractScrollArea):
         else:
             viewport = self.viewport()
             vbar.setRange(0, h - viewport.height())
-            vbar.setPageStep(viewport.height() * .9)
+            vbar.setPageStep(viewport.height() * int(.9))
             hbar.setRange(0, w - viewport.width())
-            hbar.setPageStep(viewport.width() * .9)
+            hbar.setPageStep(viewport.width() * int(.9))
 
     def scrollOffset(self):
         """Return the current scroll offset."""
