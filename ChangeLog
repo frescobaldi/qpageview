@@ -6,6 +6,8 @@ current:
 
 * View.strictPagingEnabled always lets PgUp/PgDn scroll a page instead
   of a screenful
+* Don't depend on implicit float->int conversions, which were deprecated since
+  Python 3.8 and not supported anymore by Python 3.10
 
 
 2021-01-07: qpageview 0.6.0
