@@ -208,8 +208,8 @@ class PopplerRenderer(render.AbstractRenderer):
             key.rotation, paperColor)
         if multiplier == 2:
             image = image.scaledToWidth(tile.w, Qt.SmoothTransformation)
-        image.setDotsPerMeterX(xres * 39.37)
-        image.setDotsPerMeterY(yres * 39.37)
+        image.setDotsPerMeterX(int(xres * 39.37))
+        image.setDotsPerMeterY(int(yres * 39.37))
         return image
 
     def setRenderHints(self, doc):
@@ -262,7 +262,7 @@ class PopplerRenderer(render.AbstractRenderer):
         (See AbstractPage.print().)
 
         """
-        source = self.map(key, page.pageRect()).mapRect(QRectF(*tile))
+        source = self.map(key, page.pageRect()).mapRect(QRectF(*tile)).toRect()   # rounded
         target = QRectF(0, 0, tile.w, tile.h)
         if key.rotation & 1:
             target.setSize(target.size().transposed())

@@ -250,7 +250,7 @@ class AbstractRenderer:
         key = self.key(page, ratio)
 
         # paint rect in tile coordinates
-        target = QRect(rect.x() * ratio, rect.y() * ratio, rect.width() * ratio, rect.height() * ratio)
+        target = QRect(int(rect.x() * ratio), int(rect.y() * ratio), int(rect.width() * ratio), int(rect.height() * ratio))
 
         # tiles to paint
         tiles = [t for t in self.tiles(key.width, key.height) if QRect(*t) & target]
@@ -327,7 +327,7 @@ class AbstractRenderer:
                 vscale = key.height / height
                 for t in tileset:
                     # scale to our image size
-                    r = QRect(t.x * hscale, t.y * vscale, t.w * hscale, t.h * vscale) & target
+                    r = QRect(int(t.x * hscale), int(t.y * vscale), int(t.w * hscale), int(t.h * vscale)) & target
                     if r and QRegion(r).subtracted(region):
                         # we have an image that can be drawn in rect r
                         source = QRectF(r.x() / hscale - t.x, r.y() / vscale - t.y,

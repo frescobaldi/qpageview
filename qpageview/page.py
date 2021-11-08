@@ -300,7 +300,7 @@ class AbstractPage(util.Rectangular):
 
         pdf = QPdfWriter(filename)
         pdf.setCreator("qpageview")
-        pdf.setResolution(resolution)
+        pdf.setResolution(int(resolution))
 
         layout = pdf.pageLayout()
         layout.setMode(layout.FullPageMode)
@@ -364,7 +364,7 @@ class AbstractPage(util.Rectangular):
             svg.setFileName(filename)
         else:
             svg.setOutputDevice(filename)
-        svg.setResolution(resolution)
+        svg.setResolution(int(resolution))
         svg.setSize(targetSize.toSize())
         svg.setViewBox(QRectF(0, 0, targetSize.width(), targetSize.height()))
         return self.output(svg, source, paperColor)

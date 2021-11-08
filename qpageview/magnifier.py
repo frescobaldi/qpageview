@@ -247,8 +247,8 @@ class Magnifier(QWidget):
                 factor = 1.1 ** (ev.angleDelta().y() / 120)
                 g = self.geometry()
                 c = g.center()
-                g.setWidth(min(max(g.width() * factor, self.MIN_SIZE), self.MAX_SIZE))
-                g.setHeight(min(max(g.height() * factor, self.MIN_SIZE), self.MAX_SIZE))
+                g.setWidth(int(min(max(g.width() * factor, self.MIN_SIZE), self.MAX_SIZE)))
+                g.setHeight(int(min(max(g.height() * factor, self.MIN_SIZE), self.MAX_SIZE)))
                 g.moveCenter(c)
                 self.setGeometry(g)
             else:

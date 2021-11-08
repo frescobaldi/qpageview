@@ -97,7 +97,7 @@ class Rubberband(QWidget):
         color.setAlpha(150)
         painter.setPen(color)
         # XXX can this adjustment be done smarter?
-        adjust = -1 / self.devicePixelRatio()
+        adjust = int(-1 / self.devicePixelRatio())
         painter.drawRect(self.rect().adjusted(0, 0, adjust, adjust))
 
         # Pseudo-handles at the corners and sides
