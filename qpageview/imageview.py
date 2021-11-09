@@ -66,15 +66,14 @@ class ImageViewMixin:
 
     def fitPageLayout(self):
         """Reimplemented to avoid zooming-to-fit larger than naturalsize."""
-        if self.fitNaturalSizeEnabled and self.viewMode() and self.pageCount():
-            layout = self.pageLayout()
+        layout = self.pageLayout()
+        if self.fitNaturalSizeEnabled and self.viewMode() and layout.count():
             zoom_factor = layout.zoomFactor
             # fit layout but prevent zoomFactorChanged from being emitted
             with util.signalsBlocked(self):
                 super().fitPageLayout()
             # what would be the natural size?
-            p = self.page(1)
-            factor = p.dpi / self.physicalDpiX() if p else 1.0
+            factor = layout[0].dpi / self.physicalDpiX()
             # adjust if the image was scaled larger
             if layout.zoomFactor > factor:
                 layout.zoomFactor = factor
