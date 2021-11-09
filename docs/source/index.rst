@@ -5,6 +5,7 @@ Welcome to qpageview!
     :start-line: 2
 
 This manual documents `qpageview` version |release|.
+Last update: |today|.
 
 .. toctree::
     :maxdepth: 2
