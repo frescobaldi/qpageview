@@ -2,12 +2,13 @@ ChangeLog
 =========
 
 
-current:
+2021-11-11: qpageview 0.6.1
 
 * View.strictPagingEnabled always lets PgUp/PgDn scroll a page instead
   of a screenful
 * Don't depend on implicit float->int conversions, which were deprecated since
   Python 3.8 and not supported anymore by Python 3.10
+* Fixed initial zoomfactor for ImageView when fitNaturalSizeEnabled is True
 
 
 2021-01-07: qpageview 0.6.0
