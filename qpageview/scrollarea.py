@@ -253,7 +253,7 @@ class ScrollArea(QAbstractScrollArea):
         """Begin a scrolling operation using the specified scroller."""
         self._scroller = scroller
         if self._scrollTimer is None:
-            self._scrollTimer = self.startTimer(int(1000 // self.scrollupdatespersec))
+            self._scrollTimer = self.startTimer(1000 // self.scrollupdatespersec)
 
     def stopScrolling(self):
         """Stop scrolling."""
