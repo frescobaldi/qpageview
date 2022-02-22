@@ -2,6 +2,12 @@ ChangeLog
 =========
 
 
+current: qpageview-0.6.2
+
+* Kept another implicit float->int conversion from happening by having
+  Scrollarea.remainingScrollTime() returning an int
+
+
 2021-11-11: qpageview 0.6.1
 
 * View.strictPagingEnabled always lets PgUp/PgDn scroll a page instead
