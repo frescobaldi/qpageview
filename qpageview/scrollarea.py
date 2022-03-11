@@ -320,7 +320,7 @@ class ScrollArea(QAbstractScrollArea):
                 # compute speed of last movement
                 time, speed = self._dragSpeed
                 time += ev.timestamp() - self._dragTime # add time between last mvt and release
-                speed = speed * 1000 // self.scrollupdatespersec / time
+                speed = speed * 1000 / self.scrollupdatespersec / time
                 # compute diff to scroll
                 sx = abs(speed.x())
                 diffx = int(sx * (sx + 1) / 2)
