@@ -269,7 +269,7 @@ documents::
 *Lazy View instantiation*: It is also possible to initialize the *ViewActions*
 from your settings, even if you have not yet created a View (for example, when
 the View is in a not yet created dock widget that is lazily instantiated). This
-way, you application's user interface already reflects the corrent settings for
+way, you application's user interface already reflects the correct settings for
 the yet-not-created view. Use the View.properties() static method to get an
 uninitialized ViewProperties object, set some defaults and then add settings
 read from a QSettings object. Finally update the state of the actions in the
