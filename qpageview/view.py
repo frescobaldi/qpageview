@@ -968,11 +968,11 @@ class View(scrollarea.ScrollArea):
         for p in self.visiblePages():
             rect = self.visibleRect() & p.geometry()
             if rect and p.renderer:
-                imgs, missing, key, *rest = p.renderer.info(p, viewport, rect.translated(-p.pos()))
-                if missing:
+                info = p.renderer.info(p, viewport, rect.translated(-p.pos()))
+                if info.missing:
                     full = False
                     if page is p or page is None:
-                        p.renderer.schedule(p, key, missing, self.lazyUpdate)
+                        p.renderer.schedule(p, info.key, info.missing, self.lazyUpdate)
                 elif page is p or page is None:
                     updates.append(rect.translated(self.layoutPosition()))
         if full:

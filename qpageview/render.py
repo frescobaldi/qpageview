@@ -37,6 +37,7 @@ from . import util
 
 Tile = collections.namedtuple('Tile', 'x y w h')
 Key = collections.namedtuple("Key", "group ident rotation width height")
+Info = collections.namedtuple("Info", "images, missing, key, target, ratio")
 
 
 # the maximum number of concurrent jobs (at global level)
@@ -234,7 +235,7 @@ class AbstractRenderer:
         pass
 
     def info(self, page, device, rect):
-        """Return a five-tuple(images, missing, key, target, ratio).
+        """Return a named five-tuple Info(images, missing, key, target, ratio).
 
         images is a list of tuples (tile, image) that are available in the
         cache; missing is a list of Tile instances that are not available in
@@ -268,7 +269,7 @@ class AbstractRenderer:
             else:
                 missing.append(t)
 
-        return images, missing, key, target, ratio
+        return Info(images, missing, key, target, ratio)
 
     def update(self, page, device, rect, callback=None):
         """Check if a page can be painted on the device without waiting.
@@ -277,9 +278,9 @@ class AbstractRenderer:
         for rendering and calls the callback each time one tile if finished.
 
         """
-        imgs, missing, key, *rest = self.info(page, device, rect)
-        if missing:
-            self.schedule(page, key, missing, callback)
+        info = self.info(page, device, rect)
+        if info.missing:
+            self.schedule(page, info.key, info.missing, callback)
             return False
         return True
 
@@ -310,24 +311,24 @@ class AbstractRenderer:
         images = [] # list of images to draw at end of this method
         region = QRegion() # painted region in tile coordinates
 
-        imgs, missing, key, target, ratio = self.info(page, painter.device(), rect)
+        info = self.info(page, painter.device(), rect)
 
-        for t, image in imgs:
-            r = QRect(*t) & target # part of the tile that needs to be drawn
+        for t, image in info.images:
+            r = QRect(*t) & info.target # part of the tile that needs to be drawn
             images.append((r, image,  QRectF(r.translated(-t.x, -t.y))))
             region += r
 
-        if missing:
-            self.schedule(page, key, missing, callback)
+        if info.missing:
+            self.schedule(page, info.key, info.missing, callback)
 
             # find other images from cache for missing tiles
-            for width, height, tileset in self.cache.closest(key):
+            for width, height, tileset in self.cache.closest(info.key):
                 # we have a dict of tiles for an image of size width x height
-                hscale = key.width / width
-                vscale = key.height / height
+                hscale = info.key.width / width
+                vscale = info.key.height / height
                 for t in tileset:
                     # scale to our image size
-                    r = QRect(int(t.x * hscale), int(t.y * vscale), int(t.w * hscale), int(t.h * vscale)) & target
+                    r = QRect(int(t.x * hscale), int(t.y * vscale), int(t.w * hscale), int(t.h * vscale)) & info.target
                     if r and QRegion(r).subtracted(region):
                         # we have an image that can be drawn in rect r
                         source = QRectF(r.x() / hscale - t.x, r.y() / vscale - t.y,
@@ -335,20 +336,20 @@ class AbstractRenderer:
                         images.append((r, tileset[t].image, source))
                         region += r
                         # stop if we have covered the whole drawing area
-                        if not QRegion(target).subtracted(region):
+                        if not QRegion(info.target).subtracted(region):
                             break
                 else:
                     continue
                 break
             else:
-                if QRegion(target).subtracted(region):
+                if QRegion(info.target).subtracted(region):
                     # paint background, still partly uncovered
                     painter.fillRect(rect, page.paperColor or self.paperColor)
 
         # draw lowest quality images first
         for (r, image, source) in reversed(images):
             # scale the target rect back to the paint device
-            target = QRectF(r.x() / ratio, r.y() / ratio, r.width() / ratio, r.height() / ratio)
+            target = QRectF(r.x() / info.ratio, r.y() / info.ratio, r.width() / info.ratio, r.height() / info.ratio)
             painter.drawImage(target, image, source)
 
     def schedule(self, page, key, tiles, callback):
