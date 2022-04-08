@@ -37,7 +37,7 @@ from . import util
 
 Tile = collections.namedtuple('Tile', 'x y w h')
 Key = collections.namedtuple("Key", "group ident rotation width height")
-Info = collections.namedtuple("Info", "images, missing, key, target, ratio")
+RenderInfo = collections.namedtuple("Info", "images missing key target ratio")
 
 
 # the maximum number of concurrent jobs (at global level)
@@ -235,7 +235,7 @@ class AbstractRenderer:
         pass
 
     def info(self, page, device, rect):
-        """Return a named five-tuple Info(images, missing, key, target, ratio).
+        """Return a namedtuple RenderInfo(images, missing, key, target, ratio).
 
         images is a list of tuples (tile, image) that are available in the
         cache; missing is a list of Tile instances that are not available in
@@ -269,7 +269,7 @@ class AbstractRenderer:
             else:
                 missing.append(t)
 
-        return Info(images, missing, key, target, ratio)
+        return RenderInfo(images, missing, key, target, ratio)
 
     def update(self, page, device, rect, callback=None):
         """Check if a page can be painted on the device without waiting.
