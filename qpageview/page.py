@@ -258,8 +258,8 @@ class AbstractPage(util.Rectangular):
         is used in case pixelbased images need to be generated. But where
         possible, vector painting is used.
 
-        This method uses print() to do the actual painting to the paint device.
-        If paperColor is not given, no background is printed normally.
+        This method uses :meth:`print` to do the actual painting to the paint
+        device. If paperColor is not given, no background is printed normally.
 
         """
         if rect is None:
@@ -372,7 +372,7 @@ class AbstractPage(util.Rectangular):
     def pixmap(self, rect=None, size=100, paperColor=None):
         """Return a QPixmap, scaled so that width or height doesn't exceed size.
 
-        Uses the image() method to get the image, and converts that to a
+        Uses the :meth:`image` method to get the image, and converts that to a
         QPixmap.
 
         """
@@ -468,7 +468,7 @@ class AbstractPage(util.Rectangular):
         return links
 
     def linksAt(self, point):
-        """Return a list() of zero or more links touched by QPoint point.
+        """Return a list of zero or more links touched by QPoint point.
 
         The point is in page coordinates.
         The list is sorted with the smallest rectangle first.
@@ -511,7 +511,8 @@ class AbstractRenderedPage(AbstractPage):
         background. If a callback is specified, it is called when the image
         is ready with the page as argument.
 
-        By default, this method calls the renderer's paint() method.
+        By default, this method calls the renderer's
+        :meth:`~.render.AbstractRenderer.paint` method.
 
         """
         if rect:
@@ -520,10 +521,10 @@ class AbstractRenderedPage(AbstractPage):
     def print(self, painter, rect=None, paperColor=None):
         """Paint a page for printing.
 
-        The difference with paint() and image() is that the rect (QRectF)
-        supplied to print() is not in the Page coordinates, but in the original
-        pageSize() and unrotated. The painter has been prepared for scale and
-        rotation.
+        The difference with :meth:`paint` and :meth:`image` is that the rect
+        (QRectF) supplied to print() is not in the Page coordinates, but in the
+        original pageSize() and unrotated. The painter has been prepared for
+        scale and rotation.
 
         If rect is None, the full pageRect() is used.
         This method calls the renderer's draw() method.

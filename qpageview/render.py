@@ -34,11 +34,31 @@ from . import backgroundjob
 from . import cache
 from . import util
 
-
+#: Describes a tile to render. Most times all coordinates are integers.
+#: The needed tiles for a page are yielded by :meth:`AbstractRenderer.tiles`.
 Tile = collections.namedtuple('Tile', 'x y w h')
-Key = collections.namedtuple("Key", "group ident rotation width height")
-RenderInfo = collections.namedtuple("Info", "images missing key target ratio")
+Tile.x.__doc__ = "The x coordinate of the tile"
+Tile.y.__doc__ = "The y coordinate of the tile"
+Tile.w.__doc__ = "The width of the tile"
+Tile.h.__doc__ = "The height of the tile"
 
+#: Identifies a render operation for a Page, returned by
+#: :meth:`AbstractRenderer.key`.
+Key = collections.namedtuple("Key", "group ident rotation width height")
+Key.group.__doc__ = "The :meth:`~.page.AbstractPage.group` of the page"
+Key.ident.__doc__ = "The :meth:`~.page.AbstractPage.ident` of the page"
+Key.rotation.__doc__ = "The :attr:`~.page.AbstractPage.computedRotation` of the page"
+Key.width.__doc__ = "The :attr:`~.util.Rectangular.width` of the page"
+Key.height.__doc__ = "The :attr:`~.util.Rectangular.height` of the page"
+
+#: Information about cached or missing rendered tiles to display a rectangular
+#: part of a Page at a certain size. Returned by :meth:`AbstractRenderer.info`.
+RenderInfo = collections.namedtuple("RenderInfo", "images missing key target ratio")
+RenderInfo.images.__doc__ = "a list of tuples (tile, image) that are available in the cache"
+RenderInfo.missing.__doc__ = "a list of Tile instances that are needed but not available in the cache"
+RenderInfo.key.__doc__ = "the Key returned by :meth:`~AbstractRenderer.key`, describing width, height, rotation and identity of the page"
+RenderInfo.target.__doc__ = "the rect multiplied by the ratio"
+RenderInfo.images.__doc__ = "the devicepixelratio of the specified paint device"
 
 # the maximum number of concurrent jobs (at global level)
 maxjobs = 4
@@ -300,12 +320,12 @@ class AbstractRenderer:
             if specified, a callable accepting the `page` argument.
             Typically this should be used to trigger a repaint of the view.
 
-        The Page calls this method by default in its paint() method.
-        This method tries to fetch an image from the cache and paint that.
-        If no image is available, render() is called in the background to
-        generate one. If it is ready, the callback is called with the Page
-        as argument. An interim image may be painted in the meantime (e.g.
-        scaled from another size).
+        The Page calls this method by default in its
+        :meth:`~.page.AbstractPage.paint` method. This method tries to fetch an
+        image from the cache and paint that. If no image is available, render()
+        is called in the background to generate one. If it is ready, the
+        callback is called with the Page as argument. An interim image may be
+        painted in the meantime (e.g. scaled from another size).
 
         """
         images = [] # list of images to draw at end of this method
@@ -370,7 +390,7 @@ class AbstractRenderer:
         self.checkstart()
 
     def job(self, page, key, tile):
-        """Return a new Job tailored for this tile."""
+        """Return a new :class:`~.backgroundjob.Job` tailored for this tile."""
         job = backgroundjob.Job()
         job.callbacks = callbacks = set()
         job.mutex = page.mutex()
