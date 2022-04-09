@@ -88,23 +88,23 @@ class ImageCache:
         # purge old images is needed,
         # cache groups may have disappeared so count all images
 
-        items = sorted(
-            (entry.time, entry.bcount, group, ident, key, tile)
+        entries = iter(sorted(
+            ((entry.time, entry.bcount, group, ident, key, tile)
             for group, identd in self._cache.items()
                 for ident, keyd in identd.items()
                     for key, tiled in keyd.items()
-                        for tile, entry in tiled.items())
+                        for tile, entry in tiled.items()),
+            key=(lambda item: item[:2]), reverse=True))
 
         # now count the newest images until maxsize ...
-        items = reversed(items)
         currentsize = 0
-        for time, bcount, group, ident, key, tile in items:
+        for time, bcount, group, ident, key, tile in entries:
             currentsize += bcount
             if currentsize > self.maxsize:
                 break
         self.currentsize = currentsize
         # ... and delete the remaining images, deleting empty dicts as well
-        for time, bcount, group, ident, key, tile in items:
+        for time, bcount, group, ident, key, tile in entries:
             del self._cache[group][ident][key][tile]
             if not self._cache[group][ident][key]:
                 del self._cache[group][ident][key]
