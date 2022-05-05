@@ -60,5 +60,5 @@ url = "https://github.com/frescobaldi/qpageview"
 license = "GPL v3"
 
 #: copyright year
-copyright_year = "2020-2021"
+copyright_year = "2020-2022"
 

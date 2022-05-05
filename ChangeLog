@@ -2,10 +2,13 @@ ChangeLog
 =========
 
 
-current: qpageview-0.6.2
+2022-05-05: qpageview-0.6.2
 
+* Maintainance release
 * Kept another implicit float->int conversion from happening by having
   Scrollarea.remainingScrollTime() returning an int
+* Some robustness improvements
+* Documentation improvements
 
 
 2021-11-11: qpageview 0.6.1
