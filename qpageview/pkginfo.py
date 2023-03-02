@@ -19,46 +19,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-"""
-Meta-information about the qpageview package.
+"""Version information on the qpageview package."""
 
-This information is used by the install script.
-
-"""
-
-import collections
-Version = collections.namedtuple("Version", "major minor patch")
-
-
-#: name of the package
-name = "qpageview"
-
-#: the current version
-version = Version(0, 6, 2)
-version_suffix = ""
-#: the current version as a string
-version_string = "{}.{}.{}".format(*version) + version_suffix
-
-#: short description
-description = "Widget to display page-based documents for Qt5/PyQt5"
-
-#: long description
-long_description = \
-    "The qpageview package provides a Python library to display page-based " \
-    "documents, such as PDF and possibly other formats."
-
-#: maintainer name
-maintainer = "Wilbert Berendsen"
-
-#: maintainer email
-maintainer_email = "info@frescobaldi.org"
-
-#: homepage
-url = "https://github.com/frescobaldi/qpageview"
-
-#: license
-license = "GPL v3"
-
-#: copyright year
-copyright_year = "2020-2022"
-
+version_string = "0.6.2"

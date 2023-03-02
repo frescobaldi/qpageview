@@ -67,7 +67,7 @@ from . import highlight
 from . import shadow
 from . import view
 from . import util
-from .pkginfo import version, version_string
+from .pkginfo import version_string
 
 
 
@@ -124,5 +124,3 @@ def diffDocument(documents, renderer=None):
     """
     from . import diff
     return diff.DiffDocument(documents, renderer)
-
-
