@@ -9,9 +9,6 @@ You can install qpageview without downloading it first via ``pip``::
 
     pip install qpageview
 
-
-You can also install from the source directory::
-
-    python3 setup.py install
-
-
+Use ``pip install qpageview[pdf]`` to ensure qpageview has PDF support,
+and ``pip qpageview[cups]`` for CUPS printing support (can be combined
+as ``pip install qpageview[pdf,cups]``).
