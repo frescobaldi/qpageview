@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools >= 64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qpageview"
+dynamic = ["version"]
+description = "Widget to display page-based documents for Qt5/PyQt5"
+readme = "README.rst"
+maintainers = [{name = "Wilbert Berendsen", email = "info@frescobaldi.org"}]
+license.text = "GPL v3"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Multimedia :: Graphics",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/frescobaldi/qpageview"
+Documentation = "https://qpageview.org"
+"Issue tracker" = "https://github.com/frescobaldi/qpageview/issues"
+
+[tool.setuptools.dynamic]
+version.attr = "qpageview.pkginfo.version_string"
