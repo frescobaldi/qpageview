@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qpageview"
 dynamic = ["version"]
+dependencies = ["PyQt5"]
+optional-dependencies = {pdf = ["python-poppler-qt5"], cups = ["pycups"]}
+requires-python = ">= 3.6"
 description = "Widget to display page-based documents for Qt5/PyQt5"
 readme = "README.rst"
 maintainers = [{name = "Wilbert Berendsen", email = "info@frescobaldi.org"}]
