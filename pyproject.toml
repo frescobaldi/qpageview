@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools >= 64"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "qpageview"
@@ -28,5 +28,6 @@ Homepage = "https://github.com/frescobaldi/qpageview"
 Documentation = "https://qpageview.org"
 "Issue tracker" = "https://github.com/frescobaldi/qpageview/issues"
 
-[tool.setuptools.dynamic]
-version.attr = "qpageview.pkginfo.version_string"
+[tool.hatch.version]
+path = "qpageview/pkginfo.py"
+pattern = "version_string = \"(?P<version>.*)\""
