@@ -1115,7 +1115,7 @@ class View(scrollarea.ScrollArea):
         """Reimplemented to support wheel zooming and paging through page sets."""
         if self.wheelZoomingEnabled and ev.angleDelta().y() and ev.modifiers() & Qt.KeyboardModifier.ControlModifier:
             factor = 1.1 ** util.sign(ev.angleDelta().y())
-            self.setZoomFactor(self.zoomFactor() * factor, ev.pos())
+            self.setZoomFactor(self.zoomFactor() * factor, ev.position().toPoint())
         elif not ev.modifiers():
             # if scrolling is not possible, try going to next or previous pageset.
             sb = self.verticalScrollBar()
@@ -1132,7 +1132,7 @@ class View(scrollarea.ScrollArea):
     def mousePressEvent(self, ev):
         """Implemented to set the clicked page as current, without moving it."""
         if self.clickToSetCurrentPageEnabled:
-            page = self._pageLayout.pageAt(ev.pos() - self.layoutPosition())
+            page = self._pageLayout.pageAt(ev.position().toPoint() - self.layoutPosition())
             if page:
                 num = self._pageLayout.index(page) + 1
                 self.updateCurrentPageNumber(num)
@@ -1142,7 +1142,7 @@ class View(scrollarea.ScrollArea):
         """Implemented to adjust the mouse cursor depending on the page contents."""
         # no cursor updates when dragging the background is busy, see scrollarea.py.
         if not self.isDragging():
-            self.adjustCursor(ev.pos())
+            self.adjustCursor(ev.position().toPoint())
         super().mouseMoveEvent(ev)
 
     def keyPressEvent(self, ev):
