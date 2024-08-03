@@ -131,7 +131,7 @@ class LongMousePressMixin:
         self._longPressTimer = self.startTimer(self.longMousePressTime)
         # copy the event's attributes because Qt might reuse the event
         self._longPressAttrs = (ev.type(),
-            ev.localPos(), ev.windowPos(), ev.screenPos(),
+            ev.position(), ev.scenePosition(), ev.globalPosition(),
             ev.button(), ev.buttons(), ev.modifiers())
         self._longPressPos = ev.pos()
 
