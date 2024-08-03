@@ -182,7 +182,15 @@ class PdfRenderer(render.AbstractRenderer):
         if key.rotation & 1:
             size.transpose()
 
-        image = doc.render(num, size)
+        renderedPage = doc.render(num, size)
+        # If the page does not specify a background color, QtPdf renders
+        # the background as transparent. In this case we need to paint the
+        # background ourselves.
+        image = renderedPage.copy()
+        painter = QPainter(image)
+        painter.fillRect(image.rect(), paperColor)
+        painter.drawImage(0, 0, renderedPage)
+        painter.end()
         return image
 
     @contextlib.contextmanager
