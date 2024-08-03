@@ -28,7 +28,7 @@ PDF rendering backend using QtPdf.
 import contextlib
 import weakref
 
-from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtCore import Qt, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfLinkModel
 
@@ -171,8 +171,6 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
-    oversampleThreshold = 96
-
     def render(self, page, key, tile, paperColor=None):
         """Generate an image for the Page referred to by key."""
         if paperColor is None:
@@ -180,11 +178,11 @@ class PdfRenderer(render.AbstractRenderer):
 
         doc = page.document
         num = page.pageNumber
-        s = page.pageSize().toSize()
+        size = QSize(key.width, key.height)
         if key.rotation & 1:
-            s.transpose()
+            size.transpose()
 
-        image = doc.render(num, s)
+        image = doc.render(num, size)
         return image
 
     @contextlib.contextmanager
