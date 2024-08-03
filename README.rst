@@ -4,8 +4,7 @@ The qpageview module
 *qpageview* provides a page based document viewer widget for Qt6/PyQt6.
 
 It has a flexible architecture potentionally supporting many formats.
-Currently, it supports SVG documents, images, and, using the Poppler-Qt5
-binding, PDF documents.
+Currently, it supports PDF and SVG documents and several image formats.
 
 .. code-block:: python
 
@@ -46,8 +45,7 @@ Features
 Dependencies
 ~~~~~~~~~~~~
 
-* Python 3.6+
+* Python 3.7+
 * Qt6
 * PyQt6
-* python-poppler-qt5 (needed for display of PDF documents)
 * pycups (optionally, needed to print to a local CUPS server)
