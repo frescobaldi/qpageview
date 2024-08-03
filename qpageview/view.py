@@ -444,11 +444,11 @@ class View(scrollarea.ScrollArea):
         """Convenience method to load the specified PDF file.
 
         The filename can also be a QByteArray or an already loaded
-        popplerqt5.Poppler.Document instance.
+        QPdfDocument instance.
 
         """
-        from . import poppler
-        self.setDocument(poppler.PopplerDocument(filename, renderer))
+        from . import pdf
+        self.setDocument(pdf.PdfDocument(self, filename, renderer))
 
     def loadSvgs(self, filenames, renderer=None):
         """Convenience method to load the specified list of SVG files.
