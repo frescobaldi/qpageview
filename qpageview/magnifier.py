@@ -53,13 +53,13 @@ class Magnifier(QWidget):
     Instance attributes:
 
     ``showmodifier``:
-        the modifier to popup (Qt.Modifier.ControlModifier)
+        the modifier to popup (Qt.KeyboardModifier.ControlModifier)
 
     ``zoommodifier``:
-        the modifier to wheel zoom (Qt.Modifier.ControlModifier)
+        the modifier to wheel zoom (Qt.KeyboardModifier.ControlModifier)
 
     ``resizemodifier``:
-        the key to press for wheel resizing (Qt.Modifier.ShiftModifier)
+        the key to press for wheel resizing (Qt.KeyboardModifier.ShiftModifier)
 
     ``showbutton``:
         the mouse button causing the magnifier to popup (by default
@@ -76,13 +76,13 @@ class Magnifier(QWidget):
     """
 
     # modifier for show
-    showmodifier = Qt.Modifier.ControlModifier
+    showmodifier = Qt.KeyboardModifier.ControlModifier
 
     # modifier for wheel zoom
-    zoommodifier = Qt.Modifier.ControlModifier
+    zoommodifier = Qt.KeyboardModifier.ControlModifier
 
     # extra modifier for wheel resize
-    resizemodifier = Qt.Modifier.ShiftModifier
+    resizemodifier = Qt.KeyboardModifier.ShiftModifier
 
     # button for show
     showbutton = Qt.MouseButton.LeftButton

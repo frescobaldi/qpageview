@@ -157,10 +157,10 @@ class SelectorViewMixin:
                 pos -= page.pos()
                 if pos in QRect(0, 0, QStyle.PM_IndicatorWidth, QStyle.PM_IndicatorHeight):
                     # the indicator has been clicked
-                    if ev.modifiers() & Qt.Modifier.ControlModifier:
+                    if ev.modifiers() & Qt.KeyboardModifier.ControlModifier:
                         # CTRL toggles selection of page
                         self.toggleSelection(pageNum)
-                    elif self._selection and ev.modifiers() & Qt.Modifier.ShiftModifier:
+                    elif self._selection and ev.modifiers() & Qt.KeyboardModifier.ShiftModifier:
                         # Shift extends the selection
                         with self.modifySelection() as s:
                             s.add(pageNum)

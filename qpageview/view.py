@@ -1113,7 +1113,7 @@ class View(scrollarea.ScrollArea):
 
     def wheelEvent(self, ev):
         """Reimplemented to support wheel zooming and paging through page sets."""
-        if self.wheelZoomingEnabled and ev.angleDelta().y() and ev.modifiers() & Qt.Modifier.CTRL:
+        if self.wheelZoomingEnabled and ev.angleDelta().y() and ev.modifiers() & Qt.KeyboardModifier.ControlModifier:
             factor = 1.1 ** util.sign(ev.angleDelta().y())
             self.setZoomFactor(self.zoomFactor() * factor, ev.pos())
         elif not ev.modifiers():
@@ -1170,9 +1170,9 @@ class View(scrollarea.ScrollArea):
                 self.displayPageSet("next")
             else:
                 super().keyPressEvent(ev)
-        elif ev.key() == Qt.Key.Key_Home and ev.modifiers() == Qt.Modifier.ControlModifier:
+        elif ev.key() == Qt.Key.Key_Home and ev.modifiers() == Qt.KeyboardModifier.ControlModifier:
             self.setCurrentPageNumber(1) if sp else self.displayPageSet("first")
-        elif ev.key() == Qt.Key.Key_End and ev.modifiers() == Qt.Modifier.ControlModifier:
+        elif ev.key() == Qt.Key.Key_End and ev.modifiers() == Qt.KeyboardModifier.ControlModifier:
             self.setCurrentPageNumber(self.pageCount()) if sp else self.displayPageSet("last")
         else:
             super().keyPressEvent(ev)
