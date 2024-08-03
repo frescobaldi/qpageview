@@ -25,7 +25,8 @@ Interface with popplerqt5, popplerqt5-specific classes etc.
 This module depends on popplerqt5, although it can be imported when
 popplerqt5 is not available.
 
-You need this module to display PDF documents.
+This module is no longer used, but is being kept for now as a
+reference for implementing the new QtPdf-based backend in pdf.py.
 
 """
 
