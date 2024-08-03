@@ -176,6 +176,7 @@ class PdfRenderer(render.AbstractRenderer):
         if paperColor is None:
             paperColor = page.paperColor or self.paperColor
 
+        # TODO: Port the complete scaling logic from the Poppler backend.
         doc = page.document
         num = page.pageNumber
         size = QSize(key.width, key.height)
