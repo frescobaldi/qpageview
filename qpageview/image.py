@@ -27,8 +27,8 @@ display.
 
 """
 
-from PyQt5.QtCore import QPoint, QRect, QSize, Qt
-from PyQt5.QtGui import QImage, QImageIOHandler, QImageReader, QPainter, QTransform
+from PyQt6.QtCore import QPoint, QRect, QSize, Qt
+from PyQt6.QtGui import QImage, QImageIOHandler, QImageReader, QPainter, QTransform
 
 from . import document
 from . import locking
@@ -178,7 +178,7 @@ class ImagePage(page.AbstractRenderedPage):
         m.scale(1 / self.pageWidth, 1 / self.pageHeight)
 
         source = self.transform().inverted()[0].mapRect(rect)
-        return self._ic.image(source).transformed(m, Qt.SmoothTransformation)
+        return self._ic.image(source).transformed(m, Qt.TransformationMode.SmoothTransformation)
 
     def group(self):
         return self._ic
@@ -214,7 +214,7 @@ class ImageRenderer(render.AbstractRenderer):
         if key.rotation & 1:
             target.setSize(target.size().transposed())
         image = page._ic.image(source).scaled(
-            target.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            target.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         painter.drawImage(target, image)
 
 

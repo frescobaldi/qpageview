@@ -73,7 +73,7 @@ import os
 import shutil
 import subprocess
 
-from PyQt5.QtPrintSupport import QPrintEngine, QPrinter
+from PyQt6.QtPrintSupport import QPrintEngine, QPrinter
 
 
 class Handle:

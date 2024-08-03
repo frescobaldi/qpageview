@@ -27,8 +27,8 @@ to browse large documents.
 
 """
 
-from PyQt5.QtCore import QEvent, QMargins, QRect, Qt
-from PyQt5.QtGui import QPainter
+from PyQt6.QtCore import QEvent, QMargins, QRect, Qt
+from PyQt6.QtGui import QPainter
 
 from . import constants
 from . import layout
@@ -123,7 +123,7 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
                 painter.setPen(self.palette().text().color())
             # draw text
             textr = QRect(rect.x(), rect.bottom(), rect.width(), layout.pageMargins().bottom())
-            painter.drawText(textr, Qt.AlignCenter, str(layout.index(p) + self.firstPageNumber))
+            painter.drawText(textr, Qt.AlignmentFlag.AlignCenter, str(layout.index(p) + self.firstPageNumber))
         super().paintEvent(ev)
 
     def wheelEvent(self, ev):
@@ -135,13 +135,13 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
 
     def keyPressEvent(self, ev):
         """Reimplemented to page instead of scroll."""
-        if ev.key() in (Qt.Key_PageDown, Qt.Key_Down):
+        if ev.key() in (Qt.Key.Key_PageDown, Qt.Key.Key_Down):
             self.gotoNextPage()
-        elif ev.key() in (Qt.Key_PageUp, Qt.Key_Up):
+        elif ev.key() in (Qt.Key.Key_PageUp, Qt.Key.Key_Up):
             self.gotoPreviousPage()
-        elif ev.key() == Qt.Key_End:
+        elif ev.key() == Qt.Key.Key_End:
             self.setCurrentPageNumber(self.pageCount())
-        elif ev.key() == Qt.Key_Home:
+        elif ev.key() == Qt.Key.Key_Home:
             self.setCurrentPageNumber(1)
         else:
             super().keyPressEvent(ev)

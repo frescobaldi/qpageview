@@ -26,8 +26,8 @@ A Page intended to display the visual difference between other pages.
 
 import itertools
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QPainter, QPixmap
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPixmap
 
 from . import multipage
 from . import page
@@ -89,10 +89,10 @@ class DiffRenderer(multipage.MultiPageRenderer):
     def __init__(self):
         # we don't use a cache so no need to call super init
         self.colors = [
-            QColor(Qt.black),
-            QColor(Qt.red),
-            QColor(Qt.green),
-            QColor(Qt.blue),
+            QColor(Qt.GlobalColor.black),
+            QColor(Qt.GlobalColor.red),
+            QColor(Qt.GlobalColor.green),
+            QColor(Qt.GlobalColor.blue),
         ]
 
     def combine(self, painter, images):

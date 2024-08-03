@@ -27,9 +27,9 @@ Small utilities and simple base classes for the qpageview module.
 import collections
 import contextlib
 
-from PyQt5.QtCore import QPoint, QPointF, QRect, QRectF, QSize, Qt
-from PyQt5.QtGui import QBitmap, QMouseEvent, QRegion
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QPoint, QPointF, QRect, QRectF, QSize, Qt
+from PyQt6.QtGui import QBitmap, QMouseEvent, QRegion
+from PyQt6.QtWidgets import QApplication
 
 
 class Rectangular:
@@ -200,46 +200,46 @@ def rotate(matrix, rotation, width, height, dest=False):
             matrix.translate(height / -2, width / -2)
 
 
-def align(w, h, ow, oh, alignment=Qt.AlignCenter):
+def align(w, h, ow, oh, alignment=Qt.AlignmentFlag.AlignCenter):
     """Return (x, y) to align a rect w x h in an outer rectangle ow x oh.
 
-    The alignment can be a combination of the Qt.Alignment flags.
+    The alignment can be a combination of Qt.AlignmentFlag values.
     If w > ow, x = -1; and if h > oh, y = -1.
 
     """
     if w > ow:
         x = -1
-    elif alignment & Qt.AlignHCenter:
+    elif alignment & Qt.AlignmentFlag.AlignHCenter:
         x = (ow - w) // 2
-    elif alignment & Qt.AlignRight:
+    elif alignment & Qt.AlignmentFlag.AlignRight:
         x = ow - w
     else:
         x = 0
     if h > oh:
         y = -1
-    elif alignment & Qt.AlignVCenter:
+    elif alignment & Qt.AlignmentFlag.AlignVCenter:
         y = (oh - h) // 2
-    elif alignment & Qt.AlignBottom:
+    elif alignment & Qt.AlignmentFlag.AlignBottom:
         y = oh - h
     else:
         y = 0
     return x, y
 
 
-def alignrect(rect, point, alignment=Qt.AlignCenter):
+def alignrect(rect, point, alignment=Qt.AlignmentFlag.AlignCenter):
     """Align rect with point according to the alignment.
 
-    The alignment can be a combination of the Qt.Alignment flags.
+    The alignment can be a combination of Qt.AlignmentFlag values.
 
     """
     rect.moveCenter(point)
-    if alignment & Qt.AlignLeft:
+    if alignment & Qt.AlignmentFlag.AlignLeft:
         rect.moveLeft(point.x())
-    elif alignment & Qt.AlignRight:
+    elif alignment & Qt.AlignmentFlag.AlignRight:
         rect.moveRight(point.x())
-    if alignment & Qt.AlignTop:
+    if alignment & Qt.AlignmentFlag.AlignTop:
         rect.moveTop(point.y())
-    elif alignment & Qt.AlignBottom:
+    elif alignment & Qt.AlignmentFlag.AlignBottom:
         rect.moveBottom(point.y())
 
 

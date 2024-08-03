@@ -27,10 +27,10 @@ import collections
 import contextlib
 import weakref
 
-from PyQt5.QtCore import pyqtSignal, QEvent, QPoint, QRect, QSize, Qt
-from PyQt5.QtGui import QCursor, QPainter, QPalette, QRegion
-from PyQt5.QtWidgets import QGestureEvent, QPinchGesture, QStyle
-from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
+from PyQt6.QtCore import pyqtSignal, QEvent, QPoint, QRect, QSize, Qt
+from PyQt6.QtGui import QCursor, QPainter, QPalette, QRegion
+from PyQt6.QtWidgets import QGestureEvent, QPinchGesture, QStyle
+from PyQt6.QtPrintSupport import QPrinter, QPrintDialog
 
 from . import layout
 from . import page
@@ -164,8 +164,8 @@ class View(scrollarea.ScrollArea):
         self._magnifier = None
         self._rubberband = None
         self._pinchStartFactor = None
-        self.grabGesture(Qt.PinchGesture)
-        self.viewport().setBackgroundRole(QPalette.Dark)
+        self.grabGesture(Qt.GestureType.PinchGesture)
+        self.viewport().setBackgroundRole(QPalette.ColorRole.Dark)
         self.verticalScrollBar().setSingleStep(20)
         self.horizontalScrollBar().setSingleStep(20)
         self.setMouseTracking(True)
@@ -759,8 +759,8 @@ class View(scrollarea.ScrollArea):
         maxsize = self.maximumViewportSize()
 
         # can vertical or horizontal scrollbars appear?
-        vcan = self.verticalScrollBarPolicy() == Qt.ScrollBarAsNeeded
-        hcan = self.horizontalScrollBarPolicy() == Qt.ScrollBarAsNeeded
+        vcan = self.verticalScrollBarPolicy() == Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        hcan = self.horizontalScrollBarPolicy() == Qt.ScrollBarPolicy.ScrollBarAsNeeded
 
         # width a scrollbar takes off the viewport size
         framewidth = 0
@@ -1047,7 +1047,7 @@ class View(scrollarea.ScrollArea):
 
         """
         ## originally contributed by David Rydh, 2017
-        pinch = event.gesture(Qt.PinchGesture)
+        pinch = event.gesture(Qt.GestureType.PinchGesture)
         if pinch:
             return self.pinchGesture(pinch)
         return False
@@ -1062,7 +1062,7 @@ class View(scrollarea.ScrollArea):
         ## originally contributed by David Rydh, 2017
         # Gesture start? Reset _pinchStartFactor in case we didn't
         # catch the finish event
-        if gesture.state() == Qt.GestureStarted:
+        if gesture.state() == Qt.GestureState.GestureStarted:
             self._pinchStartFactor = None
 
         changeFlags = gesture.changeFlags()
@@ -1074,7 +1074,7 @@ class View(scrollarea.ScrollArea):
                       self.mapFromGlobal(gesture.hotSpot().toPoint()))
 
         # Gesture finished?
-        if gesture.state() in (Qt.GestureFinished, Qt.GestureCanceled):
+        if gesture.state() in (Qt.GestureState.GestureFinished, Qt.GestureState.GestureCanceled):
             self._pinchStartFactor = None
 
         return True
@@ -1113,7 +1113,7 @@ class View(scrollarea.ScrollArea):
 
     def wheelEvent(self, ev):
         """Reimplemented to support wheel zooming and paging through page sets."""
-        if self.wheelZoomingEnabled and ev.angleDelta().y() and ev.modifiers() & Qt.CTRL:
+        if self.wheelZoomingEnabled and ev.angleDelta().y() and ev.modifiers() & Qt.Modifier.CTRL:
             factor = 1.1 ** util.sign(ev.angleDelta().y())
             self.setZoomFactor(self.zoomFactor() * factor, ev.pos())
         elif not ev.modifiers():
@@ -1148,7 +1148,7 @@ class View(scrollarea.ScrollArea):
     def keyPressEvent(self, ev):
         """Reimplemented to go to next or previous page set if possible."""
         # ESC clears the selection, if any.
-        if (ev.key() == Qt.Key_Escape and not ev.modifiers()
+        if (ev.key() == Qt.Key.Key_Escape and not ev.modifiers()
             and self.rubberband() and self.rubberband().hasSelection()):
             self.rubberband().clearSelection()
             return
@@ -1156,23 +1156,23 @@ class View(scrollarea.ScrollArea):
         # Paging through page sets?
         sb = self.verticalScrollBar()
         sp = self.strictPagingEnabled
-        if ev.key() == Qt.Key_PageUp:
+        if ev.key() == Qt.Key.Key_PageUp:
             if sp:
                 self.gotoPreviousPage()
             elif sb.value() == 0:
                 self.displayPageSet("previous")
             else:
                 super().keyPressEvent(ev)
-        elif ev.key() == Qt.Key_PageDown:
+        elif ev.key() == Qt.Key.Key_PageDown:
             if sp:
                 self.gotoNextPage()
             elif sb.value() == sb.maximum():
                 self.displayPageSet("next")
             else:
                 super().keyPressEvent(ev)
-        elif ev.key() == Qt.Key_Home and ev.modifiers() == Qt.ControlModifier:
+        elif ev.key() == Qt.Key.Key_Home and ev.modifiers() == Qt.Modifier.ControlModifier:
             self.setCurrentPageNumber(1) if sp else self.displayPageSet("first")
-        elif ev.key() == Qt.Key_End and ev.modifiers() == Qt.ControlModifier:
+        elif ev.key() == Qt.Key.Key_End and ev.modifiers() == Qt.Modifier.ControlModifier:
             self.setCurrentPageNumber(self.pageCount()) if sp else self.displayPageSet("last")
         else:
             super().keyPressEvent(ev)

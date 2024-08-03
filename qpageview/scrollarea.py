@@ -25,8 +25,8 @@ ScrollArea, that supports kinetic scrolling and other features.
 
 import math
 
-from PyQt5.QtCore import QPoint, QRect, QSize, Qt
-from PyQt5.QtWidgets import QAbstractScrollArea
+from PyQt6.QtCore import QPoint, QRect, QSize, Qt
+from PyQt6.QtWidgets import QAbstractScrollArea
 
 from . import util
 
@@ -34,8 +34,8 @@ from . import util
 class ScrollArea(QAbstractScrollArea):
     """A scroll area that supports kinetic scrolling and other features."""
 
-    #: how to align the scrolled area if smaller than the viewport (Qt.AlignCenter)
-    alignment = Qt.AlignCenter
+    #: how to align the scrolled area if smaller than the viewport (Qt.AlignmentFlag.AlignCenter)
+    alignment = Qt.AlignmentFlag.AlignCenter
 
     #: how many scroll updates to draw per second (50, 50 is recommended).
     scrollupdatespersec = 50
@@ -301,9 +301,9 @@ class ScrollArea(QAbstractScrollArea):
 
     def mouseMoveEvent(self, ev):
         """Implemented to handle dragging the document with the left button."""
-        if self.draggingEnabled and ev.buttons() & Qt.LeftButton:
+        if self.draggingEnabled and ev.buttons() & Qt.MouseButton.LeftButton:
             if self._dragPos is None:
-                self.setCursor(Qt.SizeAllCursor)
+                self.setCursor(Qt.CursorShape.SizeAllCursor)
             else:
                 diff = self._dragPos - ev.pos()
                 self._dragSpeed = (ev.timestamp() - self._dragTime, diff)
@@ -314,7 +314,7 @@ class ScrollArea(QAbstractScrollArea):
 
     def mouseReleaseEvent(self, ev):
         """Implemented to handle dragging the document with the left button."""
-        if self.draggingEnabled and ev.button() == Qt.LeftButton and self._dragPos is not None:
+        if self.draggingEnabled and ev.button() == Qt.MouseButton.LeftButton and self._dragPos is not None:
             self.unsetCursor()
             if self.kineticScrollingEnabled and self._dragSpeed is not None:
                 # compute speed of last movement
@@ -347,23 +347,23 @@ class ScrollArea(QAbstractScrollArea):
         vbar = self.verticalScrollBar()
         # add Home and End, even in non-kinetic mode
         scroll = self.kineticScrollBy if self.kineticScrollingEnabled else self.scrollBy
-        if ev.key() == Qt.Key_Home:
+        if ev.key() == Qt.Key.Key_Home:
             scroll(QPoint(0, -vbar.value()))
-        elif ev.key() == Qt.Key_End:
+        elif ev.key() == Qt.Key.Key_End:
             scroll(QPoint(0, vbar.maximum() - vbar.value()))
         elif self.kineticScrollingEnabled:
             # make arrow keys and PgUp and PgDn kinetic
-            if ev.key() == Qt.Key_PageDown:
+            if ev.key() == Qt.Key.Key_PageDown:
                 self.kineticAddDelta(QPoint(0, vbar.pageStep()))
-            elif ev.key() == Qt.Key_PageUp:
+            elif ev.key() == Qt.Key.Key_PageUp:
                 self.kineticAddDelta(QPoint(0, -vbar.pageStep()))
-            elif ev.key() == Qt.Key_Down:
+            elif ev.key() == Qt.Key.Key_Down:
                 self.kineticAddDelta(QPoint(0, vbar.singleStep()))
-            elif ev.key() == Qt.Key_Up:
+            elif ev.key() == Qt.Key.Key_Up:
                 self.kineticAddDelta(QPoint(0, -vbar.singleStep()))
-            elif ev.key() == Qt.Key_Left:
+            elif ev.key() == Qt.Key.Key_Left:
                 self.kineticAddDelta(QPoint(-hbar.singleStep(), 0))
-            elif ev.key() == Qt.Key_Right:
+            elif ev.key() == Qt.Key.Key_Right:
                 self.kineticAddDelta(QPoint(hbar.singleStep(), 0))
             else:
                 super().keyPressEvent(ev)

@@ -19,7 +19,7 @@
 
 #autodoc_mock_imports = [
 #    'sip',
-#    'PyQt5',
+#    'PyQt6',
 #    'popplerqt5',
 #]
 
@@ -27,7 +27,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-# avoid importing the full module (depends on PyQt5 etc)
+# avoid importing the full module (depends on PyQt6 etc)
 pkginfo = {}
 exec(open("../../qpageview/pkginfo.py").read(), {}, pkginfo)
 
@@ -125,7 +125,7 @@ html_theme_options = {
     'github_repo': 'qpageview',
 #    'show_related': 'true',
     'show_relbar_bottom': 'true',
-    'description': 'Widget to display page-based documents for Qt5/PyQt5',
+    'description': 'Widget to display page-based documents for Qt5/PyQt6',
     'extra_nav_links': {
         'qpageview@Github': 'https://github.com/frescobaldi/qpageview',
         'qpageview@PyPi': 'https://pypi.org/project/qpageview',

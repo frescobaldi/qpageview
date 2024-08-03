@@ -26,9 +26,9 @@ ViewActions provides QActions to control a View.
 
 import weakref
 
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import (
+from PyQt6.QtCore import pyqtSignal, QObject, Qt
+from PyQt6.QtGui import QKeySequence
+from PyQt6.QtWidgets import (
     QAction, QActionGroup, QApplication, QComboBox, QLabel, QSpinBox,
     QWidgetAction)
 
@@ -308,7 +308,7 @@ class ViewActions(QObject):
         self.print.setShortcuts(QKeySequence.Print)
         self.zoom_in.setShortcuts(QKeySequence.ZoomIn)
         self.zoom_out.setShortcuts(QKeySequence.ZoomOut)
-        self.reload.setShortcut(QKeySequence(Qt.Key_F5))
+        self.reload.setShortcut(QKeySequence(Qt.Key.Key_F5))
 
     def slotPrint(self):
         view = self.view()
@@ -438,7 +438,7 @@ class PagerAction(QWidgetAction):
     currentPageNumberChanged = pyqtSignal(int)
 
     buttonSymbols = QSpinBox.NoButtons
-    focusPolicy = Qt.ClickFocus
+    focusPolicy = Qt.FocusPolicy.ClickFocus
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -616,7 +616,7 @@ class ZoomerAction(QWidgetAction):
         w.setSizeAdjustPolicy(QComboBox.AdjustToContents)
         w.setEditable(True)
         w.lineEdit().setReadOnly(True)
-        w.setFocusPolicy(Qt.NoFocus)
+        w.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self._setupComboBox(w)
         self._adjustComboBox(w)
         w.activated[int].connect(self.setCurrentIndex)

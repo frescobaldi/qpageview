@@ -28,9 +28,9 @@ Adds the capability to select or unselect Pages.
 
 import contextlib
 
-from PyQt5.QtCore import pyqtSignal, QRect, Qt
-from PyQt5.QtGui import QPainter, QKeySequence
-from PyQt5.QtWidgets import QStyle, QStyleOptionButton
+from PyQt6.QtCore import pyqtSignal, QRect, Qt
+from PyQt6.QtGui import QPainter, QKeySequence
+from PyQt6.QtWidgets import QStyle, QStyleOptionButton
 
 
 class SelectorViewMixin:
@@ -149,7 +149,7 @@ class SelectorViewMixin:
 
     def mousePressEvent(self, ev):
         """Reimplemented to check if a checkbox was clicked."""
-        if self._selectionMode and ev.buttons() == Qt.LeftButton:
+        if self._selectionMode and ev.buttons() == Qt.MouseButton.LeftButton:
             pos = ev.pos() - self.layoutPosition()
             page = self._pageLayout.pageAt(pos)
             if page:
@@ -157,10 +157,10 @@ class SelectorViewMixin:
                 pos -= page.pos()
                 if pos in QRect(0, 0, QStyle.PM_IndicatorWidth, QStyle.PM_IndicatorHeight):
                     # the indicator has been clicked
-                    if ev.modifiers() & Qt.ControlModifier:
+                    if ev.modifiers() & Qt.Modifier.ControlModifier:
                         # CTRL toggles selection of page
                         self.toggleSelection(pageNum)
-                    elif self._selection and ev.modifiers() & Qt.ShiftModifier:
+                    elif self._selection and ev.modifiers() & Qt.Modifier.ShiftModifier:
                         # Shift extends the selection
                         with self.modifySelection() as s:
                             s.add(pageNum)
@@ -179,7 +179,7 @@ class SelectorViewMixin:
     def keyPressEvent(self, ev):
         """Clear the selection and switch off selectionmode with ESC."""
         if self._selectionMode:
-            if self.userChangeSelectionModeEnabled and ev.key() == Qt.Key_Escape and not ev.modifiers():
+            if self.userChangeSelectionModeEnabled and ev.key() == Qt.Key.Key_Escape and not ev.modifiers():
                 self.clearSelection()
                 self.setSelectionMode(False)
                 return

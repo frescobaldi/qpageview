@@ -25,8 +25,8 @@ Export Pages to different file formats.
 
 import os
 
-from PyQt5.QtCore import QBuffer, QIODevice, QMimeData, QPoint, QSizeF, Qt, QUrl
-from PyQt5.QtGui import QDrag, QGuiApplication, QImage, QPageSize, QPdfWriter
+from PyQt6.QtCore import QBuffer, QIODevice, QMimeData, QPoint, QSizeF, Qt, QUrl
+from PyQt6.QtGui import QDrag, QGuiApplication, QImage, QPageSize, QPdfWriter
 
 from . import poppler
 from . import util
@@ -229,7 +229,7 @@ class AbstractExporter:
         d.setMimeData(mimeData)
         d.setPixmap(self.pixmap())
         d.setHotSpot(QPoint(-10, -10))
-        return d.exec_(Qt.CopyAction)
+        return d.exec_(Qt.DropAction.CopyAction)
 
     def dragData(self, parent):
         """Start dragging the data. Parent can be any QObject."""
@@ -253,9 +253,9 @@ class ImageExporter(AbstractExporter):
             res *= self.oversample
         i = self.page().image(self._rect, res, res, self.paperColor)
         if self.oversample != 1:
-            i = i.scaled(i.size() / self.oversample, transformMode=Qt.SmoothTransformation)
+            i = i.scaled(i.size() / self.oversample, transformMode=Qt.TransformationMode.SmoothTransformation)
         if self.grayscale:
-            i = i.convertToFormat(QImage.Format_Grayscale8)
+            i = i.convertToFormat(QImage.Format.Format_Grayscale8)
         if self.autocrop:
             i = i.copy(util.autoCropRect(i))
         return i

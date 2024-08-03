@@ -32,8 +32,8 @@ You need this module to display PDF documents.
 import contextlib
 import weakref
 
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QRegion, QPainter, QPicture, QTransform
+from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 
 try:
     import popplerqt5
@@ -207,7 +207,7 @@ class PopplerRenderer(render.AbstractRenderer):
             tile.x * multiplier, tile.y * multiplier, tile.w * multiplier, tile.h * multiplier,
             key.rotation, paperColor)
         if multiplier == 2:
-            image = image.scaledToWidth(tile.w, Qt.SmoothTransformation)
+            image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
         image.setDotsPerMeterX(int(xres * 39.37))
         image.setDotsPerMeterY(int(yres * 39.37))
         return image

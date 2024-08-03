@@ -24,10 +24,10 @@
 The Magnifier magnifies a part of the displayed document.
 """
 
-from PyQt5.QtCore import QEvent, QPoint, QRect, Qt
-from PyQt5.QtGui import (
+from PyQt6.QtCore import QEvent, QPoint, QRect, Qt
+from PyQt6.QtGui import (
     QColor, QCursor, QPainter, QPalette, QPen, QRegion, QTransform)
-from PyQt5.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget
 
 
 DRAG_SHORT = 1      # visible only while keeping the mouse button pressed
@@ -53,21 +53,21 @@ class Magnifier(QWidget):
     Instance attributes:
 
     ``showmodifier``:
-        the modifier to popup (Qt.ControlModifier)
+        the modifier to popup (Qt.Modifier.ControlModifier)
 
     ``zoommodifier``:
-        the modifier to wheel zoom (Qt.ControlModifier)
+        the modifier to wheel zoom (Qt.Modifier.ControlModifier)
 
     ``resizemodifier``:
-        the key to press for wheel resizing (Qt.ShiftModifier)
+        the key to press for wheel resizing (Qt.Modifier.ShiftModifier)
 
     ``showbutton``:
         the mouse button causing the magnifier to popup (by default
-        Qt.LeftButton)
+        Qt.MouseButton.LeftButton)
 
     ``resizebutton``:
         the extra mouse button to be pressed when resizing the
-        magnifier (by default Qt.RightButton)
+        magnifier (by default Qt.MouseButton.RightButton)
 
     ``MAX_EXTRA_ZOOM``:
         the maximum zoom (relative to the View's maximum zoom
@@ -76,19 +76,19 @@ class Magnifier(QWidget):
     """
 
     # modifier for show
-    showmodifier = Qt.ControlModifier
+    showmodifier = Qt.Modifier.ControlModifier
 
     # modifier for wheel zoom
-    zoommodifier = Qt.ControlModifier
+    zoommodifier = Qt.Modifier.ControlModifier
 
     # extra modifier for wheel resize
-    resizemodifier = Qt.ShiftModifier
+    resizemodifier = Qt.Modifier.ShiftModifier
 
     # button for show
-    showbutton = Qt.LeftButton
+    showbutton = Qt.MouseButton.LeftButton
 
     # extra button for resizing
-    resizebutton = Qt.RightButton
+    resizebutton = Qt.MouseButton.RightButton
 
     # Maximum extra zoom above the View.MAX_ZOOM
     MAX_EXTRA_ZOOM = 1.25
@@ -132,7 +132,7 @@ class Magnifier(QWidget):
         self.moveCenter(pos)
         self.raise_()
         self.show()
-        viewport.setCursor(Qt.BlankCursor)
+        viewport.setCursor(Qt.CursorShape.BlankCursor)
 
     def endShortDrag(self):
         """End a short drag."""
@@ -148,7 +148,7 @@ class Magnifier(QWidget):
         """Start a long drag (when we are already visible and then dragged)."""
         self._dragging = DRAG_LONG
         self._dragpos = pos
-        self.setCursor(Qt.ClosedHandCursor)
+        self.setCursor(Qt.CursorShape.ClosedHandCursor)
 
     def endLongDrag(self):
         """End a long drag."""
@@ -220,7 +220,7 @@ class Magnifier(QWidget):
         """Start dragging the magnifier."""
         if self._dragging == DRAG_SHORT:
             ev.ignore()
-        elif not self._dragging and ev.button() == Qt.LeftButton:
+        elif not self._dragging and ev.button() == Qt.MouseButton.LeftButton:
             self.startLongDrag(ev.pos())
 
     def mouseMoveEvent(self, ev):
@@ -236,7 +236,7 @@ class Magnifier(QWidget):
     def mouseReleaseEvent(self, ev):
         """The button is released, stop moving ourselves."""
         ev.ignore()
-        if self._dragging == DRAG_LONG and ev.button() == Qt.LeftButton:
+        if self._dragging == DRAG_LONG and ev.button() == Qt.MouseButton.LeftButton:
             self.endLongDrag()
 
     def wheelEvent(self, ev):

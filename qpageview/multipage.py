@@ -31,8 +31,8 @@ rendering to the renderer of the embedded pages.
 import collections
 import itertools
 
-from PyQt5.QtCore import QPoint, QRect, QRectF, Qt
-from PyQt5.QtGui import QColor, QImage, QPainter, QPixmap, QRegion, QTransform
+from PyQt6.QtCore import QPoint, QRect, QRectF, Qt
+from PyQt6.QtGui import QColor, QImage, QPainter, QPixmap, QRegion, QTransform
 
 from . import document
 from . import page
@@ -181,7 +181,7 @@ class MultiPage(page.AbstractRenderedPage):
             painter.setTransform(m, True)
             # handle rect clipping
             clip = m.inverted()[0].mapRect(rect) & p.pageRect()
-            painter.fillRect(clip, paperColor or Qt.white)    # draw a white background
+            painter.fillRect(clip, paperColor or Qt.GlobalColor.white)    # draw a white background
             painter.translate(clip.topLeft())   # the page will go back...
             p.print(painter, clip)
             painter.restore()

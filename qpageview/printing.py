@@ -24,9 +24,9 @@ Printing facilities for qpageview.
 """
 
 
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QPainter, QTransform
-from PyQt5.QtWidgets import QMessageBox, QProgressDialog
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QPainter, QTransform
+from PyQt6.QtWidgets import QMessageBox, QProgressDialog
 
 from . import backgroundjob
 

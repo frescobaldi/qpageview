@@ -31,7 +31,7 @@ sizes or rotations.
 
 import collections
 
-from PyQt5.QtCore import pyqtSignal, QEvent, QRectF, Qt
+from PyQt6.QtCore import pyqtSignal, QEvent, QRectF, Qt
 
 from . import page
 from . import rectangles
@@ -158,7 +158,7 @@ class LinkViewMixin:
         method to do something different.
 
         """
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.linkHovered.emit(page, link)
         if self._linkHighlighter:
             self.highlight({page: [link.rect()]}, self._linkHighlighter, 3000)
@@ -199,7 +199,7 @@ class LinkViewMixin:
 
     def event(self, ev):
         """Reimplemented to handle HelpEvent for links."""
-        if self.linksEnabled and ev.type() in (QEvent.ToolTip, QEvent.WhatsThis):
+        if self.linksEnabled and ev.type() in (QEvent.Type.ToolTip, QEvent.Type.WhatsThis):
             page, link = self.linkAt(ev.pos())
             if link:
                 self.linkHelpEvent(ev, page, link)

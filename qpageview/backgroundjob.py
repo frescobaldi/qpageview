@@ -24,7 +24,7 @@ Run jobs in the background using QThread.
 """
 
 
-from PyQt5.QtCore import QThread
+from PyQt6.QtCore import QThread
 
 # as soon as a Job start()s, it is saved here, to prevent it being
 # destroyed while running

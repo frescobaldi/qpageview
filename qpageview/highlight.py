@@ -27,9 +27,9 @@ Highlight rectangular areas inside a View.
 import collections
 import weakref
 
-from PyQt5.QtCore import QRect, QRectF, QTimer
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QRect, QRectF, QTimer
+from PyQt6.QtGui import QPainter, QPen
+from PyQt6.QtWidgets import QApplication
 
 
 class Highlighter:
