@@ -612,7 +612,7 @@ class ZoomerAction(QWidgetAction):
 
     def createWidget(self, parent):
         w = QComboBox(parent)
-        w.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        w.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         w.setEditable(True)
         w.lineEdit().setReadOnly(True)
         w.setFocusPolicy(Qt.FocusPolicy.NoFocus)
