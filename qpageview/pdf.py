@@ -28,7 +28,7 @@ PDF rendering backend using QtPdf.
 import contextlib
 import weakref
 
-from PyQt6.QtCore import Qt, QRect, QRectF, QSize
+from PyQt6.QtCore import Qt, QModelIndex, QRect, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
@@ -53,6 +53,12 @@ _rotation = {
     Rotate_270: QPdfDocumentRenderOptions.Rotation.Clockwise270,
 }
 
+# These are defined here because of a bug in PyQt6.
+# QPdfLinkModel.data() will not accept its own Role enumeration constants
+# because they don't convert to int as it expects for its second argument.
+RoleRectangle = 257
+RoleUrl = 258
+
 
 # store the links in the page of a Poppler document as long as the document exists
 _linkscache = weakref.WeakKeyDictionary()
@@ -60,15 +66,20 @@ _linkscache = weakref.WeakKeyDictionary()
 
 class Link(link.Link):
     """A link that encapsulates QPdfLinkModel data."""
-    def __init__(self, linkobj, index):
+    def __init__(self, linkobj, index, pointSize):
         self.linkobj = linkobj
         self.index = index
-        self.area = linkobj.data(index, QPdfLinkModel.Role.Rectangle)
+        # Convert to relative coordinates between 0.0 and 1.0 as expected
+        # by link.Link, which uses them for compatibility with Poppler
+        rect = linkobj.data(index, RoleRectangle)
+        x1, y1, x2, y2 = rect.normalized().getCoords()
+        self.area = (x1 / pointSize.width(), y1 / pointSize.height(),
+                     x2 / pointSize.width(), y2 / pointSize.height())
 
     @property
     def url(self):
         """The URL the link points to."""
-        return self.linkobj.data(self.index, QPdfLinkModel.Role.Url)
+        return self.linkobj.data(self.index, RoleUrl).toString()
 
 
 class PdfPage(page.AbstractRenderedPage):
@@ -140,7 +151,12 @@ class PdfPage(page.AbstractRenderedPage):
                 lm = QPdfLinkModel()
                 lm.setDocument(document)
                 lm.setPage(pageNumber)
-                links = link.Links(Link(lm, i) for i in range(len(lm.children())))
+                parentIndex = QModelIndex()
+                links = []
+                for row in range(lm.rowCount(parentIndex)):
+                    index = lm.index(row, 0, parentIndex)
+                    links.append(Link(lm, index, document.pagePointSize(pageNumber)))
+                links = link.Links(links)
             _linkscache.setdefault(document, {})[pageNumber] = links
             return links
 
