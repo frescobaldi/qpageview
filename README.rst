@@ -46,6 +46,6 @@ Dependencies
 ~~~~~~~~~~~~
 
 * Python 3.7+
-* Qt6
+* Qt 6.6+
 * PyQt6
 * pycups (optionally, needed to print to a local CUPS server)
