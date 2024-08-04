@@ -30,7 +30,7 @@ import weakref
 
 from PyQt6.QtCore import Qt, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
-from PyQt6.QtPdf import QPdfDocument, QPdfLinkModel
+from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
 from . import document
 from . import page
@@ -44,6 +44,14 @@ from .constants import (
     Rotate_180,
     Rotate_270,
 )
+
+# Map our rotation constants to Qt's
+_rotation = {
+    Rotate_0:   QPdfDocumentRenderOptions.Rotation.None_,
+    Rotate_90:  QPdfDocumentRenderOptions.Rotation.Clockwise90,
+    Rotate_180: QPdfDocumentRenderOptions.Rotation.Clockwise180,
+    Rotate_270: QPdfDocumentRenderOptions.Rotation.Clockwise270,
+}
 
 
 # store the links in the page of a Poppler document as long as the document exists
@@ -171,6 +179,8 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
+    oversampleThreshold = 96
+
     def render(self, page, key, tile, paperColor=None):
         """Generate an image for the Page referred to by key."""
         if paperColor is None:
@@ -179,43 +189,47 @@ class PdfRenderer(render.AbstractRenderer):
         # TODO: Port the complete scaling logic from the Poppler backend.
         doc = page.document
         num = page.pageNumber
-        size = QSize(key.width, key.height)
+        s = page.pageSize()
         if key.rotation & 1:
-            size.transpose()
+            s.transpose()
 
-        renderedPage = doc.render(num, size)
-        # If the page does not specify a background color, QtPdf renders
-        # the background as transparent. In this case we need to paint the
-        # background ourselves.
-        image = renderedPage.copy()
-        painter = QPainter(image)
-        painter.fillRect(image.rect(), paperColor)
-        painter.drawImage(0, 0, renderedPage)
-        painter.end()
+        xres = 72.0 * key.width / s.width()
+        yres = 72.0 * key.height / s.height()
+        multiplier = 2 if xres < self.oversampleThreshold else 1
+        image = self.render_image(doc, num,
+            xres * multiplier, yres * multiplier,
+            tile.x * multiplier, tile.y * multiplier, tile.w * multiplier, tile.h * multiplier,
+            key.rotation, paperColor)
+        if multiplier == 2:
+            image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
+        image.setDotsPerMeterX(int(xres * 39.37))
+        image.setDotsPerMeterY(int(yres * 39.37))
         return image
 
-    @contextlib.contextmanager
-    def setup(self, doc, backend=None, paperColor=None):
-        """Use the poppler document in context, properly configured and locked."""
+    def render_image(self, doc, pageNum,
+                     xres=72.0, yres=72.0, x=-1, y=-1, w=-1, h=-1,
+                     rotate=Rotate_0, paperColor=None):
+        """Render an image.
+
+        The document is properly locked during rendering and render options
+        are set.
+
+        """
         with locking.lock(doc):
-            if backend is not None:
-                oldbackend = doc.renderBackend()
-                doc.setRenderBackend(backend)
-            oldhints = int(doc.renderHints())
-            doc.setRenderHint(oldhints, False)
-            self.setRenderHints(doc)
-            if paperColor is not None:
-                oldcolor = doc.paperColor()
-                doc.setPaperColor(paperColor)
-            try:
-                yield
-            finally:
-                if backend is not None:
-                    doc.setRenderBackend(oldbackend)
-                doc.setRenderHint(int(doc.renderHints()), False)
-                doc.setRenderHint(oldhints)
-                if paperColor is not None:
-                    doc.setPaperColor(oldcolor)
+            options = QPdfDocumentRenderOptions()
+            options.setRotation(_rotation[rotate])
+            options.setScaledSize(QSize(int(xres * w), int(yres * h)))
+            renderedPage = doc.render(pageNum, QSize(int(w), int(h)))
+
+            # If the page does not specify a background color, QtPdf renders
+            # the background as transparent. In this case we need to paint the
+            # background ourselves.
+            image = renderedPage.copy()
+            painter = QPainter(image)
+            painter.fillRect(image.rect(), paperColor)
+            painter.drawImage(0, 0, renderedPage)
+            painter.end()
+            return image
 
 
 def load(parent, source):
