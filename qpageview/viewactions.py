@@ -27,10 +27,9 @@ ViewActions provides QActions to control a View.
 import weakref
 
 from PyQt6.QtCore import pyqtSignal, QObject, Qt
-from PyQt6.QtGui import QKeySequence
+from PyQt6.QtGui import QAction, QActionGroup, QKeySequence
 from PyQt6.QtWidgets import (
-    QAction, QActionGroup, QApplication, QComboBox, QLabel, QSpinBox,
-    QWidgetAction)
+    QApplication, QComboBox, QLabel, QSpinBox, QWidgetAction)
 
 from . import util
 from .constants import *
