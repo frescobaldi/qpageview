@@ -171,20 +171,20 @@ class Magnifier(QWidget):
         """Handle events on the viewport of the View."""
         view = viewport.parent()
         if not self.isVisible():
-            if (ev.type() == QEvent.MouseButtonPress and
+            if (ev.type() == QEvent.Type.MouseButtonPress and
                 ev.modifiers() == self.showmodifier and
                 ev.button() == self.showbutton):
                 # show and drag while button pressed: DRAG_SHORT
                 self.startShortDrag(ev.pos())
                 return True
-        elif ev.type() == QEvent.Paint:
+        elif ev.type() == QEvent.Type.Paint:
             # if the viewport is painted, also update
             self.update()
         elif self._dragging == DRAG_SHORT:
-            if ev.type() == QEvent.MouseButtonPress:
+            if ev.type() == QEvent.Type.MouseButtonPress:
                 if ev.button() == self.resizebutton:
                     return True
-            elif ev.type() == QEvent.MouseMove:
+            elif ev.type() == QEvent.Type.MouseMove:
                 if ev.buttons() == self.showbutton | self.resizebutton:
                     # DRAG_SHORT is busy, both buttons are pressed: resize!
                     if self._resizepos == None:
@@ -202,7 +202,7 @@ class Magnifier(QWidget):
                     self.moveCenter(ev.pos())
                     view.scrollForDragging(ev.pos())
                 return True
-            elif ev.type() == QEvent.MouseButtonRelease:
+            elif ev.type() == QEvent.Type.MouseButtonRelease:
                 if ev.button() == self.showbutton:
                     # left button is released, stop dragging and/or resizing, hide
                     self.endShortDrag()
@@ -212,7 +212,7 @@ class Magnifier(QWidget):
                     QCursor.setPos(viewport.mapToGlobal(self.geometry().center()))
                     ev.accept()
                 return True
-            elif ev.type() == QEvent.ContextMenu:
+            elif ev.type() == QEvent.Type.ContextMenu:
                 self.endShortDrag()
         return False
 

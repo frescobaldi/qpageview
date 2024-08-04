@@ -159,7 +159,7 @@ class SidebarView(selector.SelectorViewMixin, util.LongMousePressMixin, view.Vie
     def changeEvent(self, ev):
         """Reimplemented to set the correct font height for the page numbers."""
         super().changeEvent(ev)
-        if ev.type() in (QEvent.ApplicationFontChange, QEvent.FontChange):
+        if ev.type() in (QEvent.Type.ApplicationFontChange, QEvent.Type.FontChange):
             self.setLayoutFontHeight()
 
 

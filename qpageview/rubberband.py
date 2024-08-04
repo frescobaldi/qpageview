@@ -355,7 +355,7 @@ class Rubberband(QWidget):
           the context menu, show it on button release.
 
         """
-        if ev.type() == QEvent.Resize and self.isVisible():
+        if ev.type() == QEvent.Type.Resize and self.isVisible():
             view = self.parent().parent()
             if not view.viewMode():
                 # fixed scale, try to keep ourselves in the same position on resize
@@ -367,7 +367,7 @@ class Rubberband(QWidget):
                 return False
             return True
         elif not self._dragging:
-            if ev.type() == QEvent.MouseButtonPress and ev.button() == self.showbutton:
+            if ev.type() == QEvent.Type.MouseButtonPress and ev.button() == self.showbutton:
                 if self.isVisible():
                     # this cancels a previous selection if we were visible
                     self._setSelectionFromGeometry(QRect())
@@ -380,10 +380,10 @@ class Rubberband(QWidget):
                 self.show()
                 return True
         elif self._dragging:
-            if ev.type() == QEvent.MouseMove:
+            if ev.type() == QEvent.Type.MouseMove:
                 self.drag(ev.pos())
                 return True
-            elif ev.type() == QEvent.MouseButtonRelease and ev.button() == self._dragbutton:
+            elif ev.type() == QEvent.Type.MouseButtonRelease and ev.button() == self._dragbutton:
                 self.stopDrag()
                 if ev.button() == Qt.MouseButton.RightButton:
                     QApplication.postEvent(viewport,
