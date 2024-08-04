@@ -436,7 +436,7 @@ class PagerAction(QWidgetAction):
 
     currentPageNumberChanged = pyqtSignal(int)
 
-    buttonSymbols = QSpinBox.NoButtons
+    buttonSymbols = QSpinBox.ButtonSymbols.NoButtons
     focusPolicy = Qt.FocusPolicy.ClickFocus
 
     def __init__(self, *args, **kwargs):
