@@ -229,7 +229,7 @@ class AbstractExporter:
         d.setMimeData(mimeData)
         d.setPixmap(self.pixmap())
         d.setHotSpot(QPoint(-10, -10))
-        return d.exec_(Qt.DropAction.CopyAction)
+        return d.exec(Qt.DropAction.CopyAction)
 
     def dragData(self, parent):
         """Start dragging the data. Parent can be any QObject."""
