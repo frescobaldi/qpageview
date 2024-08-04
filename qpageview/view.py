@@ -764,9 +764,9 @@ class View(scrollarea.ScrollArea):
 
         # width a scrollbar takes off the viewport size
         framewidth = 0
-        if self.style().styleHint(QStyle.SH_ScrollView_FrameOnlyAroundContents, None, self):
-            framewidth = self.style().pixelMetric(QStyle.PM_DefaultFrameWidth) * 2
-        scrollbarextent = self.style().pixelMetric(QStyle.PM_ScrollBarExtent, None, self) + framewidth
+        if self.style().styleHint(QStyle.StyleHint.SH_ScrollView_FrameOnlyAroundContents, None, self):
+            framewidth = self.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth) * 2
+        scrollbarextent = self.style().pixelMetric(QStyle.PixelMetric.PM_ScrollBarExtent, None, self) + framewidth
 
         # remember old factor
         zoom_factor = self.zoomFactor()
