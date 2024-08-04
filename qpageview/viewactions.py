@@ -304,9 +304,9 @@ class ViewActions(QObject):
 
     def setActionShortcuts(self):
         """Implement this method to set keyboard shortcuts to the actions."""
-        self.print.setShortcuts(QKeySequence.Print)
-        self.zoom_in.setShortcuts(QKeySequence.ZoomIn)
-        self.zoom_out.setShortcuts(QKeySequence.ZoomOut)
+        self.print.setShortcuts(QKeySequence.StandardKey.Print)
+        self.zoom_in.setShortcuts(QKeySequence.StandardKey.ZoomIn)
+        self.zoom_out.setShortcuts(QKeySequence.StandardKey.ZoomOut)
         self.reload.setShortcut(QKeySequence(Qt.Key.Key_F5))
 
     def slotPrint(self):
