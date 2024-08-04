@@ -489,19 +489,19 @@ class View(scrollarea.ScrollArea):
         if showDialog:
             dlg = QPrintDialog(printer, self)
             dlg.setMinMax(1, self.pageCount())
-            if not dlg.exec_():
+            if not dlg.exec():
                 return  # cancelled
         if not pageNumbers:
-            if printer.printRange() == QPrinter.CurrentPage:
+            if printer.printRange() == QPrinter.PrintRange.CurrentPage:
                 pageNumbers = [self.currentPageNumber()]
             else:
-                if printer.printRange() == QPrinter.PageRange:
+                if printer.printRange() == QPrinter.PrintRange.PageRange:
                     first = printer.toPage() or 1
                     last = printer.fromPage() or self.pageCount()
                 else:
                     first, last = 1, self.pageCount()
                 pageNumbers = list(range(first, last + 1))
-            if printer.pageOrder() == QPrinter.LastPageFirst:
+            if printer.pageOrder() == QPrinter.PageOrder.LastPageFirst:
                 pageNumbers.reverse()
         # add the page objects
         pageList = [(n, self.page(n)) for n in pageNumbers]
