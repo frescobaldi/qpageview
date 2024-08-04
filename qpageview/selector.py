@@ -183,7 +183,7 @@ class SelectorViewMixin:
                 self.clearSelection()
                 self.setSelectionMode(False)
                 return
-            elif ev.matches(QKeySequence.SelectAll):
+            elif ev.matches(QKeySequence.StandardKey.SelectAll):
                 self.selectAll()
                 return
         super().keyPressEvent(ev)
