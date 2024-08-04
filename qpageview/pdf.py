@@ -28,7 +28,7 @@ PDF rendering backend using QtPdf.
 import contextlib
 import weakref
 
-from PyQt6.QtCore import Qt, QRectF, QSize
+from PyQt6.QtCore import Qt, QRect, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
@@ -219,6 +219,7 @@ class PdfRenderer(render.AbstractRenderer):
             options = QPdfDocumentRenderOptions()
             options.setRotation(_rotation[rotate])
             options.setScaledSize(QSize(int(xres * w), int(yres * h)))
+            options.setScaledClipRect(QRect(x, y, w, h))
             renderedPage = doc.render(pageNum, QSize(int(w), int(h)))
 
             # If the page does not specify a background color, QtPdf renders
@@ -230,6 +231,38 @@ class PdfRenderer(render.AbstractRenderer):
             painter.drawImage(0, 0, renderedPage)
             painter.end()
             return image
+
+    def draw(self, page, painter, key, tile, paperColor=None):
+        """Draw a tile on the painter.
+
+        The painter is already at the right position and rotation.
+        For the PDF renderer, draw() is only used for printing; see
+        AbstractPage.print().
+
+        """
+        source = self.map(key, page.pageRect()).mapRect(QRectF(*tile)).toRect()   # rounded
+        target = QRectF(0, 0, tile.w, tile.h)
+        if key.rotation & 1:
+            target.setSize(target.size().transposed())
+
+        doc = page.document
+        p = doc.page(page.pageNumber)
+
+        # Make an image exactly in the printer's resolution
+        m = painter.transform()
+        r = m.mapRect(source)       # see where the source ends up
+        w, h = r.width(), r.height()
+        if m.m11() == 0:
+            w, h = h, w     # swap if rotation & 1  :-)
+        # now we know the scale from our dpi to the paintdevice's logicalDpi!
+        hscale = w / source.width()
+        vscale = h / source.height()
+        s = QTransform().scale(hscale, vscale).mapRect(source)
+        dpiX = page.dpi * hscale
+        dpiY = page.dpi * vscale
+        img = self.render_image(doc, p,
+            dpiX, dpiY, s.x(), s.y(), s.width(), s.height())
+        painter.drawImage(target, img, QRectF(img.rect()))
 
 
 def load(parent, source):
