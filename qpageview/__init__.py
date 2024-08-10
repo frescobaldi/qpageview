@@ -86,7 +86,7 @@ def loadPdf(filename, renderer=None):
     """Convenience function to create a Document with the specified PDF file.
 
     The filename can also be a QByteArray or an already loaded
-    popplerqt5.Poppler.Document instance.
+    popplerqt6.Poppler.Document instance.
 
     """
     from . import poppler

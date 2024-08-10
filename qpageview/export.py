@@ -104,9 +104,9 @@ class AbstractExporter:
             p.renderer.paperColor = self.paperColor
             p.renderer.antialiasing = self.antialiasing
             if self.forceVector and self.wantsVector and \
-                    isinstance(p, poppler.PopplerPage) and poppler.popplerqt5:
+                    isinstance(p, poppler.PopplerPage) and poppler.popplerqt6:
                 p.renderer.printRenderBackend = \
-                    poppler.popplerqt5.Poppler.Document.ArthurBackend
+                    poppler.popplerqt6.Poppler.Document.ArthurBackend
         return p
 
     def autoCroppedRect(self):

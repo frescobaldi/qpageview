@@ -20,7 +20,7 @@
 #autodoc_mock_imports = [
 #    'sip',
 #    'PyQt6',
-#    'popplerqt5',
+#    'popplerqt6',
 #]
 
 import os

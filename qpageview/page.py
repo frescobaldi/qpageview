@@ -311,7 +311,7 @@ class AbstractPage(util.Rectangular):
     def eps(self, filename, rect=None, resolution=72.0, paperColor=None):
         """Create a EPS (Encapsulated Postscript) file for the selected rect or the whole page.
 
-        This needs the popplerqt5 module.
+        This needs the popplerqt6 module.
         The filename may be a string or a QIODevice object. The rectangle is
         relative to our top-left position. Normally vector graphics are
         rendered, but in cases where that is not possible, the resolution will
