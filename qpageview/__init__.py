@@ -102,7 +102,7 @@ def loadPdf(filename, renderer=None):
         return poppler.PopplerDocument(filename, renderer)
     else:
         from . import pdf
-        return pdf.PdfDocument(filename)
+        return pdf.PdfDocument(filename, renderer)
 
 
 def loadSvgs(filenames, renderer=None):

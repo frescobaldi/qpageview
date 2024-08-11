@@ -28,7 +28,7 @@ PDF rendering backend using QtPdf.
 import contextlib
 import weakref
 
-from PyQt6.QtCore import Qt, QModelIndex, QRect, QRectF, QSize
+from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
@@ -165,9 +165,8 @@ class PdfDocument(document.SingleSourceDocument):
     """A lazily loaded PDF document."""
     pageClass = PdfPage
 
-    def __init__(self, parent, source=None, renderer=None):
+    def __init__(self, source=None, renderer=None):
         super().__init__(source, renderer)
-        self._parent = parent
         self._document = None
 
     def invalidate(self):
@@ -190,7 +189,7 @@ class PdfDocument(document.SingleSourceDocument):
         if self._document is None:
             source = self.source()
             if source:
-                self._document = load(self._parent, source) or False
+                self._document = load(source) or False
         return self._document
 
 
@@ -281,7 +280,7 @@ class PdfRenderer(render.AbstractRenderer):
         painter.drawImage(target, img, QRectF(img.rect()))
 
 
-def load(parent, source):
+def load(source):
     """Load a PDF document.
 
     Source may be:
@@ -295,7 +294,7 @@ def load(parent, source):
     if isinstance(source, QPdfDocument):
         return source
     elif isinstance(source, str) or isinstance(source, QByteArray):
-        document = QPdfDocument(parent)
+        document = QPdfDocument(QCoreApplication.instance())
         document.load(source)
         return document
 
