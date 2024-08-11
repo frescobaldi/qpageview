@@ -67,6 +67,26 @@ class Link(link.Link):
         self.area = link.Area(*linkobj.linkArea().normalized().getCoords())
 
     @property
+    def fileName(self):
+        """The file name if this is an external link."""
+        return self.linkobj.fileName() if self.linkobj.isExternal() else ""
+
+    @property
+    def isExternal(self):
+        """Indicates whether this is an external link."""
+        return self.linkobj.isExternal()
+
+    @property
+    def targetPage(self):
+        """If this is an internal link, the page number to which the
+        link should jump; otherwise -1."""
+        if (isinstance(self.linkobj, popplerqt6.Poppler.LinkGoto)
+            and not self.linkobj.isExternal()):
+            return self.linkobj.destination().pageNumber()
+        else:
+            return -1
+
+    @property
     def url(self):
         """The url the link points to."""
         if isinstance(self.linkobj, popplerqt6.Poppler.LinkBrowse):

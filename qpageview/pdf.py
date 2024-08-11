@@ -71,6 +71,22 @@ class Link(link.Link):
                      x2 / pointSize.width(), y2 / pointSize.height())
 
     @property
+    def fileName(self):
+        """The file name if this is an external link."""
+        return QUrl(self.url).fileName() if self.isExternal else ""
+
+    @property
+    def isExternal(self):
+        """Indicates whether this is an external link."""
+        return (self.url and "://" in self.url)
+
+    @property
+    def targetPage(self):
+        """If this is an internal link, the page number to which the
+        link should jump; otherwise -1."""
+        return self.linkobj.data(self.index, QPdfLinkModel.Role.Page.value)
+
+    @property
     def url(self):
         """The URL the link points to."""
         return self.linkobj.data(self.index, QPdfLinkModel.Role.Url.value).toString()
@@ -142,9 +158,7 @@ class PdfPage(page.AbstractRenderedPage):
             return _linkscache[document][pageNumber]
         except KeyError:
             with locking.lock(document):
-                lm = QPdfLinkModel()
-                lm.setDocument(document)
-                lm.setPage(pageNumber)
+                lm = QPdfLinkModel(document=document, page=pageNumber)
                 parentIndex = QModelIndex()
                 links = []
                 for row in range(lm.rowCount(parentIndex)):

@@ -40,6 +40,9 @@ Area = collections.namedtuple("Area", "left top right bottom")
 
 
 class Link:
+    fileName = ""
+    isExternal = False
+    targetPage = -1
     url = ""
     tooltip = ""
     area = Area(0, 0, 0, 0)
@@ -48,6 +51,8 @@ class Link:
         self.area = Area(left, top, right, bottom)
         if url:
             self.url = url
+            if "://" in url:
+                self.isExternal = True
         if tooltip:
             self.tooltip = tooltip
 
