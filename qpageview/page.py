@@ -304,7 +304,7 @@ class AbstractPage(util.Rectangular):
 
         layout = pdf.pageLayout()
         layout.setMode(layout.FullPageMode)
-        layout.setPageSize(QPageSize(targetSize * 72.0 / self.dpi, QPageSize.Point))
+        layout.setPageSize(QPageSize(targetSize * 72.0 / self.dpi, QPageSize.Unit.Point))
         pdf.setPageLayout(layout)
         return self.output(pdf, source, paperColor)
 
@@ -319,7 +319,7 @@ class AbstractPage(util.Rectangular):
 
         """
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.pdf(buf, rect, resolution, paperColor)
         buf.close()
         if success:

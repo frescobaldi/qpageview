@@ -112,14 +112,14 @@ class DiffRenderer(multipage.MultiPageRenderer):
             color |= 0xFF000000
 
             p = QPainter(image)
-            p.setCompositionMode(QPainter.CompositionMode_Lighten)
+            p.setCompositionMode(QPainter.CompositionMode.CompositionMode_Lighten)
             p.fillRect(image.rect(), QColor(color))
             p.end()
             if isinstance(image, QPixmap):
                 painter.drawPixmap(pos, image)
             else:
                 painter.drawImage(pos, image)
-            painter.setCompositionMode(QPainter.CompositionMode_Darken)
+            painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Darken)
 
 
 

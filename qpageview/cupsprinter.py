@@ -255,17 +255,17 @@ def options(printer):
         o['collate'] = 'true'
 
     # TODO: in Qt5 >= 5.11 page-ranges support is more fine-grained!
-    if printer.printRange() == QPrinter.PageRange:
+    if printer.printRange() == QPrinter.PrintRange.PageRange:
         o['page-ranges'] = '{0}-{1}'.format(printer.fromPage(), printer.toPage())
 
     # page order
-    if printer.pageOrder() == QPrinter.LastPageFirst:
+    if printer.pageOrder() == QPrinter.PageOrder.LastPageFirst:
         o['outputorder'] = 'reverse'
 
     # media size
     media = []
     size = printer.paperSize()
-    if size == QPrinter.Custom:
+    if size == QPrinter.ZoomMode.Custom:
         media.append('Custom.{0}x{1}mm'.format(printer.heightMM(), printer.widthMM()))
     elif size in PAGE_SIZES:
         media.append(PAGE_SIZES[size])
@@ -279,8 +279,8 @@ def options(printer):
         o['media'] = ','.join(media)
 
     # page margins
-    if printer.printEngine().property(QPrintEngine.PPK_PageMargins):
-        left, top, right, bottom = printer.getPageMargins(QPrinter.Point)
+    if printer.printEngine().property(QPrintEngine.PrintEnginePropertyKey.PPK_PageMargins):
+        left, top, right, bottom = printer.getPageMargins(QPrinter.Unit.Point)
         o['page-left'] = format(left)
         o['page-top'] = format(top)
         o['page-right'] = format(right)
@@ -294,14 +294,14 @@ def options(printer):
     # double sided
     duplex = printer.duplex()
     o['sides'] = (
-        'two-sided-long-edge' if duplex == QPrinter.DuplexLongSide or
-                        (duplex == QPrinter.DuplexAuto and not landscape) else
-        'two-sided-short-edge' if duplex == QPrinter.DuplexShortSide or
-                        (duplex == QPrinter.DuplexAuto and landscape) else
+        'two-sided-long-edge' if duplex == QPrinter.DuplexMode.DuplexLongSide or
+                        (duplex == QPrinter.DuplexMode.DuplexAuto and not landscape) else
+        'two-sided-short-edge' if duplex == QPrinter.DuplexMode.DuplexShortSide or
+                        (duplex == QPrinter.DuplexMode.DuplexAuto and landscape) else
         'one-sided')
 
     # grayscale
-    if printer.colorMode() == QPrinter.GrayScale:
+    if printer.colorMode() == QPrinter.ColorMode.GrayScale:
         o['print-color-mode'] = 'monochrome'
 
     return o
@@ -367,18 +367,18 @@ PAGE_SIZES = {
 }
 
 PAPER_SOURCES = {
-    QPrinter.Cassette: "Cassette",
-    QPrinter.Envelope: "Envelope",
-    QPrinter.EnvelopeManual: "EnvelopeManual",
-    QPrinter.FormSource: "FormSource",
-    QPrinter.LargeCapacity: "LargeCapacity",
-    QPrinter.LargeFormat: "LargeFormat",
-    QPrinter.Lower: "Lower",
-    QPrinter.MaxPageSource: "MaxPageSource",
-    QPrinter.Middle: "Middle",
-    QPrinter.Manual: "Manual",
-    QPrinter.OnlyOne: "OnlyOne",
-    QPrinter.Tractor: "Tractor",
-    QPrinter.SmallFormat: "SmallFormat",
+    QPrinter.PaperSource.Cassette: "Cassette",
+    QPrinter.PaperSource.Envelope: "Envelope",
+    QPrinter.PaperSource.EnvelopeManual: "EnvelopeManual",
+    QPrinter.PaperSource.FormSource: "FormSource",
+    QPrinter.PaperSource.LargeCapacity: "LargeCapacity",
+    QPrinter.PaperSource.LargeFormat: "LargeFormat",
+    QPrinter.PaperSource.Lower: "Lower",
+    QPrinter.PaperSource.MaxPageSource: "MaxPageSource",
+    QPrinter.PaperSource.Middle: "Middle",
+    QPrinter.PaperSource.Manual: "Manual",
+    QPrinter.PaperSource.OnlyOne: "OnlyOne",
+    QPrinter.PaperSource.Tractor: "Tractor",
+    QPrinter.PaperSource.SmallFormat: "SmallFormat",
 }
 

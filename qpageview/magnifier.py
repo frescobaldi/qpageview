@@ -159,7 +159,7 @@ class Magnifier(QWidget):
 
     def resizeEvent(self, ev):
         """Called on resize, sets our circular mask."""
-        self.setMask(QRegion(self.rect(), QRegion.Ellipse))
+        self.setMask(QRegion(self.rect(), QRegion.RegionType.Ellipse))
 
     def moveEvent(self, ev):
         """Called on move, updates the contents."""
@@ -277,7 +277,7 @@ class Magnifier(QWidget):
         # make a region scaling back to the view scale
         rect = matrix.inverted()[0].mapRect(self.rect())
         rect.moveCenter(c)
-        region = QRegion(rect, QRegion.Ellipse) # touches the Pages we need to draw
+        region = QRegion(rect, QRegion.RegionType.Ellipse) # touches the Pages we need to draw
 
         # our rect on the enlarged pages
         our_rect = self.rect()
@@ -309,7 +309,7 @@ class Magnifier(QWidget):
 
     def drawBorder(self, painter):
         """Draw a nice looking glass border."""
-        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.PaintEngineFeature.Antialiasing, True)
         painter.setPen(QPen(QColor(192, 192, 192, 128), 6))
         painter.drawEllipse(self.rect().adjusted(2, 2, -2, -2))
 

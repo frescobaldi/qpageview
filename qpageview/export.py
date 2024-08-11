@@ -291,7 +291,7 @@ class SvgExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().svg(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -312,7 +312,7 @@ class PdfExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().pdf(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -333,7 +333,7 @@ class EpsExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().eps(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -343,7 +343,7 @@ class EpsExporter(AbstractExporter):
         from . import poppler
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().pdf(buf, rect, self.resolution, self.paperColor)
         buf.close()
         return poppler.PopplerDocument(buf.data(), self.renderer())
@@ -382,7 +382,7 @@ def pdf(filename, pageList, resolution=72, paperColor=None):
             pdf.newPage()
         layout = pdf.pageLayout()
         layout.setMode(layout.FullPageMode)
-        layout.setPageSize(QPageSize(targetSize * 72.0 / page.dpi, QPageSize.Point))
+        layout.setPageSize(QPageSize(targetSize * 72.0 / page.dpi, QPageSize.Unit.Point))
         pdf.setPageLayout(layout)
         # TODO handle errors?
         page.output(pdf, source, paperColor)

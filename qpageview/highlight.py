@@ -62,7 +62,7 @@ class Highlighter:
         pen = QPen(color)
         pen.setWidth(self.lineWidth)
         painter.setPen(pen)
-        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.PaintEngineFeature.Antialiasing, True)
         rad = self.radius
         for r in rects:
             r.adjust(-rad, -rad, rad, rad)

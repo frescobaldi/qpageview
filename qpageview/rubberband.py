@@ -85,7 +85,7 @@ class Rubberband(QWidget):
 
     def paintEvent(self, ev):
         ### Paint code contributed by Richard Cognot Jun 2012
-        color = self.palette().color(QPalette.Highlight)
+        color = self.palette().color(QPalette.ColorRole.Highlight)
         painter = QPainter(self)
 
         # Filled rectangle.
@@ -361,7 +361,7 @@ class Rubberband(QWidget):
                 # fixed scale, try to keep ourselves in the same position on resize
                 self.move(self._getLayoutOffset())
         elif (self.showbutton == Qt.MouseButton.RightButton and isinstance(ev, QContextMenuEvent)
-              and ev.reason() == QContextMenuEvent.Mouse):
+              and ev.reason() == QContextMenuEvent.DeviceType.Mouse):
             # suppress context menu event if that would coincide with start selection
             if not self._dragging or (self.geometry() and self.edge(ev.pos()) == _INSIDE):
                 return False
@@ -387,7 +387,7 @@ class Rubberband(QWidget):
                 self.stopDrag()
                 if ev.button() == Qt.MouseButton.RightButton:
                     QApplication.postEvent(viewport,
-                        QContextMenuEvent(QContextMenuEvent.Mouse, ev.pos()))
+                        QContextMenuEvent(QContextMenuEvent.DeviceType.Mouse, ev.pos()))
                 return True
         return False
 
@@ -416,6 +416,6 @@ class Rubberband(QWidget):
             self.stopDrag()
         if ev.button() == Qt.MouseButton.RightButton:
             QApplication.postEvent(self.parent(),
-                QContextMenuEvent(QContextMenuEvent.Mouse, ev.pos() + self.pos()))
+                QContextMenuEvent(QContextMenuEvent.DeviceType.Mouse, ev.pos() + self.pos()))
 
 

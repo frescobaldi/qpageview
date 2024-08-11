@@ -102,13 +102,13 @@ class ImageLoader(ImageContainer):
                     transf = reader.transformation()
                     m = QTransform()
                     m.translate(size.width() / 2, size.height() / 2)
-                    if transf & QImageIOHandler.TransformationMirror:
+                    if transf & QImageIOHandler.Transformation.TransformationMirror:
                         # horizontal mirror
                         m.scale(-1, 1)
-                    if transf & QImageIOHandler.TransformationFlip:
+                    if transf & QImageIOHandler.Transformation.TransformationFlip:
                         # vertical mirror
                         m.scale(1, -1)
-                    if transf & QImageIOHandler.TransformationRotate90:
+                    if transf & QImageIOHandler.Transformation.TransformationRotate90:
                         # rotate 90
                         m.rotate(-90)
                         m.translate(size.height() / -2, size.width() / -2)
