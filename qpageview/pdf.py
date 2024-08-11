@@ -27,6 +27,7 @@ PDF rendering backend using QtPdf.
 
 import contextlib
 import weakref
+import platform
 
 from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
 from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
@@ -89,7 +90,17 @@ class Link(link.Link):
     @property
     def url(self):
         """The URL the link points to."""
-        return self.linkobj.data(self.index, QPdfLinkModel.Role.Url.value).toString()
+        url = self.linkobj.data(self.index, QPdfLinkModel.Role.Url.value).toString()
+        if platform.system() == "Windows":
+            # If this is a local path, make sure there is a colon after the
+            # drive letter (QUrl likes to strip it out)
+            for proto in ("file", "textedit"):
+                pattern = "{0}://".format(proto)
+                pos = len(pattern) + 1  # the colon should be here
+                if (url.startswith(pattern)
+                    and url[pos - 1].isalpha() and url[pos] == "/"):
+                    url = ":".join((url[0:pos], url[pos:]))
+        return url
 
 
 class PdfPage(page.AbstractRenderedPage):
