@@ -361,7 +361,7 @@ class Rubberband(QWidget):
                 # fixed scale, try to keep ourselves in the same position on resize
                 self.move(self._getLayoutOffset())
         elif (self.showbutton == Qt.MouseButton.RightButton and isinstance(ev, QContextMenuEvent)
-              and ev.reason() == QContextMenuEvent.DeviceType.Mouse):
+              and ev.reason() == QContextMenuEvent.Reason.Mouse):
             # suppress context menu event if that would coincide with start selection
             if not self._dragging or (self.geometry() and self.edge(ev.pos()) == _INSIDE):
                 return False
@@ -387,7 +387,7 @@ class Rubberband(QWidget):
                 self.stopDrag()
                 if ev.button() == Qt.MouseButton.RightButton:
                     QApplication.postEvent(viewport,
-                        QContextMenuEvent(QContextMenuEvent.DeviceType.Mouse, ev.pos()))
+                        QContextMenuEvent(QContextMenuEvent.Reason.Mouse, ev.pos()))
                 return True
         return False
 
@@ -416,6 +416,6 @@ class Rubberband(QWidget):
             self.stopDrag()
         if ev.button() == Qt.MouseButton.RightButton:
             QApplication.postEvent(self.parent(),
-                QContextMenuEvent(QContextMenuEvent.DeviceType.Mouse, ev.pos() + self.pos()))
+                QContextMenuEvent(QContextMenuEvent.Reason.Mouse, ev.pos() + self.pos()))
 
 
