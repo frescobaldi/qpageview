@@ -53,12 +53,6 @@ _rotation = {
     Rotate_270: QPdfDocumentRenderOptions.Rotation.Clockwise270,
 }
 
-# These are defined here because of a bug in PyQt6.
-# QPdfLinkModel.data() will not accept its own Role enumeration constants
-# because they don't convert to int as it expects for its second argument.
-RoleRectangle = 257
-RoleUrl = 258
-
 
 # store the links in the page of a Poppler document as long as the document exists
 _linkscache = weakref.WeakKeyDictionary()
@@ -71,7 +65,7 @@ class Link(link.Link):
         self.index = index
         # Convert to relative coordinates between 0.0 and 1.0 as expected
         # by link.Link, which uses them for compatibility with Poppler
-        rect = linkobj.data(index, RoleRectangle)
+        rect = linkobj.data(index, QPdfLinkModel.Role.Rectangle.value)
         x1, y1, x2, y2 = rect.normalized().getCoords()
         self.area = (x1 / pointSize.width(), y1 / pointSize.height(),
                      x2 / pointSize.width(), y2 / pointSize.height())
@@ -79,7 +73,7 @@ class Link(link.Link):
     @property
     def url(self):
         """The URL the link points to."""
-        return self.linkobj.data(self.index, RoleUrl).toString()
+        return self.linkobj.data(self.index, QPdfLinkModel.Role.Url.value).toString()
 
 
 class PdfPage(page.AbstractRenderedPage):
