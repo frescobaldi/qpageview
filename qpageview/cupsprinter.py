@@ -73,6 +73,7 @@ import os
 import shutil
 import subprocess
 
+from PyQt6.QtGui import QPageSize
 from PyQt6.QtPrintSupport import QPrintEngine, QPrinter
 
 
@@ -334,36 +335,36 @@ def clearPageSetSetting(printer):
 
 
 PAGE_SIZES = {
-    QPrinter.A0: "A0",
-    QPrinter.A1: "A1",
-    QPrinter.A2: "A2",
-    QPrinter.A3: "A3",
-    QPrinter.A4: "A4",
-    QPrinter.A5: "A5",
-    QPrinter.A6: "A6",
-    QPrinter.A7: "A7",
-    QPrinter.A8: "A8",
-    QPrinter.A9: "A9",
-    QPrinter.B0: "B0",
-    QPrinter.B1: "B1",
-    QPrinter.B10: "B10",
-    QPrinter.B2: "B2",
-    QPrinter.B3: "B3",
-    QPrinter.B4: "B4",
-    QPrinter.B5: "B5",
-    QPrinter.B6: "B6",
-    QPrinter.B7: "B7",
-    QPrinter.B8: "B8",
-    QPrinter.B9: "B9",
-    QPrinter.C5E: "C5",         # Correct Translation?
-    QPrinter.Comm10E: "Comm10", # Correct Translation?
-    QPrinter.DLE: "DL",         # Correct Translation?
-    QPrinter.Executive: "Executive",
-    QPrinter.Folio: "Folio",
-    QPrinter.Ledger: "Ledger",
-    QPrinter.Legal: "Legal",
-    QPrinter.Letter: "Letter",
-    QPrinter.Tabloid: "Tabloid",
+    QPageSize.PageSizeId.A0: "A0",
+    QPageSize.PageSizeId.A1: "A1",
+    QPageSize.PageSizeId.A2: "A2",
+    QPageSize.PageSizeId.A3: "A3",
+    QPageSize.PageSizeId.A4: "A4",
+    QPageSize.PageSizeId.A5: "A5",
+    QPageSize.PageSizeId.A6: "A6",
+    QPageSize.PageSizeId.A7: "A7",
+    QPageSize.PageSizeId.A8: "A8",
+    QPageSize.PageSizeId.A9: "A9",
+    QPageSize.PageSizeId.B0: "B0",
+    QPageSize.PageSizeId.B1: "B1",
+    QPageSize.PageSizeId.B10: "B10",
+    QPageSize.PageSizeId.B2: "B2",
+    QPageSize.PageSizeId.B3: "B3",
+    QPageSize.PageSizeId.B4: "B4",
+    QPageSize.PageSizeId.B5: "B5",
+    QPageSize.PageSizeId.B6: "B6",
+    QPageSize.PageSizeId.B7: "B7",
+    QPageSize.PageSizeId.B8: "B8",
+    QPageSize.PageSizeId.B9: "B9",
+    QPageSize.PageSizeId.C5E: "C5",         # Correct Translation?
+    QPageSize.PageSizeId.Comm10E: "Comm10", # Correct Translation?
+    QPageSize.PageSizeId.DLE: "DL",         # Correct Translation?
+    QPageSize.PageSizeId.Executive: "Executive",
+    QPageSize.PageSizeId.Folio: "Folio",
+    QPageSize.PageSizeId.Ledger: "Ledger",
+    QPageSize.PageSizeId.Legal: "Legal",
+    QPageSize.PageSizeId.Letter: "Letter",
+    QPageSize.PageSizeId.Tabloid: "Tabloid",
 }
 
 PAPER_SOURCES = {
