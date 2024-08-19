@@ -309,7 +309,7 @@ class Magnifier(QWidget):
 
     def drawBorder(self, painter):
         """Draw a nice looking glass border."""
-        painter.setRenderHint(QPainter.PaintEngineFeature.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setPen(QPen(QColor(192, 192, 192, 128), 6))
         painter.drawEllipse(self.rect().adjusted(2, 2, -2, -2))
 
