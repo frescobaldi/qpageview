@@ -159,8 +159,9 @@ class PdfPage(page.AbstractRenderedPage):
 
     def text(self, rect):
         """Returns text inside rectangle."""
+        rectf = rect.toRectF()
         with locking.lock(self.document):
-            return self.document.getSelection(self.pageNumber, rect.topLeft(), rect.bottomRight())
+            return self.document.getSelection(self.pageNumber, rectf.topLeft(), rectf.bottomRight()).text()
 
     def links(self):
         """Return links inside the document."""
