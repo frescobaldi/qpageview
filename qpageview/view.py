@@ -448,7 +448,7 @@ class View(scrollarea.ScrollArea):
 
         """
         from . import pdf
-        self.setDocument(pdf.PdfDocument(self, filename, renderer))
+        self.setDocument(pdf.PdfDocument(filename, renderer))
 
     def loadSvgs(self, filenames, renderer=None):
         """Convenience method to load the specified list of SVG files.
