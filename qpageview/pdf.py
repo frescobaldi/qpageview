@@ -255,7 +255,7 @@ class PdfRenderer(render.AbstractRenderer):
             options.setRotation(_rotation[rotate])
             options.setScaledSize(QSize(int(xres * w), int(yres * h)))
             options.setScaledClipRect(QRect(x, y, w, h))
-            renderedPage = doc.render(pageNum, QSize(int(w), int(h)))
+            renderedPage = doc.render(pageNum, QSize(int(w), int(h)), options)
 
             # If the page does not specify a background color, QtPdf renders
             # the background as transparent. In this case we need to paint the
