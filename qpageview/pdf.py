@@ -221,7 +221,6 @@ class PdfRenderer(render.AbstractRenderer):
         if paperColor is None:
             paperColor = page.paperColor or self.paperColor
 
-        # TODO: Port the complete scaling logic from the Poppler backend.
         doc = page.document
         num = page.pageNumber
         s = page.pageSize()
@@ -231,15 +230,17 @@ class PdfRenderer(render.AbstractRenderer):
         xres = 72.0 * key.width / s.width()
         yres = 72.0 * key.height / s.height()
         multiplier = 2 if xres < self.oversampleThreshold else 1
+        # QtPdf forces us to render the entire page area
         image = self.render_image(doc, num,
             xres * multiplier, yres * multiplier,
-            tile.x * multiplier, tile.y * multiplier, tile.w * multiplier, tile.h * multiplier,
+            0, 0, key.width * multiplier, key.height * multiplier,
             key.rotation, paperColor)
         if multiplier == 2:
             image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
         image.setDotsPerMeterX(int(xres * 39.37))
         image.setDotsPerMeterY(int(yres * 39.37))
-        return image
+        # Crop to the tile boundaries
+        return image.copy(tile.x, tile.y, tile.w, tile.h)
 
     def render_image(self, doc, pageNum,
                      xres=72.0, yres=72.0, x=-1, y=-1, w=-1, h=-1,
