@@ -85,7 +85,7 @@ class SvgRenderer(render.AbstractRenderer):
     """Render SVG pages."""
     def setRenderHints(self, painter):
         """Sets the renderhints for the painter we want to use."""
-        painter.setRenderHint(QPainter.PaintEngineFeature.Antialiasing, self.antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, self.antialiasing)
         painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, self.antialiasing)
 
     def draw(self, page, painter, key, tile, paperColor=None):
