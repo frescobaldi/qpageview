@@ -262,7 +262,8 @@ class PdfRenderer(render.AbstractRenderer):
             # background ourselves.
             image = renderedPage.copy()
             painter = QPainter(image)
-            painter.fillRect(image.rect(), paperColor)
+            if paperColor:
+                painter.fillRect(image.rect(), paperColor)
             painter.drawImage(0, 0, renderedPage)
             painter.end()
             return image
@@ -281,7 +282,6 @@ class PdfRenderer(render.AbstractRenderer):
             target.setSize(target.size().transposed())
 
         doc = page.document
-        p = doc.page(page.pageNumber)
 
         # Make an image exactly in the printer's resolution
         m = painter.transform()
@@ -295,8 +295,11 @@ class PdfRenderer(render.AbstractRenderer):
         s = QTransform().scale(hscale, vscale).mapRect(source)
         dpiX = page.dpi * hscale
         dpiY = page.dpi * vscale
-        img = self.render_image(doc, p,
+        # Render the full page...
+        img = self.render_image(doc, page.pageNumber,
             dpiX, dpiY, s.x(), s.y(), s.width(), s.height())
+        # ...and crop it to the tile size
+        img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
         painter.drawImage(target, img, QRectF(img.rect()))
 
 
