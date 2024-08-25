@@ -303,7 +303,7 @@ class AbstractPage(util.Rectangular):
         pdf.setResolution(int(resolution))
 
         layout = pdf.pageLayout()
-        layout.setMode(layout.FullPageMode)
+        layout.setMode(layout.Mode.FullPageMode)
         layout.setPageSize(QPageSize(targetSize * 72.0 / self.dpi, QPageSize.Unit.Point))
         pdf.setPageLayout(layout)
         return self.output(pdf, source, paperColor)
