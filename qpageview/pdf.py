@@ -300,7 +300,7 @@ class PdfRenderer(render.AbstractRenderer):
             dpiX, dpiY, s.x(), s.y(), s.width(), s.height())
         # ...and crop it to the tile size
         img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
-        painter.drawImage(target, img, QRectF(img.rect()))
+        painter.drawImage(target, img, img.rect().toRectF())
 
 
 def load(source):
