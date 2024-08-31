@@ -268,16 +268,17 @@ class PdfRenderer(render.AbstractRenderer):
 
             renderedPage = doc.render(pageNum, QSize(int(w), int(h)), options)
 
-            # If the page does not specify a background color, QtPdf renders
-            # the background as transparent. In this case we need to paint the
-            # background ourselves.
-            image = renderedPage.copy()
-            painter = QPainter(image)
             if paperColor:
+                # QtPdf leaves the page background transparent, so we need to
+                # paint it ourselves.
+                image = renderedPage.copy()
+                painter = QPainter(image)
                 painter.fillRect(image.rect(), paperColor)
-            painter.drawImage(0, 0, renderedPage)
-            painter.end()
-            return image
+                painter.drawImage(0, 0, renderedPage)
+                painter.end()
+                return image
+            else:
+                return renderedPage
 
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
