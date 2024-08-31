@@ -233,7 +233,7 @@ class PdfRenderer(render.AbstractRenderer):
         # QtPdf forces us to render the entire page area
         image = self.render_image(doc, num,
             xres * multiplier, yres * multiplier,
-            0, 0, key.width * multiplier, key.height * multiplier,
+            key.width * multiplier, key.height * multiplier,
             key.rotation, paperColor)
         if multiplier == 2:
             image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
@@ -243,7 +243,7 @@ class PdfRenderer(render.AbstractRenderer):
         return image.copy(tile.x, tile.y, tile.w, tile.h)
 
     def render_image(self, doc, pageNum,
-                     xres=72.0, yres=72.0, x=-1, y=-1, w=-1, h=-1,
+                     xres=72.0, yres=72.0, w=-1, h=-1,
                      rotate=Rotate_0, paperColor=None):
         """Render an image.
 
@@ -297,7 +297,7 @@ class PdfRenderer(render.AbstractRenderer):
         dpiY = page.dpi * vscale
         # Render the full page...
         img = self.render_image(doc, page.pageNumber,
-            dpiX, dpiY, s.x(), s.y(), s.width(), s.height())
+            dpiX, dpiY, s.width(), s.height())
         # ...and crop it to the tile size
         img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
         painter.drawImage(target, img, img.rect().toRectF())
