@@ -251,10 +251,21 @@ class PdfRenderer(render.AbstractRenderer):
         are set.
 
         """
+        RenderFlag = QPdfDocumentRenderOptions.RenderFlag
         with locking.lock(doc):
             options = QPdfDocumentRenderOptions()
             options.setRotation(_rotation[rotate])
             options.setScaledSize(QSize(int(xres * w), int(yres * h)))
+
+            # This ridiculous back-and-forth conversion is necessary because
+            # PyQt6 won't let you just 'OR' together RenderFlag constants.
+            renderFlags = 0
+            if not self.antialiasing:
+                renderFlags |= RenderFlag.TextAliased.value
+                renderFlags |= RenderFlag.ImageAliased.value
+                renderFlags |= RenderFlag.PathAliased.value
+            options.setRenderFlags(RenderFlag(renderFlags))
+
             renderedPage = doc.render(pageNum, QSize(int(w), int(h)), options)
 
             # If the page does not specify a background color, QtPdf renders
