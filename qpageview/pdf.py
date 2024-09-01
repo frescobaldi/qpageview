@@ -247,6 +247,10 @@ class PdfRenderer(render.AbstractRenderer):
                      rotate=Rotate_0, paperColor=None):
         """Render an image.
 
+        This always renders the full page because that is the only rendering
+        mode supported by QtPdf. If you need a smaller area, you can crop
+        the returned QImage by calling its copy(x, y, w, h) method.
+
         The document is properly locked during rendering and render options
         are set.
 
