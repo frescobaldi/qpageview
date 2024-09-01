@@ -238,7 +238,10 @@ class PdfRenderer(render.AbstractRenderer):
             image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
         image.setDotsPerMeterX(int(xres * 39.37))
         image.setDotsPerMeterY(int(yres * 39.37))
-        return image.copy(tile.x, tile.y, tile.w, tile.h)
+        if tile != (0, 0, key.width, key.height):
+            # Crop the image to the tile boundaries
+            image = image.copy(tile.x, tile.y, tile.w, tile.h)
+        return image
 
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
@@ -269,7 +272,9 @@ class PdfRenderer(render.AbstractRenderer):
         dpiY = page.dpi * vscale
         img = self._render_image(doc, page.pageNumber,
             dpiX, dpiY, s.width(), s.height())
-        img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
+        if tile != (0, 0, key.width, key.height):
+            # Crop the image to the tile boundaries
+            img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
         painter.drawImage(target, img, img.rect().toRectF())
 
     def _render_image(self, doc, pageNum,
