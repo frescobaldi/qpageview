@@ -216,6 +216,16 @@ class PdfDocument(document.SingleSourceDocument):
 class PdfRenderer(render.AbstractRenderer):
     oversampleThreshold = 96
 
+    def tiles(self, width, height):
+        """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
+
+        For the QtPdf backend, this always returns a single tile covering
+        the entire page because QtPdf does not support selectively rendering
+        a smaller area.
+
+        """
+        yield render.Tile(0, 0, width, height)
+
     def render(self, page, key, tile, paperColor=None):
         """Generate an image for the Page referred to by key."""
         if paperColor is None:
