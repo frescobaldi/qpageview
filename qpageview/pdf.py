@@ -231,7 +231,7 @@ class PdfRenderer(render.AbstractRenderer):
         yres = 72.0 * key.height / s.height()
         multiplier = 2 if xres < self.oversampleThreshold else 1
         # QtPdf forces us to render the entire page area
-        image = self.render_image(doc, num,
+        image = self._render_image(doc, num,
             xres * multiplier, yres * multiplier,
             key.width * multiplier, key.height * multiplier,
             key.rotation, paperColor)
@@ -242,9 +242,43 @@ class PdfRenderer(render.AbstractRenderer):
         # Crop to the tile boundaries
         return image.copy(tile.x, tile.y, tile.w, tile.h)
 
-    def render_image(self, doc, pageNum,
-                     xres=72.0, yres=72.0, w=-1, h=-1,
-                     rotate=Rotate_0, paperColor=None):
+    def draw(self, page, painter, key, tile, paperColor=None):
+        """Draw a tile on the painter.
+
+        The painter is already at the right position and rotation.
+        For the PDF renderer, draw() is only used for printing; see
+        AbstractPage.print().
+
+        """
+        source = self.map(key, page.pageRect()).mapRect(QRectF(*tile)).toRect()   # rounded
+        target = QRectF(0, 0, tile.w, tile.h)
+        if key.rotation & 1:
+            target.setSize(target.size().transposed())
+
+        doc = page.document
+
+        # Make an image exactly in the printer's resolution
+        m = painter.transform()
+        r = m.mapRect(source)       # see where the source ends up
+        w, h = r.width(), r.height()
+        if m.m11() == 0:
+            w, h = h, w     # swap if rotation & 1  :-)
+        # now we know the scale from our dpi to the paintdevice's logicalDpi!
+        hscale = w / source.width()
+        vscale = h / source.height()
+        s = QTransform().scale(hscale, vscale).mapRect(source)
+        dpiX = page.dpi * hscale
+        dpiY = page.dpi * vscale
+        # Render the full page...
+        img = self._render_image(doc, page.pageNumber,
+            dpiX, dpiY, s.width(), s.height())
+        # ...and crop it to the tile size
+        img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
+        painter.drawImage(target, img, img.rect().toRectF())
+
+    def _render_image(self, doc, pageNum,
+                      xres=72.0, yres=72.0, w=-1, h=-1,
+                      rotate=Rotate_0, paperColor=None):
         """Render an image.
 
         This always renders the full page because that is the only rendering
@@ -283,40 +317,6 @@ class PdfRenderer(render.AbstractRenderer):
                 return image
             else:
                 return renderedPage
-
-    def draw(self, page, painter, key, tile, paperColor=None):
-        """Draw a tile on the painter.
-
-        The painter is already at the right position and rotation.
-        For the PDF renderer, draw() is only used for printing; see
-        AbstractPage.print().
-
-        """
-        source = self.map(key, page.pageRect()).mapRect(QRectF(*tile)).toRect()   # rounded
-        target = QRectF(0, 0, tile.w, tile.h)
-        if key.rotation & 1:
-            target.setSize(target.size().transposed())
-
-        doc = page.document
-
-        # Make an image exactly in the printer's resolution
-        m = painter.transform()
-        r = m.mapRect(source)       # see where the source ends up
-        w, h = r.width(), r.height()
-        if m.m11() == 0:
-            w, h = h, w     # swap if rotation & 1  :-)
-        # now we know the scale from our dpi to the paintdevice's logicalDpi!
-        hscale = w / source.width()
-        vscale = h / source.height()
-        s = QTransform().scale(hscale, vscale).mapRect(source)
-        dpiX = page.dpi * hscale
-        dpiY = page.dpi * vscale
-        # Render the full page...
-        img = self.render_image(doc, page.pageNumber,
-            dpiX, dpiY, s.width(), s.height())
-        # ...and crop it to the tile size
-        img = img.copy(*(map(int, (tile.x, tile.y, tile.w, tile.h))))
-        painter.drawImage(target, img, img.rect().toRectF())
 
 
 def load(source):
