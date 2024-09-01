@@ -123,7 +123,7 @@ class PdfPage(page.AbstractRenderedPage):
         """Convenience class method yielding instances of this class.
 
         The Page instances are created from the document, in page number order.
-        The specified Renderer is used, or else the global poppler renderer.
+        The specified Renderer is used, or else the global QtPdf renderer.
         If pageSlice is given, it should be a slice object and only those pages
         are then loaded.
 
