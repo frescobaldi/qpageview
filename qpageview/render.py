@@ -248,7 +248,7 @@ class AbstractRenderer:
         coordinates. Don't use width, height and rotation from the Page object,
         as it could have been resized or rotated in the mean time.
 
-        The paperColor can be speficied, but it is not needed to paint it: by
+        The paperColor can be specified, but it is not needed to paint it: by
         default the render() method already fills the image, and when drawing on
         a printer, painting the background is normally not desired.
 
