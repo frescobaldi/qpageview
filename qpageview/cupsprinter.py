@@ -323,7 +323,8 @@ def clearPageSetSetting(printer):
 
     """
     # see qt5/qtbase/src/printsupport/kernel/qcups.cpp
-    opts = printer.printEngine().property(0xfe00)
+    key = QPrintEngine.PrintEnginePropertyKey(0xfe00)
+    opts = printer.printEngine().property(key)
     if opts and isinstance(opts, list) and len(opts) % 2 == 0:
         try:
             i = opts.index('page-set')
@@ -331,7 +332,7 @@ def clearPageSetSetting(printer):
             return
         if i % 2 == 0:
             del opts[i:i+2]
-            printer.printEngine().setProperty(0xfe00, opts)
+            printer.printEngine().setProperty(key, opts)
 
 
 PAGE_SIZES = {
