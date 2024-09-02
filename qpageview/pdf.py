@@ -313,19 +313,16 @@ class PdfRenderer(render.AbstractRenderer):
                 renderFlags |= RenderFlag.PathAliased.value
             options.setRenderFlags(RenderFlag(renderFlags))
 
-            renderedPage = doc.render(pageNum, QSize(int(w), int(h)), options)
-
+            image = doc.render(pageNum, QSize(int(w), int(h)), options)
             if paperColor:
                 # QtPdf leaves the page background transparent, so we need to
                 # paint it ourselves.
-                image = renderedPage.copy()
+                content = image.copy()
                 painter = QPainter(image)
                 painter.fillRect(image.rect(), paperColor)
-                painter.drawImage(0, 0, renderedPage)
+                painter.drawImage(0, 0, content)
                 painter.end()
-                return image
-            else:
-                return renderedPage
+            return image
 
 
 def load(source):
