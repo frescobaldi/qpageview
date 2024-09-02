@@ -228,7 +228,8 @@ class AbstractRenderer:
             paperColor = page.paperColor or self.paperColor
 
         i = QImage(tile.w, tile.h, self.imageFormat)
-        i.fill(paperColor)
+        if paperColor:
+            i.fill(paperColor)
         painter = QPainter(i)
 
         # rotate the painter accordingly
