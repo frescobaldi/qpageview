@@ -227,30 +227,31 @@ class PdfRenderer(render.AbstractRenderer):
         yield render.Tile(0, 0, width, height)
 
     def render(self, page, key, tile, paperColor=None):
-        """Generate an image for the Page referred to by key."""
-        if paperColor is None:
-            paperColor = page.paperColor or self.paperColor
+        """Generate an image for the Page referred to by key.
 
-        doc = page.document
-        num = page.pageNumber
+        This wraps AbstractRenderer.render() to implement oversampling
+        when rendering at lower resolutions.
+
+        """
         s = page.pageSize()
         if key.rotation & 1:
             s.transpose()
 
         xres = 72.0 * key.width / s.width()
         yres = 72.0 * key.height / s.height()
-        multiplier = 2 if xres < self.oversampleThreshold else 1
-        image = self._render_image(doc, num,
-            xres * multiplier, yres * multiplier,
-            key.width * multiplier, key.height * multiplier,
-            key.rotation, paperColor)
-        if multiplier == 2:
-            image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
+        if xres < self.oversampleThreshold:
+            # Render the image at double the requested resolution,
+            # then scale it down
+            doubleKey = render.Key(key.group, key.ident, key.rotation,
+                key.width * 2, key.height * 2)
+            doubleTile = render.Tile(*map(lambda x: x * 2, tile))
+            image = super().render(page, doubleKey, doubleTile, paperColor)
+            image = image.scaledToWidth(tile.w,
+                Qt.TransformationMode.SmoothTransformation)
+        else:
+            image = super().render(page, key, tile, paperColor)
         image.setDotsPerMeterX(int(xres * 39.37))
         image.setDotsPerMeterY(int(yres * 39.37))
-        if tile != (0, 0, key.width, key.height):
-            # Crop the image to the tile boundaries
-            image = image.copy(tile.x, tile.y, tile.w, tile.h)
         return image
 
     def draw(self, page, painter, key, tile, paperColor=None):
