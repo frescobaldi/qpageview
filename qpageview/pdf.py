@@ -248,7 +248,7 @@ class PdfRenderer(render.AbstractRenderer):
             image = image.copy(*map(int, tile))
 
         # Erase the target area and draw the image
-        painter.eraseRect(QRectF(image.rect()))
+        painter.eraseRect(target)
         painter.drawImage(target, image, QRectF(image.rect()))
 
         # Scale the image to our output device's resolution
