@@ -258,8 +258,6 @@ class PdfRenderer(render.AbstractRenderer):
         """Draw a tile on the painter.
 
         The painter is already at the right position and rotation.
-        For the PDF renderer, draw() is only used for printing; see
-        AbstractPage.print().
 
         """
         target = QRectF(0, 0, tile.w, tile.h)
