@@ -232,20 +232,44 @@ class PdfRenderer(render.AbstractRenderer):
         The painter is already at the right position and rotation.
 
         """
+        pageSize = page.pageSize()  # in points
+        # key and tile coordinates scale with device resolution and zoom level
+        source = QRectF(0, 0, key.width, key.height)
         target = QRectF(0, 0, tile.w, tile.h)
         if key.rotation & 1:
+            pageSize.transpose()
             target.setSize(target.size().transposed())
 
         doc = page.document
         num = page.pageNumber
+        xres = painter.device().logicalDpiX()
+        yres = painter.device().logicalDpiY()
 
-        # Adapted from the drawing logic for Poppler's Arthur backend
+        # If our effective resolution at this zoom level puts us below the
+        # oversample threshold, render the image at double the requested size
+        xresEffective = 72.0 * key.width / pageSize.width()
+        yresEffective = 72.0 * key.height / pageSize.height()
+        if xresEffective < self.oversampleThreshold: xres *= 2
+        if yresEffective < self.oversampleThreshold: yres *= 2
+
+        # Scale from key/tile to device coordinates
+        scale = QTransform().scale(xres / page.dpi, yres / page.dpi)
+
+        # Render the image at the output device's resolution
+        s = scale.mapRect(source)
         image = self._render_image(doc, num,
-            page.dpi, page.dpi, key.width, key.height, key.rotation,
+            xres, yres, int(s.width()), int(s.height()), key.rotation,
             paperColor)
+
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
-            image = image.copy(*map(int, tile))
+            image = image.copy(scale.mapRect(QRect(*map(int, tile))))
+
+        if not xres == yres == page.dpi:
+            # Scale the image to our requested resolution
+            image = image.scaled(int(tile.w), int(tile.h),
+                Qt.AspectRatioMode.IgnoreAspectRatio,
+                Qt.TransformationMode.SmoothTransformation)
 
         # Erase the target area and draw the image
         painter.eraseRect(target)
@@ -266,14 +290,8 @@ class PdfRenderer(render.AbstractRenderer):
         """
         RenderFlag = QPdfDocumentRenderOptions.RenderFlag
         with locking.lock(doc):
-            if xres < self.oversampleThreshold:
-                # Render at double the requested resolution
-                w *= 2
-                h *= 2
-
             options = QPdfDocumentRenderOptions()
             options.setRotation(_rotation[rotate])
-            options.setScaledSize(QSize(int(xres * w), int(yres * h)))
 
             # This ridiculous back-and-forth conversion is necessary because
             # PyQt6 won't let you just 'OR' together RenderFlag constants.
@@ -294,12 +312,7 @@ class PdfRenderer(render.AbstractRenderer):
                 painter.drawImage(0, 0, content)
                 painter.end()
 
-            if xres < self.oversampleThreshold:
-                # Scale the image down to the requested resolution
-                return image.scaledToWidth(int(w / 2),
-                    Qt.TransformationMode.SmoothTransformation)
-            else:
-                return image
+            return image
 
 
 def load(source):
