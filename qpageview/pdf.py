@@ -251,10 +251,6 @@ class PdfRenderer(render.AbstractRenderer):
         painter.eraseRect(target)
         painter.drawImage(target, image, QRectF(image.rect()))
 
-        # Scale the image to our output device's resolution
-        painter.scale(image.logicalDpiX() / painter.device().logicalDpiX(),
-                      image.logicalDpiY() / painter.device().logicalDpiY())
-
     def _render_image(self, doc, pageNum,
                       xres=72.0, yres=72.0, w=-1, h=-1,
                       rotate=Rotate_0, paperColor=None):
