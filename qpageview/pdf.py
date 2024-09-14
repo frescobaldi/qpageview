@@ -226,34 +226,6 @@ class PdfRenderer(render.AbstractRenderer):
         """
         yield render.Tile(0, 0, width, height)
 
-    def render(self, page, key, tile, paperColor=None):
-        """Generate an image for the Page referred to by key.
-
-        This wraps AbstractRenderer.render() to implement oversampling
-        when rendering at lower resolutions.
-
-        """
-        s = page.pageSize()
-        if key.rotation & 1:
-            s.transpose()
-
-        xres = 72.0 * key.width / s.width()
-        yres = 72.0 * key.height / s.height()
-        if xres < self.oversampleThreshold:
-            # Render the image at double the requested resolution,
-            # then scale it down
-            doubleKey = render.Key(key.group, key.ident, key.rotation,
-                key.width * 2, key.height * 2)
-            doubleTile = render.Tile(*map(lambda x: x * 2, tile))
-            image = super().render(page, doubleKey, doubleTile, paperColor)
-            image = image.scaledToWidth(tile.w,
-                Qt.TransformationMode.SmoothTransformation)
-        else:
-            image = super().render(page, key, tile, paperColor)
-        image.setDotsPerMeterX(int(xres * 39.37))
-        image.setDotsPerMeterY(int(yres * 39.37))
-        return image
-
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
 
@@ -298,6 +270,11 @@ class PdfRenderer(render.AbstractRenderer):
         """
         RenderFlag = QPdfDocumentRenderOptions.RenderFlag
         with locking.lock(doc):
+            if xres < self.oversampleThreshold:
+                # Render at double the requested resolution
+                w *= 2
+                h *= 2
+
             options = QPdfDocumentRenderOptions()
             options.setRotation(_rotation[rotate])
             options.setScaledSize(QSize(int(xres * w), int(yres * h)))
@@ -320,7 +297,13 @@ class PdfRenderer(render.AbstractRenderer):
                 painter.fillRect(image.rect(), paperColor)
                 painter.drawImage(0, 0, content)
                 painter.end()
-            return image
+
+            if xres < self.oversampleThreshold:
+                # Scale the image down to the requested resolution
+                return image.scaledToWidth(int(w / 2),
+                    Qt.TransformationMode.SmoothTransformation)
+            else:
+                return image
 
 
 def load(source):
