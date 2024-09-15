@@ -265,7 +265,13 @@ class PdfRenderer(render.AbstractRenderer):
             # Crop the image to the tile boundaries
             image = image.copy(scale.mapRect(QRect(*map(int, tile))))
 
-        if not xres == yres == page.dpi:
+        # When we are displaying an image on screen, our painter coordinates
+        # are "actual size", and we need to scale the image ourselves for good
+        # display quality. When printing, the painter coordinates are scaled to
+        # the device's resolution, and we need the image at its original size.
+        vscale = painter.deviceTransform().m11()
+        hscale = painter.deviceTransform().m22()
+        if vscale == hscale == 1 and not xres == yres == page.dpi:
             # Scale the image to our requested resolution
             image = image.scaled(int(tile.w), int(tile.h),
                 Qt.AspectRatioMode.IgnoreAspectRatio,
