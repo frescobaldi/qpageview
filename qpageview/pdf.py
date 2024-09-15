@@ -30,7 +30,7 @@ import weakref
 import platform
 
 from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
-from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
+from PyQt6.QtGui import QPainter, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
 from . import document
@@ -317,7 +317,6 @@ class PdfRenderer(render.AbstractRenderer):
                 painter.fillRect(image.rect(), paperColor)
                 painter.drawImage(0, 0, content)
                 painter.end()
-
             return image
 
 
