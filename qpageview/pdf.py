@@ -269,7 +269,8 @@ class PdfRenderer(render.AbstractRenderer):
             if xresEffective < self.oversampleThreshold: xMultiplier = 2
             if yresEffective < self.oversampleThreshold: yMultiplier = 2
 
-        # Render the image at the output device's resolution
+        # Render the image at the output device's resolution (or double
+        # that if we are oversampling)
         s = scale.scale(xMultiplier, yMultiplier).mapRect(source)
         image = self._render_image(doc, num,
             xres * xMultiplier, yres * yMultiplier,
