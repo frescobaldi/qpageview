@@ -30,7 +30,7 @@ import weakref
 import platform
 
 from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
-from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
+from PyQt6.QtGui import QRegion, QPainter, QPicture
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
 from . import document
@@ -245,12 +245,15 @@ class PdfRenderer(render.AbstractRenderer):
         xres = painter.device().logicalDpiX()
         yres = painter.device().logicalDpiY()
 
+        # Scale from key/tile to device coordinates
+        scale = painter.deviceTransform()
+
         # When we are displaying an image on screen, our painter coordinates
         # are "actual size", and we need to scale the image ourselves for good
         # display quality. When printing, the painter coordinates are scaled to
         # the device's resolution, and we need the image at its original size.
-        vscale = painter.deviceTransform().m11()
-        hscale = painter.deviceTransform().m22()
+        vscale = scale.m11()
+        hscale = scale.m22()
         actualSize = (vscale == hscale == 1)
 
         # Oversampling is only necessary when painting at "actual size"
@@ -261,9 +264,6 @@ class PdfRenderer(render.AbstractRenderer):
             yresEffective = 72.0 * key.height / pageSize.height()
             if xresEffective < self.oversampleThreshold: xres *= 2
             if yresEffective < self.oversampleThreshold: yres *= 2
-
-        # Scale from key/tile to device coordinates
-        scale = QTransform().scale(xres / page.dpi, yres / page.dpi)
 
         # Render the image at the output device's resolution
         s = scale.mapRect(source)
