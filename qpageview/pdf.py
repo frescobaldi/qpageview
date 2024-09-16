@@ -249,9 +249,9 @@ class PdfRenderer(render.AbstractRenderer):
         scale = painter.deviceTransform()
 
         # When we are displaying an image on screen, our painter coordinates
-        # are "actual size", and we need to scale the image ourselves for good
-        # display quality. When printing, the painter coordinates are scaled to
-        # the device's resolution, and we need the image at its original size.
+        # are "actual size" and scaling is our responsibility. When printing,
+        # the painter coordinates are scaled to the device's resolution and
+        # scaling is the device's responsibility.
         vscale = scale.m11()
         hscale = scale.m22()
         actualSize = (vscale == hscale == 1)
