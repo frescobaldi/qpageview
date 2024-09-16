@@ -270,11 +270,10 @@ class PdfRenderer(render.AbstractRenderer):
             if yresEffective < self.oversampleThreshold: yMultiplier = 2
 
         # Render the image at the output device's resolution
-        s = scale.mapRect(source)
+        s = scale.scale(xMultiplier, yMultiplier).mapRect(source)
         image = self._render_image(doc, num,
             xres * xMultiplier, yres * yMultiplier,
-            int(s.width() * xMultiplier), int(s.height() * yMultiplier),
-            key.rotation, paperColor)
+            int(s.width()), int(s.height()), key.rotation, paperColor)
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
