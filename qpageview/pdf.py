@@ -251,9 +251,10 @@ class PdfRenderer(render.AbstractRenderer):
         # the device's resolution, and we need the image at its original size.
         vscale = painter.deviceTransform().m11()
         hscale = painter.deviceTransform().m22()
+        actualSize = (vscale == hscale == 1)
 
         # Oversampling is only necessary when painting at "actual size"
-        if vscale == hscale == 1:
+        if actualSize:
             # If our effective resolution at this zoom level is below the
             # oversample threshold, render at double the requested size
             xresEffective = 72.0 * key.width / pageSize.width()
@@ -274,7 +275,7 @@ class PdfRenderer(render.AbstractRenderer):
             # Crop the image to the tile boundaries
             image = image.copy(scale.mapRect(QRect(*map(int, tile))))
 
-        if vscale == hscale == 1 and not xres == yres == page.dpi:
+        if actualSize and not xres == yres == page.dpi:
             # Scale the image to our requested resolution
             image = image.scaled(int(tile.w), int(tile.h),
                 Qt.AspectRatioMode.IgnoreAspectRatio,
