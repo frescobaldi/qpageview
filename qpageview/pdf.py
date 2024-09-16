@@ -30,7 +30,7 @@ import weakref
 import platform
 
 from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
-from PyQt6.QtGui import QPainter, QTransform
+from PyQt6.QtGui import QPainter
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
 from . import document
@@ -245,35 +245,44 @@ class PdfRenderer(render.AbstractRenderer):
         xres = painter.device().logicalDpiX()
         yres = painter.device().logicalDpiY()
 
-        # If our effective resolution at this zoom level puts us below the
-        # oversample threshold, render the image at double the requested size
-        xresEffective = 72.0 * key.width / pageSize.width()
-        yresEffective = 72.0 * key.height / pageSize.height()
-        if xresEffective < self.oversampleThreshold: xres *= 2
-        if yresEffective < self.oversampleThreshold: yres *= 2
-
         # Scale from key/tile to device coordinates
-        scale = QTransform().scale(xres / page.dpi, yres / page.dpi)
+        scale = painter.deviceTransform()
 
-        # Render the image at the output device's resolution
-        s = scale.mapRect(source)
+        # When we are displaying an image on screen, our painter coordinates
+        # are "actual size" and scaling is our responsibility. When printing,
+        # the painter coordinates are scaled to the device's resolution and
+        # scaling is the device's responsibility.
+        vscale = scale.m11()
+        hscale = scale.m22()
+        actualSize = (vscale == hscale == 1)
+
+        # Oversampling produces more readable output at lower resolutions
+        # when painting at "actual size"
+        xMultiplier = 1
+        yMultiplier = 1
+
+        if actualSize:
+            # If our effective resolution at this zoom level is below the
+            # oversample threshold, render at double the requested size
+            xresEffective = 72.0 * key.width / pageSize.width()
+            yresEffective = 72.0 * key.height / pageSize.height()
+            if xresEffective < self.oversampleThreshold: xMultiplier = 2
+            if yresEffective < self.oversampleThreshold: yMultiplier = 2
+
+        # Render the image at the output device's resolution (or double
+        # that if we are oversampling)
+        s = scale.scale(xMultiplier, yMultiplier).mapRect(source)
         image = self._render_image(doc, num,
-            xres, yres, int(s.width()), int(s.height()), key.rotation,
-            paperColor)
+            xres * xMultiplier, yres * yMultiplier,
+            int(s.width()), int(s.height()), key.rotation, paperColor)
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
             image = image.copy(scale.mapRect(QRect(*map(int, tile))))
 
-        # When we are displaying an image on screen, our painter coordinates
-        # are "actual size", and we need to scale the image ourselves for good
-        # display quality. When printing, the painter coordinates are scaled to
-        # the device's resolution, and we need the image at its original size.
-        vscale = painter.deviceTransform().m11()
-        hscale = painter.deviceTransform().m22()
-        if vscale == hscale == 1 and not xres == yres == page.dpi:
+        if actualSize and QRectF(image.rect()) != target:
             # Scale the image to our requested resolution
-            image = image.scaled(int(tile.w), int(tile.h),
+            image = image.scaled(int(target.width()), int(target.height()),
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
 
