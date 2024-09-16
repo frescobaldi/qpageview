@@ -214,6 +214,9 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
+    # Oversampling produces much more readable output at lower resolutions
+    # when using Poppler, but I'm not convinced it's as helpful with QtPdf.
+    useOversampling = False
     oversampleThreshold = 96
 
     def tiles(self, width, height):
@@ -256,8 +259,8 @@ class PdfRenderer(render.AbstractRenderer):
         hscale = scale.m22()
         actualSize = (vscale == hscale == 1)
 
-        # Oversampling is only necessary when painting at "actual size"
-        if actualSize:
+        # Oversampling is only useful when painting at "actual size"
+        if actualSize and self.useOversampling:
             # If our effective resolution at this zoom level is below the
             # oversample threshold, render at double the requested size
             xresEffective = 72.0 * key.width / pageSize.width()
