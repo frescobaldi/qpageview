@@ -245,12 +245,21 @@ class PdfRenderer(render.AbstractRenderer):
         xres = painter.device().logicalDpiX()
         yres = painter.device().logicalDpiY()
 
-        # If our effective resolution at this zoom level puts us below the
-        # oversample threshold, render the image at double the requested size
-        xresEffective = 72.0 * key.width / pageSize.width()
-        yresEffective = 72.0 * key.height / pageSize.height()
-        if xresEffective < self.oversampleThreshold: xres *= 2
-        if yresEffective < self.oversampleThreshold: yres *= 2
+        # When we are displaying an image on screen, our painter coordinates
+        # are "actual size", and we need to scale the image ourselves for good
+        # display quality. When printing, the painter coordinates are scaled to
+        # the device's resolution, and we need the image at its original size.
+        vscale = painter.deviceTransform().m11()
+        hscale = painter.deviceTransform().m22()
+
+        # Oversampling is only necessary when painting at "actual size"
+        if vscale == hscale == 1:
+            # If our effective resolution at this zoom level is below the
+            # oversample threshold, render at double the requested size
+            xresEffective = 72.0 * key.width / pageSize.width()
+            yresEffective = 72.0 * key.height / pageSize.height()
+            if xresEffective < self.oversampleThreshold: xres *= 2
+            if yresEffective < self.oversampleThreshold: yres *= 2
 
         # Scale from key/tile to device coordinates
         scale = QTransform().scale(xres / page.dpi, yres / page.dpi)
@@ -265,12 +274,6 @@ class PdfRenderer(render.AbstractRenderer):
             # Crop the image to the tile boundaries
             image = image.copy(scale.mapRect(QRect(*map(int, tile))))
 
-        # When we are displaying an image on screen, our painter coordinates
-        # are "actual size", and we need to scale the image ourselves for good
-        # display quality. When printing, the painter coordinates are scaled to
-        # the device's resolution, and we need the image at its original size.
-        vscale = painter.deviceTransform().m11()
-        hscale = painter.deviceTransform().m22()
         if vscale == hscale == 1 and not xres == yres == page.dpi:
             # Scale the image to our requested resolution
             image = image.scaled(int(tile.w), int(tile.h),
