@@ -216,7 +216,7 @@ class PdfDocument(document.SingleSourceDocument):
 class PdfRenderer(render.AbstractRenderer):
     # Oversampling produces much more readable output at lower resolutions
     # when using Poppler, but I'm not convinced it's as helpful with QtPdf.
-    useOversampling = False
+    useOversampling = True
     oversampleThreshold = 96
 
     def tiles(self, width, height):
@@ -259,28 +259,33 @@ class PdfRenderer(render.AbstractRenderer):
         hscale = scale.m22()
         actualSize = (vscale == hscale == 1)
 
+        # For oversampling
+        xMultiplier = 1
+        yMultiplier = 1
+
         # Oversampling is only useful when painting at "actual size"
         if actualSize and self.useOversampling:
             # If our effective resolution at this zoom level is below the
             # oversample threshold, render at double the requested size
             xresEffective = 72.0 * key.width / pageSize.width()
             yresEffective = 72.0 * key.height / pageSize.height()
-            if xresEffective < self.oversampleThreshold: xres *= 2
-            if yresEffective < self.oversampleThreshold: yres *= 2
+            if xresEffective < self.oversampleThreshold: xMultiplier = 2
+            if yresEffective < self.oversampleThreshold: yMultiplier = 2
 
         # Render the image at the output device's resolution
         s = scale.mapRect(source)
         image = self._render_image(doc, num,
-            xres, yres, int(s.width()), int(s.height()), key.rotation,
-            paperColor)
+            xres * xMultiplier, yres * yMultiplier,
+            int(s.width() * xMultiplier), int(s.height() * yMultiplier),
+            key.rotation, paperColor)
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
             image = image.copy(scale.mapRect(QRect(*map(int, tile))))
 
-        if actualSize and not xres == yres == page.dpi:
+        if actualSize and QRectF(image.rect()) != target:
             # Scale the image to our requested resolution
-            image = image.scaled(int(tile.w), int(tile.h),
+            image = image.scaled(int(target.width()), int(target.height()),
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
 
