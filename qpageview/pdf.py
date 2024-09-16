@@ -214,8 +214,6 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
-    oversampleThreshold = 96
-
     def tiles(self, width, height):
         """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
 
@@ -258,16 +256,16 @@ class PdfRenderer(render.AbstractRenderer):
 
         # Oversampling produces more readable output at lower resolutions
         # when painting at "actual size"
-        xMultiplier = 1
-        yMultiplier = 1
-
         if actualSize:
-            # If our effective resolution at this zoom level is below the
-            # oversample threshold, render at double the requested size
+            # If our effective resolution at this zoom level is lower than
+            # the device's resolution, render at double size then downscale
             xresEffective = 72.0 * key.width / pageSize.width()
             yresEffective = 72.0 * key.height / pageSize.height()
-            if xresEffective < self.oversampleThreshold: xMultiplier = 2
-            if yresEffective < self.oversampleThreshold: yMultiplier = 2
+            xMultiplier = 2 if xresEffective < xres else 1
+            yMultiplier = 2 if yresEffective < yres else 1
+        else:
+            xMultiplier = 1
+            yMultiplier = 1
 
         # Render the image at the output device's resolution (or double
         # that if we are oversampling)
