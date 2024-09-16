@@ -245,15 +245,15 @@ class PdfRenderer(render.AbstractRenderer):
         xres = painter.device().logicalDpiX()
         yres = painter.device().logicalDpiY()
 
-        # Scale from key/tile to device coordinates
-        scale = painter.deviceTransform()
+        # We use this to scale from key/tile to device coordinates
+        matrix = painter.deviceTransform()
 
         # When we are displaying an image on screen, our painter coordinates
         # are "actual size" and scaling is our responsibility. When printing,
         # the painter coordinates are scaled to the device's resolution and
         # scaling is the device's responsibility.
-        vscale = scale.m11()
-        hscale = scale.m22()
+        vscale = matrix.m11()
+        hscale = matrix.m22()
         actualSize = (vscale == hscale == 1)
 
         # Oversampling produces more readable output at lower resolutions
@@ -271,14 +271,14 @@ class PdfRenderer(render.AbstractRenderer):
 
         # Render the image at the output device's resolution (or double
         # that if we are oversampling)
-        s = scale.scale(xMultiplier, yMultiplier).mapRect(source)
+        s = matrix.scale(xMultiplier, yMultiplier).mapRect(source)
         image = self._render_image(doc, num,
             xres * xMultiplier, yres * yMultiplier,
             int(s.width()), int(s.height()), key.rotation, paperColor)
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
-            image = image.copy(scale.mapRect(QRect(*map(int, tile))))
+            image = image.copy(matrix.mapRect(QRect(*map(int, tile))))
 
         if actualSize and QRectF(image.rect()) != target:
             # Scale the image to our requested resolution
