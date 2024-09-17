@@ -214,7 +214,7 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
-    oversampleThreshold = 96
+    oversampleThreshold = 96    # determined experimentally?
 
     def tiles(self, width, height):
         """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
