@@ -259,8 +259,8 @@ class PdfRenderer(render.AbstractRenderer):
         # Oversampling produces more readable output at lower resolutions
         # when painting at "actual size"
         if actualSize:
-            # If our effective resolution at this zoom level is lower than
-            # the device's resolution, render at double size then downscale
+            # If our effective pixel density at this zoom level is below
+            # our threshold, render at double size then downscale
             xresEffective = 72.0 * key.width / pageSize.width()
             yresEffective = 72.0 * key.height / pageSize.height()
             xMultiplier = 2 if xresEffective < self.oversampleThreshold else 1
