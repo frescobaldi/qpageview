@@ -214,7 +214,7 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
-    oversampleThreshold = 96    # determined experimentally?
+    oversampleThreshold = 96    # DPI of a standard PC screen
 
     def tiles(self, width, height):
         """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
