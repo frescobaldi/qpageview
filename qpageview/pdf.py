@@ -214,6 +214,8 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
+    oversampleThreshold = 96
+
     def tiles(self, width, height):
         """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
 
@@ -261,8 +263,8 @@ class PdfRenderer(render.AbstractRenderer):
             # the device's resolution, render at double size then downscale
             xresEffective = 72.0 * key.width / pageSize.width()
             yresEffective = 72.0 * key.height / pageSize.height()
-            xMultiplier = 2 if xresEffective < xres else 1
-            yMultiplier = 2 if yresEffective < yres else 1
+            xMultiplier = 2 if xresEffective < self.oversampleThreshold else 1
+            yMultiplier = 2 if yresEffective < self.oversampleThreshold else 1
         else:
             xMultiplier = 1
             yMultiplier = 1
