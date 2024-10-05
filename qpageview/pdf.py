@@ -90,7 +90,8 @@ class Link(link.Link):
     @property
     def url(self):
         """The URL the link points to."""
-        url = self.linkobj.data(self.index, QPdfLinkModel.Role.Url.value).toString()
+        url = self.linkobj.data(self.index,
+                                QPdfLinkModel.Role.Url.value).toString()
         if platform.system() == "Windows":
             # If this is a local path, make sure there is a colon after the
             # drive letter (QUrl likes to strip it out)
@@ -161,7 +162,8 @@ class PdfPage(page.AbstractRenderedPage):
         """Returns text inside rectangle."""
         rectf = self.mapFromPage(self.pageWidth, self.pageHeight).rect(rect)
         with locking.lock(self.document):
-            return self.document.getSelection(self.pageNumber, rectf.topLeft(), rectf.bottomRight()).text()
+            return self.document.getSelection(
+                self.pageNumber, rectf.topLeft(), rectf.bottomRight()).text()
 
     def links(self):
         """Return links inside the document."""
@@ -175,7 +177,8 @@ class PdfPage(page.AbstractRenderedPage):
                 links = []
                 for row in range(lm.rowCount(parentIndex)):
                     index = lm.index(row, 0, parentIndex)
-                    links.append(Link(lm, index, document.pagePointSize(pageNumber)))
+                    links.append(Link(lm, index,
+                                      document.pagePointSize(pageNumber)))
                 links = link.Links(links)
             _linkscache.setdefault(document, {})[pageNumber] = links
             return links
