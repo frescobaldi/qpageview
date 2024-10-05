@@ -93,14 +93,21 @@ class Link(link.Link):
         url = self.linkobj.data(self.index,
                                 QPdfLinkModel.Role.Url.value).toString()
         if platform.system() == "Windows":
-            # If this is a local path, make sure there is a colon after the
-            # drive letter (QUrl likes to strip it out)
+            # Fix weird things QUrl does to local paths
             for proto in ("file", "textedit"):
-                pattern = "{0}://".format(proto)
-                pos = len(pattern) + 1  # the colon should be here
-                if (url.startswith(pattern)
-                    and url[pos - 1].isalpha() and url[pos] == "/"):
-                    url = ":".join((url[0:pos], url[pos:]))
+                scheme = "{0}://".format(proto)
+                pos = len(scheme) + 1  # the colon should be here
+                if (url.startswith(scheme)
+                    and url[pos - 1].isalpha() and not url[pos].isalpha()):
+                    # Capitalize the drive letter because that is the standard
+                    # format, and some path-matching functions (incorrectly)
+                    # assume case sensitivity
+                    driveLetter = url[pos - 1].upper()
+                    # Make sure there is a colon after the drive letter
+                    if url[pos] != ":":
+                        driveLetter = "{0}:".format(driveLetter)
+                    path = url[pos:]
+                    url = "".join((scheme, driveLetter, path))
         return url
 
 
