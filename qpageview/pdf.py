@@ -85,7 +85,9 @@ class Link(link.Link):
     def targetPage(self):
         """If this is an internal link, the page number to which the
         link should jump; otherwise -1."""
-        return self.linkobj.data(self.index, QPdfLinkModel.Role.Page.value)
+        # QtPdf pages are 0-indexed, but our View is 1-indexed
+        page = self.linkobj.data(self.index, QPdfLinkModel.Role.Page.value)
+        return (page + 1) if page != -1 else -1
 
     @property
     def url(self):
