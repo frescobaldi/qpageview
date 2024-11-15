@@ -31,7 +31,7 @@ sizes or rotations.
 
 import collections
 
-from PyQt5.QtCore import pyqtSignal, QEvent, QRectF, Qt
+from PyQt6.QtCore import pyqtSignal, QEvent, QRectF, Qt
 
 from . import page
 from . import rectangles
@@ -40,6 +40,9 @@ Area = collections.namedtuple("Area", "left top right bottom")
 
 
 class Link:
+    fileName = ""
+    isExternal = False
+    targetPage = -1
     url = ""
     tooltip = ""
     area = Area(0, 0, 0, 0)
@@ -48,6 +51,8 @@ class Link:
         self.area = Area(left, top, right, bottom)
         if url:
             self.url = url
+            if "://" in url:
+                self.isExternal = True
         if tooltip:
             self.tooltip = tooltip
 
@@ -158,7 +163,7 @@ class LinkViewMixin:
         method to do something different.
 
         """
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.linkHovered.emit(page, link)
         if self._linkHighlighter:
             self.highlight({page: [link.rect()]}, self._linkHighlighter, 3000)
@@ -199,7 +204,7 @@ class LinkViewMixin:
 
     def event(self, ev):
         """Reimplemented to handle HelpEvent for links."""
-        if self.linksEnabled and ev.type() in (QEvent.ToolTip, QEvent.WhatsThis):
+        if self.linksEnabled and ev.type() in (QEvent.Type.ToolTip, QEvent.Type.WhatsThis):
             page, link = self.linkAt(ev.pos())
             if link:
                 self.linkHelpEvent(ev, page, link)

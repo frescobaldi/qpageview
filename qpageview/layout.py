@@ -29,7 +29,7 @@ import copy
 import itertools
 import math
 
-from PyQt5.QtCore import QMargins, QPoint, QPointF, QRect, QSize, Qt
+from PyQt6.QtCore import QMargins, QPoint, QPointF, QRect, QSize, Qt
 
 from . import rectangles
 from . import util
@@ -67,7 +67,7 @@ class PageLayout(util.Rectangular, list):
         dpiY = 72.0
         rotation = Rotate_0
         orientation = Vertical
-        alignment = Qt.AlignCenter
+        alignment = Qt.AlignmentFlag.AlignCenter
 
     The layout has margins around each page, accessible via pageMargins(), and
     margins around the whole layout, accessible via margins(). Both have class
@@ -101,7 +101,7 @@ class PageLayout(util.Rectangular, list):
     dpiY = 72.0
     rotation = Rotate_0
     orientation = Vertical
-    alignment = Qt.AlignCenter
+    alignment = Qt.AlignmentFlag.AlignCenter
 
     continuousMode = True
     currentPageSet = 0  # used in non-continuous mode

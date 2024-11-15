@@ -24,9 +24,9 @@ A page that can display a SVG document.
 
 """
 
-from PyQt5.QtCore import QRect, QRectF, Qt
-from PyQt5.QtGui import QColor, QPainter
-from PyQt5.QtSvg import QSvgRenderer
+from PyQt6.QtCore import QRect, QRectF, Qt
+from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtSvg import QSvgRenderer
 
 from .constants import (
     Rotate_0,
@@ -85,8 +85,8 @@ class SvgRenderer(render.AbstractRenderer):
     """Render SVG pages."""
     def setRenderHints(self, painter):
         """Sets the renderhints for the painter we want to use."""
-        painter.setRenderHint(QPainter.Antialiasing, self.antialiasing)
-        painter.setRenderHint(QPainter.TextAntialiasing, self.antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, self.antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, self.antialiasing)
 
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw the specified tile of the page (coordinates in key) on painter."""
@@ -100,7 +100,7 @@ class SvgRenderer(render.AbstractRenderer):
             # we must specify the target otherwise QSvgRenderer scales to the
             # unrotated image
             painter.save()
-            painter.setClipRect(target, Qt.IntersectClip)
+            painter.setClipRect(target, Qt.ClipOperation.IntersectClip)
             # QSvgRenderer seems to set antialiasing always on anyway... :-)
             self.setRenderHints(painter)
             page._svg.render(painter, target)

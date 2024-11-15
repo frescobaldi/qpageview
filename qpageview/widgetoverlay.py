@@ -25,7 +25,7 @@ View mixin class to display QWidgets on top of a Page.
 
 import collections
 
-from PyQt5.QtCore import QPoint, QRect, Qt
+from PyQt6.QtCore import QPoint, QRect, Qt
 
 from . import constants
 
@@ -74,7 +74,7 @@ class WidgetOverlayViewMixin:
 
         """
         if not alignment:
-            alignment = Qt.AlignTop | Qt.AlignLeft
+            alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         # translate rect to original coordinates
         rect = None
         point = None

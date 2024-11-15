@@ -30,7 +30,7 @@ import time
 class ImageEntry:
     def __init__(self, image):
         self.image = image
-        self.bcount = image.byteCount()
+        self.bcount = image.sizeInBytes()
         self.time = time.time()
 
 

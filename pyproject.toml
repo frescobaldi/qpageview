@@ -5,10 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "qpageview"
 dynamic = ["version"]
-dependencies = ["PyQt5"]
-optional-dependencies = {pdf = ["python-poppler-qt5"], cups = ["pycups"]}
-requires-python = ">= 3.6"
-description = "Widget to display page-based documents for Qt5/PyQt5"
+dependencies = ["PyQt6"]
+optional-dependencies = {cups = ["pycups"]}
+requires-python = ">= 3.7"
+description = "Widget to display page-based documents for Qt6/PyQt6"
 readme = "README.rst"
 maintainers = [{name = "Wilbert Berendsen", email = "info@frescobaldi.org"}]
 license.text = "GPL v3"
@@ -20,7 +20,7 @@ classifiers = [
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
-    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
 ]
 
 [project.urls]

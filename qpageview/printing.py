@@ -24,9 +24,10 @@ Printing facilities for qpageview.
 """
 
 
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QPainter, QTransform
-from PyQt5.QtWidgets import QMessageBox, QProgressDialog
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QPainter, QTransform
+from PyQt6.QtWidgets import QMessageBox, QProgressDialog
+from PyQt6.QtPrintSupport import QPrinter
 
 from . import backgroundjob
 
@@ -90,7 +91,7 @@ class PrintJob(backgroundjob.Job):
                 p.newPage()
             painter.save()
             # center on the page and use scale 100% (TEMP)
-            r = p.pageRect()
+            r = p.pageRect(QPrinter.Unit.DevicePixel)
             m = QTransform()
             m.translate(r.center().x(), r.center().y())
             m.scale(p.logicalDpiX() / page.dpi, p.logicalDpiY() / page.dpi)

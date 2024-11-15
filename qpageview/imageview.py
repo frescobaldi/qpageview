@@ -27,7 +27,7 @@ Clicking in the view toggles between FitBoth and NaturalSize.
 """
 
 
-from PyQt5.QtCore import QMargins, Qt
+from PyQt6.QtCore import QMargins, Qt
 
 from . import constants
 from . import util
@@ -84,7 +84,7 @@ class ImageViewMixin:
 
     def mouseReleaseEvent(self, ev):
         """Reimplemented to toggle between FitBoth and ZoomNaturalSize."""
-        if not self.isDragging() and ev.button() == Qt.LeftButton:
+        if not self.isDragging() and ev.button() == Qt.MouseButton.LeftButton:
             self.toggleZooming()
         super().mouseReleaseEvent(ev)
 

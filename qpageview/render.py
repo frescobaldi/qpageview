@@ -27,8 +27,8 @@ import collections
 import sys
 import time
 
-from PyQt5.QtCore import QRect, QRectF, Qt
-from PyQt5.QtGui import QColor, QImage, QPainter, QRegion, QTransform
+from PyQt6.QtCore import QRect, QRectF, Qt
+from PyQt6.QtGui import QColor, QImage, QPainter, QRegion, QTransform
 
 from . import backgroundjob
 from . import cache
@@ -92,7 +92,7 @@ class AbstractRenderer:
 
     ``imageFormat``
         QImage format to use (if possible). Default is
-        QImage.Format_ARGB32_Premultiplied
+        QImage.Format.Format_ARGB32_Premultiplied
 
     ``antialiasing``
         True by default. Whether to antialias graphics. (Most Renderers
@@ -104,10 +104,10 @@ class AbstractRenderer:
     MAX_TILE_HEIGHT = 1600
 
     # default paper color to use (if possible, and when drawing an empty page)
-    paperColor = QColor(Qt.white)
+    paperColor = QColor(Qt.GlobalColor.white)
 
     # QImage format to use (if possible)
-    imageFormat = QImage.Format_ARGB32_Premultiplied
+    imageFormat = QImage.Format.Format_ARGB32_Premultiplied
 
     # antialias True by default (not all renderers may support this)
     antialiasing = True
@@ -228,7 +228,8 @@ class AbstractRenderer:
             paperColor = page.paperColor or self.paperColor
 
         i = QImage(tile.w, tile.h, self.imageFormat)
-        i.fill(paperColor)
+        if paperColor:
+            i.fill(paperColor)
         painter = QPainter(i)
 
         # rotate the painter accordingly
@@ -247,7 +248,7 @@ class AbstractRenderer:
         coordinates. Don't use width, height and rotation from the Page object,
         as it could have been resized or rotated in the mean time.
 
-        The paperColor can be speficied, but it is not needed to paint it: by
+        The paperColor can be specified, but it is not needed to paint it: by
         default the render() method already fills the image, and when drawing on
         a printer, painting the background is normally not desired.
 

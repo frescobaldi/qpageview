@@ -26,11 +26,10 @@ ViewActions provides QActions to control a View.
 
 import weakref
 
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import (
-    QAction, QActionGroup, QApplication, QComboBox, QLabel, QSpinBox,
-    QWidgetAction)
+from PyQt6.QtCore import pyqtSignal, QObject, Qt
+from PyQt6.QtGui import QAction, QActionGroup, QKeySequence
+from PyQt6.QtWidgets import (
+    QApplication, QComboBox, QLabel, QSpinBox, QWidgetAction)
 
 from . import util
 from .constants import *
@@ -305,10 +304,10 @@ class ViewActions(QObject):
 
     def setActionShortcuts(self):
         """Implement this method to set keyboard shortcuts to the actions."""
-        self.print.setShortcuts(QKeySequence.Print)
-        self.zoom_in.setShortcuts(QKeySequence.ZoomIn)
-        self.zoom_out.setShortcuts(QKeySequence.ZoomOut)
-        self.reload.setShortcut(QKeySequence(Qt.Key_F5))
+        self.print.setShortcuts(QKeySequence.StandardKey.Print)
+        self.zoom_in.setShortcuts(QKeySequence.StandardKey.ZoomIn)
+        self.zoom_out.setShortcuts(QKeySequence.StandardKey.ZoomOut)
+        self.reload.setShortcut(QKeySequence(Qt.Key.Key_F5))
 
     def slotPrint(self):
         view = self.view()
@@ -437,8 +436,8 @@ class PagerAction(QWidgetAction):
 
     currentPageNumberChanged = pyqtSignal(int)
 
-    buttonSymbols = QSpinBox.NoButtons
-    focusPolicy = Qt.ClickFocus
+    buttonSymbols = QSpinBox.ButtonSymbols.NoButtons
+    focusPolicy = Qt.FocusPolicy.ClickFocus
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -613,10 +612,10 @@ class ZoomerAction(QWidgetAction):
 
     def createWidget(self, parent):
         w = QComboBox(parent)
-        w.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        w.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         w.setEditable(True)
         w.lineEdit().setReadOnly(True)
-        w.setFocusPolicy(Qt.NoFocus)
+        w.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self._setupComboBox(w)
         self._adjustComboBox(w)
         w.activated[int].connect(self.setCurrentIndex)

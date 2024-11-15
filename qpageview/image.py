@@ -27,8 +27,8 @@ display.
 
 """
 
-from PyQt5.QtCore import QPoint, QRect, QSize, Qt
-from PyQt5.QtGui import QImage, QImageIOHandler, QImageReader, QPainter, QTransform
+from PyQt6.QtCore import QPoint, QRect, QSize, Qt
+from PyQt6.QtGui import QImage, QImageIOHandler, QImageReader, QPainter, QTransform
 
 from . import document
 from . import locking
@@ -102,13 +102,13 @@ class ImageLoader(ImageContainer):
                     transf = reader.transformation()
                     m = QTransform()
                     m.translate(size.width() / 2, size.height() / 2)
-                    if transf & QImageIOHandler.TransformationMirror:
+                    if transf & QImageIOHandler.Transformation.TransformationMirror:
                         # horizontal mirror
                         m.scale(-1, 1)
-                    if transf & QImageIOHandler.TransformationFlip:
+                    if transf & QImageIOHandler.Transformation.TransformationFlip:
                         # vertical mirror
                         m.scale(1, -1)
-                    if transf & QImageIOHandler.TransformationRotate90:
+                    if transf & QImageIOHandler.Transformation.TransformationRotate90:
                         # rotate 90
                         m.rotate(-90)
                         m.translate(size.height() / -2, size.width() / -2)
@@ -178,7 +178,7 @@ class ImagePage(page.AbstractRenderedPage):
         m.scale(1 / self.pageWidth, 1 / self.pageHeight)
 
         source = self.transform().inverted()[0].mapRect(rect)
-        return self._ic.image(source).transformed(m, Qt.SmoothTransformation)
+        return self._ic.image(source).transformed(m, Qt.TransformationMode.SmoothTransformation)
 
     def group(self):
         return self._ic
@@ -214,7 +214,7 @@ class ImageRenderer(render.AbstractRenderer):
         if key.rotation & 1:
             target.setSize(target.size().transposed())
         image = page._ic.image(source).scaled(
-            target.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            target.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         painter.drawImage(target, image)
 
 

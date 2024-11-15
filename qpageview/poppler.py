@@ -20,25 +20,26 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 """
-Interface with popplerqt5, popplerqt5-specific classes etc.
+Interface with popplerqt6, popplerqt6-specific classes etc.
 
-This module depends on popplerqt5, although it can be imported when
-popplerqt5 is not available.
+This module depends on popplerqt6, although it can be imported when
+popplerqt6 is not available.
 
-You need this module to display PDF documents.
+This module is no longer used, but is being kept for now as a
+reference for implementing the new QtPdf-based backend in pdf.py.
 
 """
 
 import contextlib
 import weakref
 
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QRegion, QPainter, QPicture, QTransform
+from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtGui import QRegion, QPainter, QPicture, QTransform
 
 try:
-    import popplerqt5
+    import popplerqt6
 except ImportError:
-    popplerqt5 = None
+    popplerqt6 = None
 
 from . import document
 from . import page
@@ -66,9 +67,29 @@ class Link(link.Link):
         self.area = link.Area(*linkobj.linkArea().normalized().getCoords())
 
     @property
+    def fileName(self):
+        """The file name if this is an external link."""
+        return self.linkobj.fileName() if self.linkobj.isExternal() else ""
+
+    @property
+    def isExternal(self):
+        """Indicates whether this is an external link."""
+        return self.linkobj.isExternal()
+
+    @property
+    def targetPage(self):
+        """If this is an internal link, the page number to which the
+        link should jump; otherwise -1."""
+        if (isinstance(self.linkobj, popplerqt6.Poppler.LinkGoto)
+            and not self.linkobj.isExternal()):
+            return self.linkobj.destination().pageNumber()
+        else:
+            return -1
+
+    @property
     def url(self):
         """The url the link points to."""
-        if isinstance(self.linkobj, popplerqt5.Poppler.LinkBrowse):
+        if isinstance(self.linkobj, popplerqt6.Poppler.LinkBrowse):
             return self.linkobj.url()
         return ""
 
@@ -108,7 +129,7 @@ class PopplerPage(page.AbstractRenderedPage):
     def load(cls, filename, renderer=None):
         """Load a Poppler document, and yield of instances of this class.
 
-        The filename can also be a QByteArray or a popplerqt5.Poppler.Document
+        The filename can also be a QByteArray or a popplerqt6.Poppler.Document
         instance. The specified Renderer is used, or else the global poppler
         renderer.
 
@@ -180,9 +201,9 @@ class PopplerDocument(document.SingleSourceDocument):
 
 
 class PopplerRenderer(render.AbstractRenderer):
-    if popplerqt5:
-        renderBackend = popplerqt5.Poppler.Document.SplashBackend
-        printRenderBackend = popplerqt5.Poppler.Document.SplashBackend
+    if popplerqt6:
+        renderBackend = popplerqt6.Poppler.Document.SplashBackend
+        printRenderBackend = popplerqt6.Poppler.Document.SplashBackend
     else:
         renderBackend = printRenderBackend = 0
 
@@ -207,7 +228,7 @@ class PopplerRenderer(render.AbstractRenderer):
             tile.x * multiplier, tile.y * multiplier, tile.w * multiplier, tile.h * multiplier,
             key.rotation, paperColor)
         if multiplier == 2:
-            image = image.scaledToWidth(tile.w, Qt.SmoothTransformation)
+            image = image.scaledToWidth(tile.w, Qt.TransformationMode.SmoothTransformation)
         image.setDotsPerMeterX(int(xres * 39.37))
         image.setDotsPerMeterY(int(yres * 39.37))
         return image
@@ -215,8 +236,8 @@ class PopplerRenderer(render.AbstractRenderer):
     def setRenderHints(self, doc):
         """Set the poppler render hints we want to set."""
         if self.antialiasing:
-            doc.setRenderHint(popplerqt5.Poppler.Document.Antialiasing)
-            doc.setRenderHint(popplerqt5.Poppler.Document.TextAntialiasing)
+            doc.setRenderHint(popplerqt6.Poppler.Document.Antialiasing)
+            doc.setRenderHint(popplerqt6.Poppler.Document.TextAntialiasing)
 
     @contextlib.contextmanager
     def setup(self, doc, backend=None, paperColor=None):
@@ -271,7 +292,7 @@ class PopplerRenderer(render.AbstractRenderer):
         p = doc.page(page.pageNumber)
 
         with self.setup(doc, self.printRenderBackend, paperColor):
-            if self.printRenderBackend == popplerqt5.Poppler.Document.ArthurBackend:
+            if self.printRenderBackend == popplerqt6.Poppler.Document.ArthurBackend:
                 # Poppler's Arthur backend removes the current transform from
                 # the painter (it sets a default CTM, instead of combining it
                 # with the current transform). We let Poppler draw on a QPicture,
@@ -309,17 +330,17 @@ def load(source):
         - a filename
         - q QByteArray instance.
 
-    Returns None if popplerqt5 is not available or the document could not be
+    Returns None if popplerqt6 is not available or the document could not be
     loaded.
 
     """
-    if popplerqt5:
-        if isinstance(source, popplerqt5.Poppler.Document):
+    if popplerqt6:
+        if isinstance(source, popplerqt6.Poppler.Document):
             return source
         elif isinstance(source, str):
-            return popplerqt5.Poppler.Document.load(source)
+            return popplerqt6.Poppler.Document.load(source)
         else:
-            return popplerqt5.Poppler.Document.loadFromData(source)
+            return popplerqt6.Poppler.Document.loadFromData(source)
 
 
 

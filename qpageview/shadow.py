@@ -23,8 +23,8 @@
 A View mixin class that draws a nice drop shadow around all pages.
 """
 
-from PyQt5.QtCore import QPoint, Qt
-from PyQt5.QtGui import QColor, QPainter, QPen
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtGui import QColor, QPainter, QPen
 
 
 class ShadowViewMixin:
@@ -56,10 +56,10 @@ class ShadowViewMixin:
         """
         width = round(width)
         rect = page.rect().adjusted(width // 2, width // 2, 0, 0)
-        color = QColor(Qt.black)
+        color = QColor(Qt.GlobalColor.black)
         pen = QPen()
         pen.setWidth(1)
-        pen.setJoinStyle(Qt.MiterJoin)
+        pen.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
         for i in range(width):
             f = (width-i)/width
             color.setAlpha(int(200**f + 55*f))

@@ -25,8 +25,8 @@ Export Pages to different file formats.
 
 import os
 
-from PyQt5.QtCore import QBuffer, QIODevice, QMimeData, QPoint, QSizeF, Qt, QUrl
-from PyQt5.QtGui import QDrag, QGuiApplication, QImage, QPageSize, QPdfWriter
+from PyQt6.QtCore import QBuffer, QIODevice, QMimeData, QPoint, QSizeF, Qt, QUrl
+from PyQt6.QtGui import QDrag, QGuiApplication, QImage, QPageSize, QPdfWriter
 
 from . import poppler
 from . import util
@@ -104,9 +104,9 @@ class AbstractExporter:
             p.renderer.paperColor = self.paperColor
             p.renderer.antialiasing = self.antialiasing
             if self.forceVector and self.wantsVector and \
-                    isinstance(p, poppler.PopplerPage) and poppler.popplerqt5:
+                    isinstance(p, poppler.PopplerPage) and poppler.popplerqt6:
                 p.renderer.printRenderBackend = \
-                    poppler.popplerqt5.Poppler.Document.ArthurBackend
+                    poppler.popplerqt6.Poppler.Document.ArthurBackend
         return p
 
     def autoCroppedRect(self):
@@ -229,7 +229,7 @@ class AbstractExporter:
         d.setMimeData(mimeData)
         d.setPixmap(self.pixmap())
         d.setHotSpot(QPoint(-10, -10))
-        return d.exec_(Qt.CopyAction)
+        return d.exec(Qt.DropAction.CopyAction)
 
     def dragData(self, parent):
         """Start dragging the data. Parent can be any QObject."""
@@ -253,9 +253,9 @@ class ImageExporter(AbstractExporter):
             res *= self.oversample
         i = self.page().image(self._rect, res, res, self.paperColor)
         if self.oversample != 1:
-            i = i.scaled(i.size() / self.oversample, transformMode=Qt.SmoothTransformation)
+            i = i.scaled(i.size() / self.oversample, transformMode=Qt.TransformationMode.SmoothTransformation)
         if self.grayscale:
-            i = i.convertToFormat(QImage.Format_Grayscale8)
+            i = i.convertToFormat(QImage.Format.Format_Grayscale8)
         if self.autocrop:
             i = i.copy(util.autoCropRect(i))
         return i
@@ -291,7 +291,7 @@ class SvgExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().svg(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -312,7 +312,7 @@ class PdfExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().pdf(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -333,7 +333,7 @@ class EpsExporter(AbstractExporter):
     def export(self):
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().eps(buf, rect, self.resolution, self.paperColor)
         buf.close()
         if success:
@@ -343,7 +343,7 @@ class EpsExporter(AbstractExporter):
         from . import poppler
         rect = self.autoCroppedRect()
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.page().pdf(buf, rect, self.resolution, self.paperColor)
         buf.close()
         return poppler.PopplerDocument(buf.data(), self.renderer())
@@ -382,7 +382,7 @@ def pdf(filename, pageList, resolution=72, paperColor=None):
             pdf.newPage()
         layout = pdf.pageLayout()
         layout.setMode(layout.FullPageMode)
-        layout.setPageSize(QPageSize(targetSize * 72.0 / page.dpi, QPageSize.Point))
+        layout.setPageSize(QPageSize(targetSize * 72.0 / page.dpi, QPageSize.Unit.Point))
         pdf.setPageLayout(layout)
         # TODO handle errors?
         page.output(pdf, source, paperColor)

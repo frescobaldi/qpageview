@@ -73,7 +73,8 @@ import os
 import shutil
 import subprocess
 
-from PyQt5.QtPrintSupport import QPrintEngine, QPrinter
+from PyQt6.QtGui import QPageSize
+from PyQt6.QtPrintSupport import QPrintEngine, QPrinter
 
 
 class Handle:
@@ -255,17 +256,17 @@ def options(printer):
         o['collate'] = 'true'
 
     # TODO: in Qt5 >= 5.11 page-ranges support is more fine-grained!
-    if printer.printRange() == QPrinter.PageRange:
+    if printer.printRange() == QPrinter.PrintRange.PageRange:
         o['page-ranges'] = '{0}-{1}'.format(printer.fromPage(), printer.toPage())
 
     # page order
-    if printer.pageOrder() == QPrinter.LastPageFirst:
+    if printer.pageOrder() == QPrinter.PageOrder.LastPageFirst:
         o['outputorder'] = 'reverse'
 
     # media size
     media = []
     size = printer.paperSize()
-    if size == QPrinter.Custom:
+    if size == QPrinter.ZoomMode.Custom:
         media.append('Custom.{0}x{1}mm'.format(printer.heightMM(), printer.widthMM()))
     elif size in PAGE_SIZES:
         media.append(PAGE_SIZES[size])
@@ -279,8 +280,8 @@ def options(printer):
         o['media'] = ','.join(media)
 
     # page margins
-    if printer.printEngine().property(QPrintEngine.PPK_PageMargins):
-        left, top, right, bottom = printer.getPageMargins(QPrinter.Point)
+    if printer.printEngine().property(QPrintEngine.PrintEnginePropertyKey.PPK_PageMargins):
+        left, top, right, bottom = printer.getPageMargins(QPrinter.Unit.Point)
         o['page-left'] = format(left)
         o['page-top'] = format(top)
         o['page-right'] = format(right)
@@ -294,14 +295,14 @@ def options(printer):
     # double sided
     duplex = printer.duplex()
     o['sides'] = (
-        'two-sided-long-edge' if duplex == QPrinter.DuplexLongSide or
-                        (duplex == QPrinter.DuplexAuto and not landscape) else
-        'two-sided-short-edge' if duplex == QPrinter.DuplexShortSide or
-                        (duplex == QPrinter.DuplexAuto and landscape) else
+        'two-sided-long-edge' if duplex == QPrinter.DuplexMode.DuplexLongSide or
+                        (duplex == QPrinter.DuplexMode.DuplexAuto and not landscape) else
+        'two-sided-short-edge' if duplex == QPrinter.DuplexMode.DuplexShortSide or
+                        (duplex == QPrinter.DuplexMode.DuplexAuto and landscape) else
         'one-sided')
 
     # grayscale
-    if printer.colorMode() == QPrinter.GrayScale:
+    if printer.colorMode() == QPrinter.ColorMode.GrayScale:
         o['print-color-mode'] = 'monochrome'
 
     return o
@@ -322,7 +323,8 @@ def clearPageSetSetting(printer):
 
     """
     # see qt5/qtbase/src/printsupport/kernel/qcups.cpp
-    opts = printer.printEngine().property(0xfe00)
+    key = QPrintEngine.PrintEnginePropertyKey(0xfe00)
+    opts = printer.printEngine().property(key)
     if opts and isinstance(opts, list) and len(opts) % 2 == 0:
         try:
             i = opts.index('page-set')
@@ -330,55 +332,55 @@ def clearPageSetSetting(printer):
             return
         if i % 2 == 0:
             del opts[i:i+2]
-            printer.printEngine().setProperty(0xfe00, opts)
+            printer.printEngine().setProperty(key, opts)
 
 
 PAGE_SIZES = {
-    QPrinter.A0: "A0",
-    QPrinter.A1: "A1",
-    QPrinter.A2: "A2",
-    QPrinter.A3: "A3",
-    QPrinter.A4: "A4",
-    QPrinter.A5: "A5",
-    QPrinter.A6: "A6",
-    QPrinter.A7: "A7",
-    QPrinter.A8: "A8",
-    QPrinter.A9: "A9",
-    QPrinter.B0: "B0",
-    QPrinter.B1: "B1",
-    QPrinter.B10: "B10",
-    QPrinter.B2: "B2",
-    QPrinter.B3: "B3",
-    QPrinter.B4: "B4",
-    QPrinter.B5: "B5",
-    QPrinter.B6: "B6",
-    QPrinter.B7: "B7",
-    QPrinter.B8: "B8",
-    QPrinter.B9: "B9",
-    QPrinter.C5E: "C5",         # Correct Translation?
-    QPrinter.Comm10E: "Comm10", # Correct Translation?
-    QPrinter.DLE: "DL",         # Correct Translation?
-    QPrinter.Executive: "Executive",
-    QPrinter.Folio: "Folio",
-    QPrinter.Ledger: "Ledger",
-    QPrinter.Legal: "Legal",
-    QPrinter.Letter: "Letter",
-    QPrinter.Tabloid: "Tabloid",
+    QPageSize.PageSizeId.A0: "A0",
+    QPageSize.PageSizeId.A1: "A1",
+    QPageSize.PageSizeId.A2: "A2",
+    QPageSize.PageSizeId.A3: "A3",
+    QPageSize.PageSizeId.A4: "A4",
+    QPageSize.PageSizeId.A5: "A5",
+    QPageSize.PageSizeId.A6: "A6",
+    QPageSize.PageSizeId.A7: "A7",
+    QPageSize.PageSizeId.A8: "A8",
+    QPageSize.PageSizeId.A9: "A9",
+    QPageSize.PageSizeId.B0: "B0",
+    QPageSize.PageSizeId.B1: "B1",
+    QPageSize.PageSizeId.B10: "B10",
+    QPageSize.PageSizeId.B2: "B2",
+    QPageSize.PageSizeId.B3: "B3",
+    QPageSize.PageSizeId.B4: "B4",
+    QPageSize.PageSizeId.B5: "B5",
+    QPageSize.PageSizeId.B6: "B6",
+    QPageSize.PageSizeId.B7: "B7",
+    QPageSize.PageSizeId.B8: "B8",
+    QPageSize.PageSizeId.B9: "B9",
+    QPageSize.PageSizeId.C5E: "C5",         # Correct Translation?
+    QPageSize.PageSizeId.Comm10E: "Comm10", # Correct Translation?
+    QPageSize.PageSizeId.DLE: "DL",         # Correct Translation?
+    QPageSize.PageSizeId.Executive: "Executive",
+    QPageSize.PageSizeId.Folio: "Folio",
+    QPageSize.PageSizeId.Ledger: "Ledger",
+    QPageSize.PageSizeId.Legal: "Legal",
+    QPageSize.PageSizeId.Letter: "Letter",
+    QPageSize.PageSizeId.Tabloid: "Tabloid",
 }
 
 PAPER_SOURCES = {
-    QPrinter.Cassette: "Cassette",
-    QPrinter.Envelope: "Envelope",
-    QPrinter.EnvelopeManual: "EnvelopeManual",
-    QPrinter.FormSource: "FormSource",
-    QPrinter.LargeCapacity: "LargeCapacity",
-    QPrinter.LargeFormat: "LargeFormat",
-    QPrinter.Lower: "Lower",
-    QPrinter.MaxPageSource: "MaxPageSource",
-    QPrinter.Middle: "Middle",
-    QPrinter.Manual: "Manual",
-    QPrinter.OnlyOne: "OnlyOne",
-    QPrinter.Tractor: "Tractor",
-    QPrinter.SmallFormat: "SmallFormat",
+    QPrinter.PaperSource.Cassette: "Cassette",
+    QPrinter.PaperSource.Envelope: "Envelope",
+    QPrinter.PaperSource.EnvelopeManual: "EnvelopeManual",
+    QPrinter.PaperSource.FormSource: "FormSource",
+    QPrinter.PaperSource.LargeCapacity: "LargeCapacity",
+    QPrinter.PaperSource.LargeFormat: "LargeFormat",
+    QPrinter.PaperSource.Lower: "Lower",
+    QPrinter.PaperSource.MaxPageSource: "MaxPageSource",
+    QPrinter.PaperSource.Middle: "Middle",
+    QPrinter.PaperSource.Manual: "Manual",
+    QPrinter.PaperSource.OnlyOne: "OnlyOne",
+    QPrinter.PaperSource.Tractor: "Tractor",
+    QPrinter.PaperSource.SmallFormat: "SmallFormat",
 }
 

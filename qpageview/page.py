@@ -26,10 +26,10 @@ A Page is responsible for drawing a page inside a PageLayout.
 
 import weakref
 
-from PyQt5.QtCore import QBuffer, QPointF, QRect, QRectF, QSizeF, Qt
-from PyQt5.QtGui import (
+from PyQt6.QtCore import QBuffer, QPointF, QRect, QRectF, QSizeF, Qt
+from PyQt6.QtGui import (
     QColor, QImage, QPageSize, QPainter, QPdfWriter, QPixmap, QTransform)
-from PyQt5.QtSvg import QSvgGenerator
+from PyQt6.QtSvg import QSvgGenerator
 
 from . import util
 from .constants import Rotate_0
@@ -303,15 +303,15 @@ class AbstractPage(util.Rectangular):
         pdf.setResolution(int(resolution))
 
         layout = pdf.pageLayout()
-        layout.setMode(layout.FullPageMode)
-        layout.setPageSize(QPageSize(targetSize * 72.0 / self.dpi, QPageSize.Point))
+        layout.setMode(layout.Mode.FullPageMode)
+        layout.setPageSize(QPageSize(targetSize * 72.0 / self.dpi, QPageSize.Unit.Point))
         pdf.setPageLayout(layout)
         return self.output(pdf, source, paperColor)
 
     def eps(self, filename, rect=None, resolution=72.0, paperColor=None):
         """Create a EPS (Encapsulated Postscript) file for the selected rect or the whole page.
 
-        This needs the popplerqt5 module.
+        This needs the popplerqt6 module.
         The filename may be a string or a QIODevice object. The rectangle is
         relative to our top-left position. Normally vector graphics are
         rendered, but in cases where that is not possible, the resolution will
@@ -319,7 +319,7 @@ class AbstractPage(util.Rectangular):
 
         """
         buf = QBuffer()
-        buf.open(QBuffer.WriteOnly)
+        buf.open(QBuffer.OpenModeFlag.WriteOnly)
         success = self.pdf(buf, rect, resolution, paperColor)
         buf.close()
         if success:
@@ -560,7 +560,7 @@ class BlankPage(AbstractPage):
     """A blank page."""
     def paint(self, painter, rect, callback=None):
         """Paint blank page in the View."""
-        painter.fillRect(rect, self.paperColor or Qt.white)
+        painter.fillRect(rect, self.paperColor or Qt.GlobalColor.white)
 
     def print(self, painter, rect=None, paperColor=None):
         """Paint blank page for printing."""
@@ -568,7 +568,7 @@ class BlankPage(AbstractPage):
             rect = self.pageRect()
         else:
             rect = rect & self.pageRect()
-        painter.fillRect(rect, paperColor or Qt.white)
+        painter.fillRect(rect, paperColor or Qt.GlobalColor.white)
 
     def image(self, rect=None, dpiX=None, dpiY=None, paperColor=None):
         """Return a blank image."""
@@ -581,8 +581,8 @@ class BlankPage(AbstractPage):
         s = self.defaultSize()
         width = s.width() * dpiX / self.dpi
         height = s.height() * dpiY / self.dpi
-        image = QImage(width, height, QImage.Format_ARGB32_Premultiplied)
-        image.fill(paperColor or Qt.white)
+        image = QImage(width, height, QImage.Format.Format_ARGB32_Premultiplied)
+        image.fill(paperColor or Qt.GlobalColor.white)
         return image
 
 

@@ -24,10 +24,10 @@
 The Magnifier magnifies a part of the displayed document.
 """
 
-from PyQt5.QtCore import QEvent, QPoint, QRect, Qt
-from PyQt5.QtGui import (
+from PyQt6.QtCore import QEvent, QPoint, QRect, Qt
+from PyQt6.QtGui import (
     QColor, QCursor, QPainter, QPalette, QPen, QRegion, QTransform)
-from PyQt5.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget
 
 
 DRAG_SHORT = 1      # visible only while keeping the mouse button pressed
@@ -53,21 +53,21 @@ class Magnifier(QWidget):
     Instance attributes:
 
     ``showmodifier``:
-        the modifier to popup (Qt.ControlModifier)
+        the modifier to popup (Qt.KeyboardModifier.ControlModifier)
 
     ``zoommodifier``:
-        the modifier to wheel zoom (Qt.ControlModifier)
+        the modifier to wheel zoom (Qt.KeyboardModifier.ControlModifier)
 
     ``resizemodifier``:
-        the key to press for wheel resizing (Qt.ShiftModifier)
+        the key to press for wheel resizing (Qt.KeyboardModifier.ShiftModifier)
 
     ``showbutton``:
         the mouse button causing the magnifier to popup (by default
-        Qt.LeftButton)
+        Qt.MouseButton.LeftButton)
 
     ``resizebutton``:
         the extra mouse button to be pressed when resizing the
-        magnifier (by default Qt.RightButton)
+        magnifier (by default Qt.MouseButton.RightButton)
 
     ``MAX_EXTRA_ZOOM``:
         the maximum zoom (relative to the View's maximum zoom
@@ -76,19 +76,19 @@ class Magnifier(QWidget):
     """
 
     # modifier for show
-    showmodifier = Qt.ControlModifier
+    showmodifier = Qt.KeyboardModifier.ControlModifier
 
     # modifier for wheel zoom
-    zoommodifier = Qt.ControlModifier
+    zoommodifier = Qt.KeyboardModifier.ControlModifier
 
     # extra modifier for wheel resize
-    resizemodifier = Qt.ShiftModifier
+    resizemodifier = Qt.KeyboardModifier.ShiftModifier
 
     # button for show
-    showbutton = Qt.LeftButton
+    showbutton = Qt.MouseButton.LeftButton
 
     # extra button for resizing
-    resizebutton = Qt.RightButton
+    resizebutton = Qt.MouseButton.RightButton
 
     # Maximum extra zoom above the View.MAX_ZOOM
     MAX_EXTRA_ZOOM = 1.25
@@ -106,7 +106,7 @@ class Magnifier(QWidget):
         self._resizewidth = 0
         self._scale = 3.0
         self.setAutoFillBackground(True)
-        self.setBackgroundRole(QPalette.Dark)
+        self.setBackgroundRole(QPalette.ColorRole.Dark)
         self.resize(350, 350)
         self.hide()
 
@@ -132,7 +132,7 @@ class Magnifier(QWidget):
         self.moveCenter(pos)
         self.raise_()
         self.show()
-        viewport.setCursor(Qt.BlankCursor)
+        viewport.setCursor(Qt.CursorShape.BlankCursor)
 
     def endShortDrag(self):
         """End a short drag."""
@@ -148,7 +148,7 @@ class Magnifier(QWidget):
         """Start a long drag (when we are already visible and then dragged)."""
         self._dragging = DRAG_LONG
         self._dragpos = pos
-        self.setCursor(Qt.ClosedHandCursor)
+        self.setCursor(Qt.CursorShape.ClosedHandCursor)
 
     def endLongDrag(self):
         """End a long drag."""
@@ -159,7 +159,7 @@ class Magnifier(QWidget):
 
     def resizeEvent(self, ev):
         """Called on resize, sets our circular mask."""
-        self.setMask(QRegion(self.rect(), QRegion.Ellipse))
+        self.setMask(QRegion(self.rect(), QRegion.RegionType.Ellipse))
 
     def moveEvent(self, ev):
         """Called on move, updates the contents."""
@@ -171,20 +171,20 @@ class Magnifier(QWidget):
         """Handle events on the viewport of the View."""
         view = viewport.parent()
         if not self.isVisible():
-            if (ev.type() == QEvent.MouseButtonPress and
+            if (ev.type() == QEvent.Type.MouseButtonPress and
                 ev.modifiers() == self.showmodifier and
                 ev.button() == self.showbutton):
                 # show and drag while button pressed: DRAG_SHORT
                 self.startShortDrag(ev.pos())
                 return True
-        elif ev.type() == QEvent.Paint:
+        elif ev.type() == QEvent.Type.Paint:
             # if the viewport is painted, also update
             self.update()
         elif self._dragging == DRAG_SHORT:
-            if ev.type() == QEvent.MouseButtonPress:
+            if ev.type() == QEvent.Type.MouseButtonPress:
                 if ev.button() == self.resizebutton:
                     return True
-            elif ev.type() == QEvent.MouseMove:
+            elif ev.type() == QEvent.Type.MouseMove:
                 if ev.buttons() == self.showbutton | self.resizebutton:
                     # DRAG_SHORT is busy, both buttons are pressed: resize!
                     if self._resizepos == None:
@@ -202,7 +202,7 @@ class Magnifier(QWidget):
                     self.moveCenter(ev.pos())
                     view.scrollForDragging(ev.pos())
                 return True
-            elif ev.type() == QEvent.MouseButtonRelease:
+            elif ev.type() == QEvent.Type.MouseButtonRelease:
                 if ev.button() == self.showbutton:
                     # left button is released, stop dragging and/or resizing, hide
                     self.endShortDrag()
@@ -212,7 +212,7 @@ class Magnifier(QWidget):
                     QCursor.setPos(viewport.mapToGlobal(self.geometry().center()))
                     ev.accept()
                 return True
-            elif ev.type() == QEvent.ContextMenu:
+            elif ev.type() == QEvent.Type.ContextMenu:
                 self.endShortDrag()
         return False
 
@@ -220,7 +220,7 @@ class Magnifier(QWidget):
         """Start dragging the magnifier."""
         if self._dragging == DRAG_SHORT:
             ev.ignore()
-        elif not self._dragging and ev.button() == Qt.LeftButton:
+        elif not self._dragging and ev.button() == Qt.MouseButton.LeftButton:
             self.startLongDrag(ev.pos())
 
     def mouseMoveEvent(self, ev):
@@ -236,7 +236,7 @@ class Magnifier(QWidget):
     def mouseReleaseEvent(self, ev):
         """The button is released, stop moving ourselves."""
         ev.ignore()
-        if self._dragging == DRAG_LONG and ev.button() == Qt.LeftButton:
+        if self._dragging == DRAG_LONG and ev.button() == Qt.MouseButton.LeftButton:
             self.endLongDrag()
 
     def wheelEvent(self, ev):
@@ -277,7 +277,7 @@ class Magnifier(QWidget):
         # make a region scaling back to the view scale
         rect = matrix.inverted()[0].mapRect(self.rect())
         rect.moveCenter(c)
-        region = QRegion(rect, QRegion.Ellipse) # touches the Pages we need to draw
+        region = QRegion(rect, QRegion.RegionType.Ellipse) # touches the Pages we need to draw
 
         # our rect on the enlarged pages
         our_rect = self.rect()
@@ -309,7 +309,7 @@ class Magnifier(QWidget):
 
     def drawBorder(self, painter):
         """Draw a nice looking glass border."""
-        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setPen(QPen(QColor(192, 192, 192, 128), 6))
         painter.drawEllipse(self.rect().adjusted(2, 2, -2, -2))
 
