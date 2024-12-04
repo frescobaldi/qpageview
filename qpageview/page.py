@@ -308,39 +308,6 @@ class AbstractPage(util.Rectangular):
         pdf.setPageLayout(layout)
         return self.output(pdf, source, paperColor)
 
-    def eps(self, filename, rect=None, resolution=72.0, paperColor=None):
-        """Create a EPS (Encapsulated Postscript) file for the selected rect or the whole page.
-
-        This needs the popplerqt6 module.
-        The filename may be a string or a QIODevice object. The rectangle is
-        relative to our top-left position. Normally vector graphics are
-        rendered, but in cases where that is not possible, the resolution will
-        be used to determine the DPI for the generated rendering.
-
-        """
-        buf = QBuffer()
-        buf.open(QBuffer.OpenModeFlag.WriteOnly)
-        success = self.pdf(buf, rect, resolution, paperColor)
-        buf.close()
-        if success:
-            from . import poppler
-            for pdf in poppler.PopplerPage.load(buf.data()):
-                ps = pdf.document.psConverter()
-                ps.setPageList([pdf.pageNumber+1])
-                if isinstance(filename, str):
-                    ps.setOutputFileName(filename)
-                else:
-                    ps.setOutputDevice(filename)
-                try:
-                    ps.setPSOptions(ps.PSOption(ps.Printing | ps.StrictMargins))
-                    ps.setPSOptions(ps.PSOption(ps.Printing | ps.StrictMargins | ps.PrintToEPS))
-                except AttributeError:
-                    pass
-                ps.setVDPI(resolution)
-                ps.setHDPI(resolution)
-                return ps.convert()
-        return False
-
     def svg(self, filename, rect=None, resolution=72.0, paperColor=None):
         """Create a SVG file for the selected rect or the whole page.
 
