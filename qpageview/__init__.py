@@ -69,12 +69,6 @@ from . import view
 from . import util
 from .pkginfo import version_string
 
-# loadPdf() uses this to determine if Poppler is available
-try:
-    import popplerqt6
-except ImportError:
-    popplerqt6 = None
-
 
 
 class View(
@@ -96,8 +90,14 @@ def loadPdf(filename, renderer=None):
     QPdfDocument instance.
 
     """
+    from PyQt6.QtPdf import QPdfDocument
+    try:
+        import popplerqt6
+    except ImportError:
+        popplerqt6 = None
+
     # Use Poppler if it is available, otherwise fall back on QtPdf
-    if popplerqt6:
+    if popplerqt6 and not isinstance(filename, QPdfDocument):
         from . import poppler
         return poppler.PopplerDocument(filename, renderer)
     else:
