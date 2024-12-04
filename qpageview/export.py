@@ -28,7 +28,6 @@ import os
 from PyQt6.QtCore import QBuffer, QIODevice, QMimeData, QPoint, QSizeF, Qt, QUrl
 from PyQt6.QtGui import QDrag, QGuiApplication, QImage, QPageSize, QPdfWriter
 
-from . import poppler
 from . import util
 
 
@@ -46,8 +45,6 @@ class AbstractExporter:
         oversample = 1
         grayscale = False
         paperColor = None
-        forceVector = True  # force the render backend to be Arthur for
-                            # exporting PDF pages to vector-based formats
 
     After setting the attributes, you call one or more of save(), copyData(),
     copyFile(), mimeData() or tempFileMimeData(), which will trigger the export
@@ -65,7 +62,6 @@ class AbstractExporter:
     oversample = 1
     grayscale = False
     paperColor = None
-    forceVector = True  # force the render backend to be Arthur for PDF pages
 
     # properties of exporter:
     wantsVector = True
@@ -103,10 +99,6 @@ class AbstractExporter:
             p.renderer = self._page.renderer.copy()
             p.renderer.paperColor = self.paperColor
             p.renderer.antialiasing = self.antialiasing
-            if self.forceVector and self.wantsVector and \
-                    isinstance(p, poppler.PopplerPage) and poppler.popplerqt6:
-                p.renderer.printRenderBackend = \
-                    poppler.popplerqt6.Poppler.Document.ArthurBackend
         return p
 
     def autoCroppedRect(self):
@@ -319,34 +311,8 @@ class PdfExporter(AbstractExporter):
             return buf.data()
 
     def createDocument(self):
-        from . import poppler
-        return poppler.PopplerDocument(self.data(), self.renderer())
-
-
-class EpsExporter(AbstractExporter):
-    """Export a rectangular area of a Page (or the whole page) to an EPS file."""
-    mimeType = "application/postscript"
-    supportsGrayscale = False
-    supportsOversample = False
-    defaultExt = ".eps"
-
-    def export(self):
-        rect = self.autoCroppedRect()
-        buf = QBuffer()
-        buf.open(QBuffer.OpenModeFlag.WriteOnly)
-        success = self.page().eps(buf, rect, self.resolution, self.paperColor)
-        buf.close()
-        if success:
-            return buf.data()
-
-    def createDocument(self):
-        from . import poppler
-        rect = self.autoCroppedRect()
-        buf = QBuffer()
-        buf.open(QBuffer.OpenModeFlag.WriteOnly)
-        success = self.page().pdf(buf, rect, self.resolution, self.paperColor)
-        buf.close()
-        return poppler.PopplerDocument(buf.data(), self.renderer())
+        from . import pdf
+        return pdf.PdfDocument(self.data(), self.renderer())
 
 
 def pdf(filename, pageList, resolution=72, paperColor=None):
