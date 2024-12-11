@@ -46,6 +46,7 @@ extensions = [
 #    'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
+    'sphinx_mdinclude',
 ]
 
 # autodoc
@@ -74,8 +75,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = "python-ly"
-copyright = "2020-2022, Wilbert Berendsen"
+project = "qpageview"
+copyright = "2020-2025, Wilbert Berendsen"
 author = "Wilbert Berendsen"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -93,7 +94,7 @@ release = version
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
