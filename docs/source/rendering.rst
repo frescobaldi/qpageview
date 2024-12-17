@@ -55,6 +55,11 @@ types:
      - :class:`~svg.SvgDocument`
      - SVG images, one file per page
 
+   * - :mod:`~qpageview.pdf`
+     - :class:`~pdf.PdfPage`
+     - :class:`~pdf.PdfDocument`
+     - PDF documents, multiple pages per file
+
    * - :mod:`~qpageview.poppler`
      - :class:`~poppler.PopplerPage`
      - :class:`~poppler.PopplerDocument`

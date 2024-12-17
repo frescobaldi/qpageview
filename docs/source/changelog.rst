@@ -1,3 +1,3 @@
 :orphan:
 
-.. include:: ../../ChangeLog
+.. mdinclude:: ../../CHANGELOG.md

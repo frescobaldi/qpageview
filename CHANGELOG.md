@@ -7,6 +7,20 @@ defined at the bottom of this file.
 
 All notable changes to the qpageview project are documented in this file.
 
+## [1.0.0] - 2024-12-06
+
+### Added
+
+* Port to PyQt6 (version 6.6 or higher)
+* New PDF backend using QtPdf
+
+### Changed
+
+* Poppler is no longer required for PDF support
+* Project metadata moved to `pyproject.toml`; the build backend
+  is now hatchling
+* The new minimum Python version is 3.7
+
 ## [0.6.2] - 2022-05-05
 
 ### Fixed
