@@ -39,21 +39,6 @@ from . import link
 from . import locking
 from . import render
 
-from .constants import (
-    Rotate_0,
-    Rotate_90,
-    Rotate_180,
-    Rotate_270,
-)
-
-# Map our rotation constants to Qt's
-_rotation = {
-    Rotate_0:   QPdfDocumentRenderOptions.Rotation.None_,
-    Rotate_90:  QPdfDocumentRenderOptions.Rotation.Clockwise90,
-    Rotate_180: QPdfDocumentRenderOptions.Rotation.Clockwise180,
-    Rotate_270: QPdfDocumentRenderOptions.Rotation.Clockwise270,
-}
-
 
 # store the links in the page of a Poppler document as long as the document exists
 _linkscache = weakref.WeakKeyDictionary()
@@ -286,7 +271,7 @@ class PdfRenderer(render.AbstractRenderer):
         s = matrix.scale(xMultiplier, yMultiplier).mapRect(source)
         image = self._render_image(doc, num,
             xres * xMultiplier, yres * yMultiplier,
-            int(s.width()), int(s.height()), key.rotation, paperColor)
+            int(s.width()), int(s.height()), paperColor)
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
@@ -303,8 +288,7 @@ class PdfRenderer(render.AbstractRenderer):
         painter.drawImage(target, image, QRectF(image.rect()))
 
     def _render_image(self, doc, pageNum,
-                      xres=72.0, yres=72.0, w=-1, h=-1,
-                      rotate=Rotate_0, paperColor=None):
+                      xres=72.0, yres=72.0, w=-1, h=-1, paperColor=None):
         """Render an image.
 
         This always renders the full page because that is the only rendering
@@ -318,7 +302,6 @@ class PdfRenderer(render.AbstractRenderer):
         RenderFlag = QPdfDocumentRenderOptions.RenderFlag
         with locking.lock(doc):
             options = QPdfDocumentRenderOptions()
-            options.setRotation(_rotation[rotate])
 
             # This ridiculous back-and-forth conversion is necessary because
             # PyQt6 won't let you just 'OR' together RenderFlag constants.
