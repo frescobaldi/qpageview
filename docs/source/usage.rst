@@ -11,7 +11,7 @@ Just import :mod:`qpageview` and create a View. As the :class:`~view.View` is a
 QWidget, you need to create a QApplication object, just as for all Qt-based
 applications::
 
-    from PyQt5.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QApplication
     import qpageview
 
     app = QApplication([])
