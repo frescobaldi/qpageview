@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "qpageview"
 dynamic = ["version"]
-dependencies = ["PyQt6"]
+dependencies = ["PyQt6>=6.6"]
 optional-dependencies = {cups = ["pycups"]}
 requires-python = ">= 3.7"
 description = "Widget to display page-based documents for Qt6/PyQt6"
