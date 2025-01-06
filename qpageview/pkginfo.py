@@ -21,4 +21,4 @@
 
 """Version information on the qpageview package."""
 
-version_string = "0.6.2"
+version_string = "1.0.0"
