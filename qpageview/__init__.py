@@ -69,12 +69,6 @@ from . import view
 from . import util
 from .pkginfo import version_string
 
-# loadPdf() uses this to determine if Poppler is available
-try:
-    import popplerqt6
-except ImportError:
-    popplerqt6 = None
-
 
 
 class View(
@@ -92,17 +86,11 @@ def loadPdf(filename, renderer=None):
     """Convenience function to create a Document with the specified PDF file.
 
     The filename can also be a QByteArray or an already loaded
-    popplerqt6.Poppler.Document (if Poppler is available) or
     QPdfDocument instance.
 
     """
-    # Use Poppler if it is available, otherwise fall back on QtPdf
-    if popplerqt6:
-        from . import poppler
-        return poppler.PopplerDocument(filename, renderer)
-    else:
-        from . import pdf
-        return pdf.PdfDocument(filename, renderer)
+    from . import pdf
+    return pdf.PdfDocument(filename, renderer)
 
 
 def loadSvgs(filenames, renderer=None):
