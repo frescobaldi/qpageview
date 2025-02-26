@@ -23,7 +23,6 @@ Overview of all modules
    page.rst
    pdf.rst
    pkginfo.rst
-   poppler.rst
    printing.rst
    rectangles.rst
    render.rst

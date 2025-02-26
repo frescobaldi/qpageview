@@ -60,11 +60,6 @@ types:
      - :class:`~pdf.PdfDocument`
      - PDF documents, multiple pages per file
 
-   * - :mod:`~qpageview.poppler`
-     - :class:`~poppler.PopplerPage`
-     - :class:`~poppler.PopplerDocument`
-     - PDF documents, multiple pages per file
-
    * - :mod:`~qpageview.diff`
      - :class:`~diff.DiffPage`
      - :class:`~diff.DiffDocument`
