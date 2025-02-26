@@ -40,7 +40,7 @@ from . import locking
 from . import render
 
 
-# store the links in the page of a Poppler document as long as the document exists
+# store the links in the page of a document as long as the document exists
 _linkscache = weakref.WeakKeyDictionary()
 
 
@@ -187,7 +187,7 @@ class PdfDocument(document.SingleSourceDocument):
         self._document = None
 
     def invalidate(self):
-        """Reimplemented to clear the Poppler Document reference."""
+        """Reimplemented to clear the Document reference."""
         super().invalidate()
         self._document = None
 

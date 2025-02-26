@@ -23,7 +23,7 @@
 """
 Manages locking access (across threads) to any object.
 
-Use it for example to lock access to Poppler.Document instances.
+Use it for example to lock access to Document instances.
 
 """
 
