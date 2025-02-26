@@ -21,6 +21,7 @@ Overview of all modules
    magnifier.rst
    multipage.rst
    page.rst
+   pdf.rst
    pkginfo.rst
    poppler.rst
    printing.rst
