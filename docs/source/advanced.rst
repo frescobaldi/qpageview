@@ -184,7 +184,7 @@ This is the list of actions that are currently available in a
      - Show pages two by two
 
    * - ``layout_raster``
-     - Raster
+     - Grid Layout
      - Show pages in a grid
 
    * - ``vertical``
