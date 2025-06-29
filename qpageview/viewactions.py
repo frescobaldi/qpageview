@@ -287,7 +287,7 @@ class ViewActions(QObject):
         self.layout_single.setText(_("Single Pages"))
         self.layout_double_right.setText(_("Two Pages (first page right)"))
         self.layout_double_left.setText(_("Two Pages (first page left)"))
-        self.layout_raster.setText(_("Raster"))
+        self.layout_raster.setText(_("Grid Layout"))
         self.vertical.setText(_("Vertical"))
         self.horizontal.setText(_("Horizontal"))
         self.continuous.setText(_("&Continuous"))
