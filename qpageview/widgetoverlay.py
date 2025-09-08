@@ -25,9 +25,10 @@ View mixin class to display QWidgets on top of a Page.
 
 import collections
 
-from PyQt6.QtCore import QPoint, QRect, Qt
+from PyQt6.QtCore import QPoint, Qt
 
 from . import constants
+from . import util
 
 
 OverlayData = collections.namedtuple("OverlayData", "page point rect alignment")

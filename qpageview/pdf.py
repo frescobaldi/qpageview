@@ -25,11 +25,10 @@ PDF rendering backend using QtPdf.
 
 """
 
-import contextlib
 import weakref
 import platform
 
-from PyQt6.QtCore import Qt, QCoreApplication, QModelIndex, QRect, QRectF, QSize
+from PyQt6.QtCore import Qt, QByteArray, QCoreApplication, QModelIndex, QRect, QRectF, QSize, QUrl
 from PyQt6.QtGui import QPainter
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
 
