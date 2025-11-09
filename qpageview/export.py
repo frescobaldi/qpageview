@@ -250,6 +250,9 @@ class ImageExporter(AbstractExporter):
             i = i.convertToFormat(QImage.Format.Format_Grayscale8)
         if self.autocrop:
             i = i.copy(util.autoCropRect(i))
+        # needed for correct resolution metadata; see issue #44
+        i.setDotsPerMeterX(int(res / .0254))
+        i.setDotsPerMeterY(int(res / .0254))
         return i
 
     def image(self):
