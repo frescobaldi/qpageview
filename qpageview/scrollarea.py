@@ -25,7 +25,9 @@ ScrollArea, that supports kinetic scrolling and other features.
 
 import math
 
-from PyQt6.QtCore import QPoint, QRect, QSize, Qt
+# we use util.Point here rather than raw QPoint to prevent an overflow
+# during rapid kinetic scrolling (Frescobaldi issue #2130)
+from PyQt6.QtCore import QRect, QSize, Qt
 from PyQt6.QtWidgets import QAbstractScrollArea
 
 from . import util
@@ -80,7 +82,7 @@ class ScrollArea(QAbstractScrollArea):
             left = -self.horizontalScrollBar().value()
         if top < 0:
             top = -self.verticalScrollBar().value()
-        return QPoint(left, top)
+        return util.Point(left, top)
 
     def visibleArea(self):
         """Return a rectangle describing the part of the area that is visible."""
@@ -107,7 +109,7 @@ class ScrollArea(QAbstractScrollArea):
             dx = rect.right() - area.right()
         if rect.left() < area.left() + dx:
             dx = rect.left() - area.left()
-        return QPoint(dx, dy)
+        return util.Point(dx, dy)
 
     def ensureVisible(self, rect, margins=None, allowKinetic=True):
         """Performs the minimal scroll to make rect visible.
@@ -152,7 +154,7 @@ class ScrollArea(QAbstractScrollArea):
         """Return the current scroll offset."""
         x = self.horizontalScrollBar().value()
         y = self.verticalScrollBar().value()
-        return QPoint(x, y)
+        return util.Point(x, y)
 
     def canScrollBy(self, diff):
         """Does not scroll, but return the actual distance the View would scroll.
@@ -165,7 +167,7 @@ class ScrollArea(QAbstractScrollArea):
 
         x = min(max(0, hbar.value() + diff.x()), hbar.maximum())
         y = min(max(0, vbar.value() + diff.y()), vbar.maximum())
-        return QPoint(x - hbar.value(), y - vbar.value())
+        return util.Point(x - hbar.value(), y - vbar.value())
 
     def scrollForDragging(self, pos):
         """Slowly scroll the View if pos is close to the edge of the viewport.
@@ -180,7 +182,7 @@ class ScrollArea(QAbstractScrollArea):
         dy = pos.y() - viewport.top() - 12
         if dy >= 0:
             dy = max(0, pos.y() - viewport.bottom() + 12)
-        self.steadyScroll(QPoint(dx*10, dy*10))
+        self.steadyScroll(util.Point(dx*10, dy*10))
 
     def scrollTo(self, pos):
         """Scroll the View to get pos (QPoint) in the top left corner (if possible).
@@ -204,7 +206,7 @@ class ScrollArea(QAbstractScrollArea):
         y = vbar.value()
         vbar.setValue(vbar.value() + diff.y())
         y = vbar.value() - y
-        return QPoint(x, y)
+        return util.Point(x, y)
 
     def kineticScrollTo(self, pos):
         """Scroll the View to get pos (QPoint) in the top left corner (if possible).
@@ -328,7 +330,7 @@ class ScrollArea(QAbstractScrollArea):
                 diffy = int(sy * (sy + 1) / 2)
                 if speed.x() < 0: diffx = -diffx
                 if speed.y() < 0: diffy = -diffy
-                self.kineticScrollBy(QPoint(diffx, diffy))
+                self.kineticScrollBy(util.Point(diffx, diffy))
             self._dragPos = None
             self._dragTime = None
             self._dragSpeed = None
@@ -348,23 +350,23 @@ class ScrollArea(QAbstractScrollArea):
         # add Home and End, even in non-kinetic mode
         scroll = self.kineticScrollBy if self.kineticScrollingEnabled else self.scrollBy
         if ev.key() == Qt.Key.Key_Home:
-            scroll(QPoint(0, -vbar.value()))
+            scroll(util.Point(0, -vbar.value()))
         elif ev.key() == Qt.Key.Key_End:
-            scroll(QPoint(0, vbar.maximum() - vbar.value()))
+            scroll(util.Point(0, vbar.maximum() - vbar.value()))
         elif self.kineticScrollingEnabled:
             # make arrow keys and PgUp and PgDn kinetic
             if ev.key() == Qt.Key.Key_PageDown:
-                self.kineticAddDelta(QPoint(0, vbar.pageStep()))
+                self.kineticAddDelta(util.Point(0, vbar.pageStep()))
             elif ev.key() == Qt.Key.Key_PageUp:
-                self.kineticAddDelta(QPoint(0, -vbar.pageStep()))
+                self.kineticAddDelta(util.Point(0, -vbar.pageStep()))
             elif ev.key() == Qt.Key.Key_Down:
-                self.kineticAddDelta(QPoint(0, vbar.singleStep()))
+                self.kineticAddDelta(util.Point(0, vbar.singleStep()))
             elif ev.key() == Qt.Key.Key_Up:
-                self.kineticAddDelta(QPoint(0, -vbar.singleStep()))
+                self.kineticAddDelta(util.Point(0, -vbar.singleStep()))
             elif ev.key() == Qt.Key.Key_Left:
-                self.kineticAddDelta(QPoint(-hbar.singleStep(), 0))
+                self.kineticAddDelta(util.Point(-hbar.singleStep(), 0))
             elif ev.key() == Qt.Key.Key_Right:
-                self.kineticAddDelta(QPoint(hbar.singleStep(), 0))
+                self.kineticAddDelta(util.Point(hbar.singleStep(), 0))
             else:
                 super().keyPressEvent(ev)
         else:
@@ -416,7 +418,7 @@ class SteadyScroller(Scroller):
         dy += dy1
 
         # scroll in the right direction
-        diff = QPoint(-dx if x < 0 else dx, -dy if y < 0 else dy)
+        diff = util.Point(-dx if x < 0 else dx, -dy if y < 0 else dy)
         return diff
 
     def finished(self):
@@ -465,7 +467,7 @@ class KineticScroller(Scroller):
         self._x = sx
         self._y = sy
         # the offset is accounted for in the first step
-        self._offset = QPoint(offx, offy)
+        self._offset = util.Point(offx, offy)
 
     def remainingDistance(self):
         """Return the remaining distance."""
@@ -477,7 +479,7 @@ class KineticScroller(Scroller):
         dy = sy * (sy + 1) // 2
         if self._y < 0:
             dy = -dy
-        return QPoint(dx, dy)
+        return util.Point(dx, dy)
 
     def remainingTicks(self):
         """Return the remaining ticks of this scroll."""
@@ -485,7 +487,7 @@ class KineticScroller(Scroller):
 
     def step(self):
         """Return a QPoint indicating the diff to scroll in this step."""
-        ret = QPoint(self._x, self._y)
+        ret = util.Point(self._x, self._y)
         if self._offset:
             ret += self._offset
             self._offset = None

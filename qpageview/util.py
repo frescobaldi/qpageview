@@ -179,6 +179,24 @@ class LongMousePressMixin:
         super().mouseReleaseEvent(ev)
 
 
+class Point(QPoint):
+    """An overflow-safe QPoint.
+
+    This works around an oversight in PyQt, which does not
+    constrain integer arguments to fixed sizes as used in C++,
+    causing an OverflowError when those limits are exceeded.
+
+    """
+    def __init__(self, x, y):
+        super().__init__(clamp_int32(x), clamp_int32(y))
+
+    def setX(self, x):
+        super().setX(clamp_int32(x))
+
+    def setY(self, y):
+        super().setY(clamp_int32(y))
+
+
 def rotate(matrix, rotation, width, height, dest=False):
     """Rotate matrix inside a rectangular area of width x height.
 
@@ -241,6 +259,15 @@ def alignrect(rect, point, alignment=Qt.AlignmentFlag.AlignCenter):
         rect.moveTop(point.y())
     elif alignment & Qt.AlignmentFlag.AlignBottom:
         rect.moveBottom(point.y())
+
+
+def clamp(x, lower, upper):
+    """Return x bounded such that lower <= x <= upper."""
+    return lower if x < lower else upper if x > upper else x
+
+def clamp_int32(x):
+    """Return x bounded to the range of a 32-bit signed integer."""
+    return clamp(x, -2**31, 2**31 - 1)
 
 
 # Found at: https://stackoverflow.com/questions/1986152/why-doesnt-python-have-a-sign-function
