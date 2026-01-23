@@ -7,6 +7,13 @@ defined at the bottom of this file.
 
 All notable changes to the qpageview project are documented in this file.
 
+## [1.0.3] - 2026-01-23
+
+### Fixed
+
+*  Fix an OverflowError during rapid kinetic scrolling (#47).
+This fixes frescobaldi/frescobaldi#2130.
+
 ## [1.0.2] - 2026-01-06
 
 ### Fixed
@@ -99,3 +106,4 @@ its own project, to make it easier to use this package in other applications.
 [1.0.0]: https://github.com/frescobaldi/qpageview/compare/v0.6.2...v1.0.0
 [1.0.1]: https://github.com/frescobaldi/qpageview/compare/v1.0.0...v1.0.1
 [1.0.2]: https://github.com/frescobaldi/qpageview/compare/v1.0.1...v1.0.2
+[1.0.3]: https://github.com/frescobaldi/qpageview/compare/v1.0.2...v1.0.3
