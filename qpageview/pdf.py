@@ -284,15 +284,6 @@ class PdfRenderer(render.AbstractRenderer):
         with locking.lock(doc):
             image = doc.render(num, renderSize, renderOptions)
 
-        if paperColor:
-            # QtPdf leaves the page background transparent, so we need to
-            # paint it ourselves
-            content = image.copy()
-            bgPainter = QPainter(image)
-            bgPainter.fillRect(image.rect(), paperColor)
-            bgPainter.drawImage(0, 0, content)
-            bgPainter.end()
-
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
             image = image.copy(matrix.mapRect(QRect(*map(int, tile))))
@@ -305,6 +296,8 @@ class PdfRenderer(render.AbstractRenderer):
 
         # Erase the target area and draw the image
         painter.eraseRect(target)
+        if paperColor:
+            painter.fillRect(target, paperColor)
         painter.drawImage(target, image, QRectF(image.rect()))
 
 
