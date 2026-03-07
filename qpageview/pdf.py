@@ -265,12 +265,33 @@ class PdfRenderer(render.AbstractRenderer):
             xMultiplier = 1
             yMultiplier = 1
 
+        # Set rendering options
+        RenderFlag = QPdfDocumentRenderOptions.RenderFlag
+        renderOptions = QPdfDocumentRenderOptions()
+        # This ridiculous back-and-forth conversion is necessary because
+        # PyQt6's enum types don't implement bitwise OR
+        renderFlags = 0
+        if not self.antialiasing:
+            renderFlags |= RenderFlag.TextAliased.value
+            renderFlags |= RenderFlag.ImageAliased.value
+            renderFlags |= RenderFlag.PathAliased.value
+        renderOptions.setRenderFlags(RenderFlag(renderFlags))
+
         # Render the image at the output device's resolution (or double
         # that if we are oversampling)
         s = matrix.scale(xMultiplier, yMultiplier).mapRect(source)
-        image = self._render_image(doc, num,
-            xres * xMultiplier, yres * yMultiplier,
-            int(s.width()), int(s.height()), paperColor)
+        renderSize = QSize(int(s.width()), int(s.height()))
+        with locking.lock(doc):
+            image = doc.render(num, renderSize, renderOptions)
+
+        if paperColor:
+            # QtPdf leaves the page background transparent, so we need to
+            # paint it ourselves
+            content = image.copy()
+            bgPainter = QPainter(image)
+            bgPainter.fillRect(image.rect(), paperColor)
+            bgPainter.drawImage(0, 0, content)
+            bgPainter.end()
 
         if tile != (0, 0, key.width, key.height):
             # Crop the image to the tile boundaries
@@ -285,42 +306,6 @@ class PdfRenderer(render.AbstractRenderer):
         # Erase the target area and draw the image
         painter.eraseRect(target)
         painter.drawImage(target, image, QRectF(image.rect()))
-
-    def _render_image(self, doc, pageNum,
-                      xres=72.0, yres=72.0, w=-1, h=-1, paperColor=None):
-        """Render an image.
-
-        This always renders the full page because that is the only rendering
-        mode supported by QtPdf. If you need a smaller area, you can crop
-        the returned QImage by calling its copy(x, y, w, h) method.
-
-        The document is properly locked during rendering and render options
-        are set.
-
-        """
-        RenderFlag = QPdfDocumentRenderOptions.RenderFlag
-        with locking.lock(doc):
-            options = QPdfDocumentRenderOptions()
-
-            # This ridiculous back-and-forth conversion is necessary because
-            # PyQt6 won't let you just 'OR' together RenderFlag constants.
-            renderFlags = 0
-            if not self.antialiasing:
-                renderFlags |= RenderFlag.TextAliased.value
-                renderFlags |= RenderFlag.ImageAliased.value
-                renderFlags |= RenderFlag.PathAliased.value
-            options.setRenderFlags(RenderFlag(renderFlags))
-
-            image = doc.render(pageNum, QSize(int(w), int(h)), options)
-            if paperColor:
-                # QtPdf leaves the page background transparent, so we need to
-                # paint it ourselves.
-                content = image.copy()
-                painter = QPainter(image)
-                painter.fillRect(image.rect(), paperColor)
-                painter.drawImage(0, 0, content)
-                painter.end()
-            return image
 
 
 def load(source):
