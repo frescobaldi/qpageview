@@ -46,8 +46,9 @@ _linkscache = weakref.WeakKeyDictionary()
 class Link(link.Link):
     """A link that encapsulates QPdfLinkModel data."""
     def __init__(self, linkobj, index, pointSize):
-        self.linkobj = linkobj
-        self.index = index
+        self._targetPage = linkobj.data(index, QPdfLinkModel.Role.Page.value)
+        self._url = linkobj.data(index,
+                                 QPdfLinkModel.Role.Url.value).toString()
         # Convert to relative coordinates between 0.0 and 1.0 as expected
         # by link.Link, which uses them for compatibility with Poppler
         rect = linkobj.data(index, QPdfLinkModel.Role.Rectangle.value)
@@ -70,14 +71,12 @@ class Link(link.Link):
         """If this is an internal link, the page number to which the
         link should jump; otherwise -1."""
         # QtPdf pages are 0-indexed, but our View is 1-indexed
-        page = self.linkobj.data(self.index, QPdfLinkModel.Role.Page.value)
-        return (page + 1) if page != -1 else -1
+        return (self._targetPage + 1) if self._targetPage != -1 else -1
 
     @property
     def url(self):
         """The URL the link points to."""
-        url = self.linkobj.data(self.index,
-                                QPdfLinkModel.Role.Url.value).toString()
+        url = self._url
         if platform.system() == "Windows":
             # Fix weird things QUrl does to local paths
             for proto in ("file", "textedit"):
