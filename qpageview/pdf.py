@@ -25,7 +25,6 @@ PDF rendering backend using QtPdf.
 
 """
 
-import weakref
 import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QCoreApplication, QModelIndex, QRect, QRectF, QSize, QUrl
@@ -37,10 +36,6 @@ from . import page
 from . import link
 from . import locking
 from . import render
-
-
-# store the links in the page of a document as long as the document exists
-_linkscache = weakref.WeakKeyDictionary()
 
 
 class Link(link.Link):
@@ -161,8 +156,8 @@ class PdfPage(page.AbstractRenderedPage):
         """Return links inside the document."""
         document, pageNumber = self.document, self.pageNumber
         try:
-            return _linkscache[document][pageNumber]
-        except KeyError:
+            return self._linksCache
+        except AttributeError:
             with locking.lock(document):
                 lm = QPdfLinkModel(document=document, page=pageNumber)
                 parentIndex = QModelIndex()
@@ -171,9 +166,8 @@ class PdfPage(page.AbstractRenderedPage):
                     index = lm.index(row, 0, parentIndex)
                     links.append(Link(lm, index,
                                       document.pagePointSize(pageNumber)))
-                links = link.Links(links)
-            _linkscache.setdefault(document, {})[pageNumber] = links
-            return links
+                self._linksCache = link.Links(links)
+            return self._linksCache
 
 
 class PdfDocument(document.SingleSourceDocument):
