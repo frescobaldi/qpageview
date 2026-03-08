@@ -29,7 +29,19 @@ import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QCoreApplication, QModelIndex, QRect, QRectF, QSize, QUrl
 from PyQt6.QtGui import QPainter
-from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
+from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
+
+# Check for PDF link support (added in Qt 6.6)
+# As of 2026, some Linux distros still ship older Qt versions without it.
+# We will attempt to run with point-and-click disabled on such systems.
+try:
+    from PyQt6.QtPdf import QPdfLinkModel
+except ImportError:
+    QPdfLinkModel = None
+    import sys
+    print("qpageview: "
+        "PDF links are disabled because QPdfLinkModel is unavailable.",
+        file=sys.stderr)
 
 from . import document
 from . import page
@@ -158,6 +170,10 @@ class PdfPage(page.AbstractRenderedPage):
         try:
             return self._linksCache
         except AttributeError:
+            if QPdfLinkModel is None:
+                # Link support is unavailable; return an empty cache
+                self._linksCache = link.Links()
+                return self._linksCache
             with locking.lock(document):
                 lm = QPdfLinkModel(document=document, page=pageNumber)
                 parentIndex = QModelIndex()
