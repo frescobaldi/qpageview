@@ -7,6 +7,13 @@ defined at the bottom of this file.
 
 All notable changes to the qpageview project are documented in this file.
 
+## [1.0.4] - 2026-04-04
+
+### Fixed
+
+* Optimize PDF link caching (#49) and reduce memory usage.
+* Optimize PDF rendering (#50) to increase performance and reduce memory usage.
+
 ## [1.0.3] - 2026-01-23
 
 ### Fixed
@@ -107,3 +114,4 @@ its own project, to make it easier to use this package in other applications.
 [1.0.1]: https://github.com/frescobaldi/qpageview/compare/v1.0.0...v1.0.1
 [1.0.2]: https://github.com/frescobaldi/qpageview/compare/v1.0.1...v1.0.2
 [1.0.3]: https://github.com/frescobaldi/qpageview/compare/v1.0.2...v1.0.3
+[1.0.4]: https://github.com/frescobaldi/qpageview/compare/v1.0.3...v1.0.4
