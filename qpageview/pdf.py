@@ -25,12 +25,23 @@ PDF rendering backend using QtPdf.
 
 """
 
-import weakref
 import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QCoreApplication, QModelIndex, QRect, QRectF, QSize, QUrl
 from PyQt6.QtGui import QPainter
-from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions, QPdfLinkModel
+from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
+
+# Check for PDF link support (added in Qt 6.6)
+# As of 2026, some Linux distros still ship older Qt versions without it.
+# We will attempt to run with point-and-click disabled on such systems.
+try:
+    from PyQt6.QtPdf import QPdfLinkModel
+except ImportError:
+    QPdfLinkModel = None
+    import sys
+    print("qpageview: "
+        "PDF links are disabled because QPdfLinkModel is unavailable.",
+        file=sys.stderr)
 
 from . import document
 from . import page
@@ -39,15 +50,12 @@ from . import locking
 from . import render
 
 
-# store the links in the page of a document as long as the document exists
-_linkscache = weakref.WeakKeyDictionary()
-
-
 class Link(link.Link):
     """A link that encapsulates QPdfLinkModel data."""
     def __init__(self, linkobj, index, pointSize):
-        self.linkobj = linkobj
-        self.index = index
+        self._targetPage = linkobj.data(index, QPdfLinkModel.Role.Page.value)
+        self._url = linkobj.data(index,
+                                 QPdfLinkModel.Role.Url.value).toString()
         # Convert to relative coordinates between 0.0 and 1.0 as expected
         # by link.Link, which uses them for compatibility with Poppler
         rect = linkobj.data(index, QPdfLinkModel.Role.Rectangle.value)
@@ -70,14 +78,12 @@ class Link(link.Link):
         """If this is an internal link, the page number to which the
         link should jump; otherwise -1."""
         # QtPdf pages are 0-indexed, but our View is 1-indexed
-        page = self.linkobj.data(self.index, QPdfLinkModel.Role.Page.value)
-        return (page + 1) if page != -1 else -1
+        return -1 if self._targetPage == -1 else self._targetPage + 1
 
     @property
     def url(self):
         """The URL the link points to."""
-        url = self.linkobj.data(self.index,
-                                QPdfLinkModel.Role.Url.value).toString()
+        url = self._url
         if platform.system() == "Windows":
             # Fix weird things QUrl does to local paths
             for proto in ("file", "textedit"):
@@ -162,8 +168,12 @@ class PdfPage(page.AbstractRenderedPage):
         """Return links inside the document."""
         document, pageNumber = self.document, self.pageNumber
         try:
-            return _linkscache[document][pageNumber]
-        except KeyError:
+            return self._linksCache
+        except AttributeError:
+            if QPdfLinkModel is None:
+                # Link support is unavailable; return an empty cache
+                self._linksCache = link.Links()
+                return self._linksCache
             with locking.lock(document):
                 lm = QPdfLinkModel(document=document, page=pageNumber)
                 parentIndex = QModelIndex()
@@ -172,9 +182,8 @@ class PdfPage(page.AbstractRenderedPage):
                     index = lm.index(row, 0, parentIndex)
                     links.append(Link(lm, index,
                                       document.pagePointSize(pageNumber)))
-                links = link.Links(links)
-            _linkscache.setdefault(document, {})[pageNumber] = links
-            return links
+                self._linksCache = link.Links(links)
+            return self._linksCache
 
 
 class PdfDocument(document.SingleSourceDocument):
