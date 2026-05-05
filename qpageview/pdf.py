@@ -27,7 +27,7 @@ PDF rendering backend using QtPdf.
 
 import platform
 
-from PyQt6.QtCore import Qt, QByteArray, QCoreApplication, QModelIndex, QRect, QRectF, QSize, QUrl
+from PyQt6.QtCore import Qt, QByteArray, QModelIndex, QRect, QRectF, QSize, QUrl
 from PyQt6.QtGui import QPainter
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
 
@@ -324,7 +324,9 @@ def load(source):
     if isinstance(source, QPdfDocument):
         return source
     elif isinstance(source, str) or isinstance(source, QByteArray):
-        document = QPdfDocument(QCoreApplication.instance())
+        # We need to create the QPdfDocument without a parent QObject so
+        # Python can garbage-collect it properly when it goes out of scope
+        document = QPdfDocument(None)   # parent has no default value
         document.load(source)
         return document
 
