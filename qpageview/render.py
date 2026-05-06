@@ -219,17 +219,15 @@ class AbstractRenderer:
         The default implementation prepares the image, a painter and then
         calls draw() to actually draw the contents.
 
-        If the paperColor is not specified, it will be read from the Page's
-        paperColor attribute (if not None) or else from the renderer's
-        paperColor attribute.
+        If the paperColor is not specified, the returned image will have a
+        transparent background, and the caller is responsible to paint or
+        erase the background as needed before calling this method.
 
         """
-        if paperColor is None:
-            paperColor = page.paperColor or self.paperColor
-
         i = QImage(tile.w, tile.h, self.imageFormat)
-        if paperColor:
-            i.fill(paperColor)
+        # leave the background transparent if no paperColor is specified,
+        # since we don't necessarily want to fill it e.g. when printing
+        i.fill(paperColor or Qt.GlobalColor.transparent)
         painter = QPainter(i)
 
         # rotate the painter accordingly
@@ -333,6 +331,7 @@ class AbstractRenderer:
         region = QRegion() # painted region in tile coordinates
 
         info = self.info(page, painter.device(), rect)
+        paperColor = page.paperColor or self.paperColor
 
         for t, image in info.images:
             r = QRect(*t) & info.target # part of the tile that needs to be drawn
@@ -365,12 +364,14 @@ class AbstractRenderer:
             else:
                 if QRegion(info.target).subtracted(region):
                     # paint background, still partly uncovered
-                    painter.fillRect(rect, page.paperColor or self.paperColor)
+                    painter.fillRect(rect, paperColor)
 
         # draw lowest quality images first
         for (r, image, source) in reversed(images):
             # scale the target rect back to the paint device
             target = QRectF(r.x() / info.ratio, r.y() / info.ratio, r.width() / info.ratio, r.height() / info.ratio)
+            # remember render() does not fill the background unless requested
+            painter.fillRect(target, paperColor)
             painter.drawImage(target, image, source)
 
     def schedule(self, page, key, tiles, callback):
