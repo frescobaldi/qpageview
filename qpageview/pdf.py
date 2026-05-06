@@ -303,10 +303,6 @@ class PdfRenderer(render.AbstractRenderer):
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
 
-        # Erase the target area and draw the image
-        painter.eraseRect(target)
-        if paperColor:
-            painter.fillRect(target, paperColor)
         painter.drawImage(target, image, QRectF(image.rect()))
 
 
