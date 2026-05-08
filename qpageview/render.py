@@ -112,6 +112,13 @@ class AbstractRenderer:
     # antialias True by default (not all renderers may support this)
     antialiasing = True
 
+    # qpageview was designed to render pages tile-by-tile. However, some
+    # backends like QtPDF only support full-page rendering, so for these we
+    # render the page first and divide it into tiles later. This is less
+    # efficient, but still provides certain performance advantages of using
+    # tiles like reduced flicker when repainting the widget.
+    renderFullPages = False
+
     def __init__(self, cache=None):
         if cache:
             self.cache = cache
@@ -380,6 +387,10 @@ class AbstractRenderer:
         pending job.
 
         """
+        if self.renderFullPages:
+            # ignore the caller's request and always render the full page;
+            # job() will do the actual division into tiles later
+            tiles = [Tile(0, 0, key.width, key.height)]
         for tile in tiles:
             try:
                 job = _jobs[(key, tile)]
@@ -405,7 +416,12 @@ class AbstractRenderer:
                 exception.extend(sys.exc_info())
                 return QImage()
         def finalize(image):
-            self.cache.addtile(key, tile, image)
+            if self.renderFullPages:
+                for subtile in self.tiles(key.width, key.height):
+                    self.cache.addtile(key, subtile,
+                                       image.copy(QRect(*map(int, subtile))))
+            else:
+                self.cache.addtile(key, tile, image)
             for cb in callbacks:
                 cb(page)
             del _jobs[(key, tile)]

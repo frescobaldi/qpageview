@@ -49,8 +49,6 @@ from . import link
 from . import locking
 from . import render
 
-_jobs = render._jobs
-
 
 class Link(link.Link):
     """A link that encapsulates QPdfLinkModel data."""
@@ -222,6 +220,7 @@ class PdfDocument(document.SingleSourceDocument):
 
 class PdfRenderer(render.AbstractRenderer):
     oversampleThreshold = 96    # DPI of a standard PC screen
+    renderFullPages = True      # QtPDF doesn't support partial page rendering
 
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
@@ -296,55 +295,6 @@ class PdfRenderer(render.AbstractRenderer):
                 Qt.TransformationMode.SmoothTransformation)
 
         painter.drawImage(target, image, QRectF(image.rect()))
-
-    def schedule(self, page, key, tiles, callback):
-        """Schedule a new rendering job for the specified page.
-
-        If this page has already a job pending, the callback is added to the
-        pending job.
-
-        """
-        import time
-        # render the full page now, then job() will split it into tiles later
-        pageTile = render.Tile(0, 0, key.width, key.height)
-        try:
-            job = _jobs[(key, pageTile)]
-        except KeyError:
-            # make a new Job for this page
-            job = _jobs[(key, pageTile)] = self.job(page, key, pageTile)
-        job.time = time.time()
-        job.callbacks.add(callback)
-        self.checkstart()
-
-    def job(self, page, key, pageTile):
-        """Return a new :class:`~.backgroundjob.Job` tailored for this page."""
-        from . import backgroundjob
-        job = backgroundjob.Job()
-        job.callbacks = callbacks = set()
-        job.mutex = page.mutex()
-        exception = []
-        def work():
-            try:
-                # filling the background here is an optimization for paint()
-                return self.render(page, key, pageTile,
-                                   page.paperColor or self.paperColor)
-            except Exception:
-                exception.extend(sys.exc_info())
-                return QImage()
-        def finalize(image):
-            # split the rendered page into tiles
-            for tile in self.tiles(key.width, key.height):
-                self.cache.addtile(key, tile,
-                                   image.copy(QRect(*map(int, tile))))
-            for cb in callbacks:
-                cb(page)
-            del _jobs[(key, pageTile)]
-            self.checkstart()
-            if exception:
-                self.exception(*exception)
-        job.work = work
-        job.finalize = finalize
-        return job
 
 
 def load(source):
