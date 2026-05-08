@@ -391,6 +391,10 @@ class AbstractRenderer:
             # ignore the caller's request and always render the full page;
             # job() will do the actual division into tiles later
             tiles = [Tile(0, 0, key.width, key.height)]
+            # ensure the cache can always hold at least two full pages to
+            # avoid re-rendering when scrolling over a page break
+            pageBytes = key.width * key.height * 4  # 32 bits == 4 bytes
+            self.cache.maxsize = max(cache.ImageCache.maxsize, pageBytes * 2)
         for tile in tiles:
             try:
                 job = _jobs[(key, tile)]
