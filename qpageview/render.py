@@ -331,7 +331,6 @@ class AbstractRenderer:
         region = QRegion() # painted region in tile coordinates
 
         info = self.info(page, painter.device(), rect)
-        paperColor = page.paperColor or self.paperColor
 
         for t, image in info.images:
             r = QRect(*t) & info.target # part of the tile that needs to be drawn
@@ -364,14 +363,14 @@ class AbstractRenderer:
             else:
                 if QRegion(info.target).subtracted(region):
                     # paint background, still partly uncovered
-                    painter.fillRect(rect, paperColor)
+                    painter.fillRect(rect, page.paperColor or self.paperColor)
 
         # draw lowest quality images first
         for (r, image, source) in reversed(images):
             # scale the target rect back to the paint device
             target = QRectF(r.x() / info.ratio, r.y() / info.ratio, r.width() / info.ratio, r.height() / info.ratio)
-            # remember render() does not fill the background unless requested
-            painter.fillRect(target, paperColor)
+            # job() already filled the background when rendering the page
+            # so we don't have to do that separately, which can cause flicker
             painter.drawImage(target, image, source)
 
     def schedule(self, page, key, tiles, callback):
@@ -399,7 +398,9 @@ class AbstractRenderer:
         exception = []
         def work():
             try:
-                return self.render(page, key, tile)
+                # filling the background here is an optimization for paint()
+                return self.render(page, key, tile,
+                                   page.paperColor or self.paperColor)
             except Exception:
                 exception.extend(sys.exc_info())
                 return QImage()
