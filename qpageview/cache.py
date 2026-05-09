@@ -81,10 +81,15 @@ class ImageCache:
 
         # adjust the cache size to fit at least two pages' visible tiles
         # to avoid re-rendering either page when both are displayed
+        oldsize = self.maxsize
         self.maxsize = max(type(self).maxsize, 2 * tileBytes)
-
-        # free memory from unneeded tiles before rendering the new ones
-        self.purge(tileBytes)
+        if self.maxsize < oldsize:
+            # clear everything when shrinking the cache because otherwise
+            # larger tiles might prove difficult to purge()
+            self.clear()
+        else:
+            # free memory from unneeded tiles before rendering the new ones
+            self.purge(tileBytes)
 
     def addtile(self, key, tile, image):
         """Add image for the specified key and tile."""
