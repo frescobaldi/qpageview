@@ -77,12 +77,10 @@ class ImageCache:
         except KeyError:
             pass
 
-        purgeneeded = self.currentsize > self.maxsize
-
         e = d[tile] = ImageEntry(image)
         self.currentsize += e.bcount
 
-        if not purgeneeded:
+        if self.currentsize <= self.maxsize:
             return
 
         # purge old images is needed,
@@ -100,7 +98,7 @@ class ImageCache:
         currentsize = 0
         for time, bcount, group, ident, key, tile in entries:
             currentsize += bcount
-            if currentsize > self.maxsize:
+            if currentsize >= self.maxsize:
                 break
         self.currentsize = currentsize
         # ... and delete the remaining images, deleting empty dicts as well
