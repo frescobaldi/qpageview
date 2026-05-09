@@ -380,6 +380,11 @@ class AbstractRenderer:
         pending job.
 
         """
+        # adjust the cache size to fit at least two pages' visible tiles
+        # to avoid re-rendering either page when both are displayed
+        # derivation: tile area * (32 bits == 4 bytes / pixel) * 2 pages
+        self.cache.maxsize = max(type(self.cache).maxsize,
+                                 8 * sum(tile.w * tile.h for tile in tiles))
         for tile in tiles:
             try:
                 job = _jobs[(key, tile)]
