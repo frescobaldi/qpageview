@@ -158,7 +158,7 @@ class PdfPage(page.AbstractRenderedPage):
 
     def text(self, rect):
         """Returns text inside rectangle."""
-        rectf = self.mapFromPage(self.pageWidth, self.pageHeight).rect(rect)
+        rectf = self.mapFromPage().rect(rect)
         with locking.lock(self.document):
             return self.document.getSelection(
                 self.pageNumber, rectf.topLeft(), rectf.bottomRight()).text()
