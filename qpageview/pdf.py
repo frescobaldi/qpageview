@@ -28,7 +28,6 @@ PDF rendering backend using QtPdf.
 import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QModelIndex, QRect, QRectF, QSize, QUrl
-from PyQt6.QtGui import QPainter
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
 
 # Check for PDF link support (added in Qt 6.6)
@@ -159,7 +158,7 @@ class PdfPage(page.AbstractRenderedPage):
 
     def text(self, rect):
         """Returns text inside rectangle."""
-        rectf = self.mapFromPage(self.pageWidth, self.pageHeight).rect(rect)
+        rectf = self.mapFromPage().rect(rect)
         with locking.lock(self.document):
             return self.document.getSelection(
                 self.pageNumber, rectf.topLeft(), rectf.bottomRight()).text()
