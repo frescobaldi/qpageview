@@ -246,8 +246,6 @@ class PdfRenderer(render.AbstractRenderer):
 
         doc = page.document
         num = page.pageNumber
-        xres = painter.device().logicalDpiX()
-        yres = painter.device().logicalDpiY()
 
         # We use this to scale from key/tile to device coordinates
         matrix = painter.deviceTransform()
@@ -256,22 +254,20 @@ class PdfRenderer(render.AbstractRenderer):
         # are "actual size" and scaling is our responsibility. When printing,
         # the painter coordinates are scaled to the device's resolution and
         # scaling is the device's responsibility.
-        vscale = matrix.m11()
-        hscale = matrix.m22()
-        actualSize = (vscale == hscale == 1)
+        # Note: m11 and m22 are our horizontal and vertical scaling factors.
+        actualSize = (matrix.m11() == matrix.m22() == 1)
 
         # Oversampling produces more readable output at lower resolutions
         # when painting at "actual size"
         if actualSize:
             # If our effective pixel density at this zoom level is below
             # our threshold, render at double size then downscale
-            xresEffective = 72.0 * key.width / pageSize.width()
-            yresEffective = 72.0 * key.height / pageSize.height()
-            xMultiplier = 2 if xresEffective < self.oversampleThreshold else 1
-            yMultiplier = 2 if yresEffective < self.oversampleThreshold else 1
+            xres = 72.0 * key.width / pageSize.width()
+            yres = 72.0 * key.height / pageSize.height()
+            xMultiplier = 2 if xres < self.oversampleThreshold else 1
+            yMultiplier = 2 if yres < self.oversampleThreshold else 1
         else:
-            xMultiplier = 1
-            yMultiplier = 1
+            xMultiplier = yMultiplier = 1
 
         # Set rendering options
         RenderFlag = QPdfDocumentRenderOptions.RenderFlag
