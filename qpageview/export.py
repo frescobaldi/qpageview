@@ -243,11 +243,23 @@ class ImageExporter(AbstractExporter):
         res = self.resolution
         if self.oversample != 1:
             res *= self.oversample
-        i = self.page().image(self._rect, res, res, self.paperColor)
+        if self.grayscale:
+            # convertToFormat() does weird things with the alpha channel,
+            # so we always render grayscale images with a solid background
+            # and handle transparent areas manually if needed
+            paperColor = self.paperColor or Qt.GlobalColor.white
+        else:
+            paperColor = self.paperColor
+        i = self.page().image(self._rect, res, res, paperColor)
         if self.oversample != 1:
             i = i.scaled(i.size() / self.oversample, transformMode=Qt.TransformationMode.SmoothTransformation)
         if self.grayscale:
             i = i.convertToFormat(QImage.Format.Format_Grayscale8)
+            if self.paperColor is None:
+                # restore the original transparent background
+                mask = i.copy()
+                mask.invertPixels(QImage.InvertMode.InvertRgb)
+                i.setAlphaChannel(mask)
         if self.autocrop:
             i = i.copy(util.autoCropRect(i))
         # needed for correct resolution metadata; see issue #44
