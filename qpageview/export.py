@@ -257,9 +257,10 @@ class ImageExporter(AbstractExporter):
             i = i.convertToFormat(QImage.Format.Format_Grayscale8)
             if self.paperColor is None:
                 # restore the original transparent background
+                # since our alpha map here is just this image's negative,
+                # we save memory by doing this instead of making a copy()
+                i.invertPixels(QImage.InvertMode.InvertRgb)
                 i.setAlphaChannel(i)
-                # invert the alpha values so white, not black, is transparent
-                i.invertPixels(QImage.InvertMode.InvertRgba)
                 i.invertPixels(QImage.InvertMode.InvertRgb)
         if self.autocrop:
             i = i.copy(util.autoCropRect(i))
