@@ -219,17 +219,15 @@ class AbstractRenderer:
         The default implementation prepares the image, a painter and then
         calls draw() to actually draw the contents.
 
-        If the paperColor is not specified, it will be read from the Page's
-        paperColor attribute (if not None) or else from the renderer's
-        paperColor attribute.
+        If the paperColor is not specified, the returned image will have a
+        transparent background, and the caller is responsible to paint or
+        erase the background as needed before calling this method.
 
         """
-        if paperColor is None:
-            paperColor = page.paperColor or self.paperColor
-
         i = QImage(tile.w, tile.h, self.imageFormat)
-        if paperColor:
-            i.fill(paperColor)
+        # leave the background transparent if no paperColor is specified,
+        # since we don't necessarily want to fill it e.g. when printing
+        i.fill(paperColor or Qt.GlobalColor.transparent)
         painter = QPainter(i)
 
         # rotate the painter accordingly
@@ -371,6 +369,8 @@ class AbstractRenderer:
         for (r, image, source) in reversed(images):
             # scale the target rect back to the paint device
             target = QRectF(r.x() / info.ratio, r.y() / info.ratio, r.width() / info.ratio, r.height() / info.ratio)
+            # job() already filled the background when rendering the page
+            # so we don't have to do that separately, which can cause flicker
             painter.drawImage(target, image, source)
 
     def schedule(self, page, key, tiles, callback):
@@ -398,7 +398,9 @@ class AbstractRenderer:
         exception = []
         def work():
             try:
-                return self.render(page, key, tile)
+                # filling the background here is an optimization for paint()
+                return self.render(page, key, tile,
+                                   page.paperColor or self.paperColor)
             except Exception:
                 exception.extend(sys.exc_info())
                 return QImage()
