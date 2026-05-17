@@ -28,6 +28,7 @@ PDF rendering backend using QtPdf.
 import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QModelIndex, QRect, QRectF, QSize, QUrl
+from PyQt6.QtGui import QPainter, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
 
 # Check for PDF link support (added in Qt 6.6)
@@ -47,6 +48,7 @@ from . import page
 from . import link
 from . import locking
 from . import render
+from . import util
 
 
 class Link(link.Link):
@@ -218,8 +220,6 @@ class PdfDocument(document.SingleSourceDocument):
 
 
 class PdfRenderer(render.AbstractRenderer):
-    oversampleThreshold = 96    # DPI of a standard PC screen
-
     def tiles(self, width, height):
         """Yield four-tuples Tile(x, y, w, h) describing the tiles to render.
 
@@ -230,12 +230,32 @@ class PdfRenderer(render.AbstractRenderer):
         """
         yield render.Tile(0, 0, width, height)
 
+    def render(self, page, key, tile, paperColor=None):
+        """Generate a QImage for tile of the Page."""
+        if key.rotation:
+            # this is only doable by drawing on a second QImage
+            return super().render(page, key, tile, paperColor)
+        else:
+            # reuse the QImage returned by QPdfDocument.render() to save memory
+            image = self._render(page, key, tile)
+            if paperColor:
+                painter = QPainter(image)
+                painter.setCompositionMode(
+                    QPainter.CompositionMode.CompositionMode_DestinationOver)
+                painter.fillRect(image.rect(), paperColor)
+            return image
+
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
 
         The painter is already at the right position and rotation.
 
         """
+        matrix = painter.deviceTransform()
+        painter.drawImage(0, 0, self._render(page, key, tile, matrix))
+
+    def _render(self, page, key, tile, matrix=None):
+        """The actual rendering logic shared by render() and draw()."""
         pageSize = page.pageSize()  # in points
         # key and tile coordinates scale with device resolution and zoom level
         source = QRectF(0, 0, key.width, key.height)
@@ -248,7 +268,8 @@ class PdfRenderer(render.AbstractRenderer):
         num = page.pageNumber
 
         # We use this to scale from key/tile to device coordinates
-        matrix = painter.deviceTransform()
+        if matrix is None:
+            matrix = QTransform()
 
         # When we are displaying an image on screen, our painter coordinates
         # are "actual size" and scaling is our responsibility. When printing,
@@ -259,15 +280,7 @@ class PdfRenderer(render.AbstractRenderer):
 
         # Oversampling produces more readable output at lower resolutions
         # when painting at "actual size"
-        if actualSize:
-            # If our effective pixel density at this zoom level is below
-            # our threshold, render at double size then downscale
-            xres = 72.0 * key.width / pageSize.width()
-            yres = 72.0 * key.height / pageSize.height()
-            xMultiplier = 2 if xres < self.oversampleThreshold else 1
-            yMultiplier = 2 if yres < self.oversampleThreshold else 1
-        else:
-            xMultiplier = yMultiplier = 1
+        multiplier = util.oversampleFactor(key, pageSize) if actualSize else 1
 
         # Set rendering options
         RenderFlag = QPdfDocumentRenderOptions.RenderFlag
@@ -283,7 +296,7 @@ class PdfRenderer(render.AbstractRenderer):
 
         # Render the image at the output device's resolution (or double
         # that if we are oversampling)
-        s = matrix.scale(xMultiplier, yMultiplier).mapRect(source)
+        s = matrix.scale(multiplier, multiplier).mapRect(source)
         renderSize = QSize(int(s.width()), int(s.height()))
         with locking.lock(doc):
             image = doc.render(num, renderSize, renderOptions)
@@ -298,7 +311,7 @@ class PdfRenderer(render.AbstractRenderer):
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
 
-        painter.drawImage(target, image, QRectF(image.rect()))
+        return image
 
 
 def load(source):
