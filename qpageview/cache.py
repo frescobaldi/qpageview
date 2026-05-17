@@ -69,6 +69,28 @@ class ImageCache:
         except KeyError:
             return {}
 
+    def prepare(self, tiles):
+        """Make room before rendering new tiles.
+
+        This ensures there is space for the new tiles by adjusting
+        the cache size and/or purging older images as needed.
+
+        """
+        # approximate size of the new tiles at 32 bits (== 4 bytes) per pixel
+        tileBytes = sum(tile.w * tile.h for tile in tiles) * 4
+
+        # adjust the cache size to fit at least two pages' visible tiles
+        # to avoid re-rendering either page when both are displayed
+        oldsize = self.maxsize
+        self.maxsize = max(type(self).maxsize, 2 * tileBytes)
+        if self.maxsize < oldsize:
+            # clear everything when shrinking the cache because otherwise
+            # larger tiles might prove difficult to purge()
+            self.clear()
+        else:
+            # free memory from unneeded tiles before rendering the new ones
+            self.purge(tileBytes)
+
     def addtile(self, key, tile, image):
         """Add image for the specified key and tile."""
         d = self._cache.setdefault(key.group, {}).setdefault(key.ident, {}).setdefault(key[2:], {})
@@ -77,17 +99,20 @@ class ImageCache:
         except KeyError:
             pass
 
-        purgeneeded = self.currentsize > self.maxsize
-
         e = d[tile] = ImageEntry(image)
         self.currentsize += e.bcount
 
-        if not purgeneeded:
+    def purge(self, reservedsize=0):
+        """Purge old images if needed.
+
+        At least `reservedsize` bytes will remain available.
+
+        """
+        limit = self.maxsize - reservedsize
+        if self.currentsize <= limit:
             return
 
-        # purge old images is needed,
         # cache groups may have disappeared so count all images
-
         entries = iter(sorted(
             ((entry.time, entry.bcount, group, ident, key, tile)
             for group, identd in self._cache.items()
@@ -96,11 +121,11 @@ class ImageCache:
                         for tile, entry in tiled.items()),
             key=(lambda item: item[:2]), reverse=True))
 
-        # now count the newest images until maxsize ...
+        # now count the newest images until our limit ...
         currentsize = 0
         for time, bcount, group, ident, key, tile in entries:
             currentsize += bcount
-            if currentsize > self.maxsize:
+            if currentsize >= limit:
                 break
         self.currentsize = currentsize
         # ... and delete the remaining images, deleting empty dicts as well

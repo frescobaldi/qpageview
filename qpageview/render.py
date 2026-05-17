@@ -380,6 +380,7 @@ class AbstractRenderer:
         pending job.
 
         """
+        self.cache.prepare(tiles)
         for tile in tiles:
             try:
                 job = _jobs[(key, tile)]
