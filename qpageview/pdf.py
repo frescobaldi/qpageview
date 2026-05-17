@@ -28,6 +28,7 @@ PDF rendering backend using QtPdf.
 import platform
 
 from PyQt6.QtCore import Qt, QByteArray, QModelIndex, QRect, QRectF, QSize, QUrl
+from PyQt6.QtGui import QPainter, QTransform
 from PyQt6.QtPdf import QPdfDocument, QPdfDocumentRenderOptions
 
 # Check for PDF link support (added in Qt 6.6)
@@ -230,12 +231,32 @@ class PdfRenderer(render.AbstractRenderer):
         """
         yield render.Tile(0, 0, width, height)
 
+    def render(self, page, key, tile, paperColor=None):
+        """Generate a QImage for tile of the Page."""
+        if key.rotation:
+            # this is only doable by drawing on a second QImage
+            return super().render(page, key, tile, paperColor)
+        else:
+            # reuse the QImage returned by QPdfDocument.render() to save memory
+            image = self._render(page, key, tile)
+            if paperColor:
+                painter = QPainter(image)
+                painter.setCompositionMode(
+                    QPainter.CompositionMode.CompositionMode_DestinationOver)
+                painter.fillRect(image.rect(), paperColor)
+            return image
+
     def draw(self, page, painter, key, tile, paperColor=None):
         """Draw a tile on the painter.
 
         The painter is already at the right position and rotation.
 
         """
+        matrix = painter.deviceTransform()
+        painter.drawImage(0, 0, self._render(page, key, tile, matrix))
+
+    def _render(self, page, key, tile, matrix=None):
+        """The actual rendering logic shared by render() and draw()."""
         pageSize = page.pageSize()  # in points
         # key and tile coordinates scale with device resolution and zoom level
         source = QRectF(0, 0, key.width, key.height)
@@ -248,7 +269,8 @@ class PdfRenderer(render.AbstractRenderer):
         num = page.pageNumber
 
         # We use this to scale from key/tile to device coordinates
-        matrix = painter.deviceTransform()
+        if matrix is None:
+            matrix = QTransform()
 
         # When we are displaying an image on screen, our painter coordinates
         # are "actual size" and scaling is our responsibility. When printing,
@@ -298,7 +320,7 @@ class PdfRenderer(render.AbstractRenderer):
                 Qt.AspectRatioMode.IgnoreAspectRatio,
                 Qt.TransformationMode.SmoothTransformation)
 
-        painter.drawImage(target, image, QRectF(image.rect()))
+        return image
 
 
 def load(source):
