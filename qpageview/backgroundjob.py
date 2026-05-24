@@ -105,6 +105,8 @@ class SingleRun:
     old one finishes.
 
     """
+    __slots__ = ("_job")
+
     def __init__(self):
         self._job = None
 

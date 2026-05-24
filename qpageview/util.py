@@ -80,6 +80,8 @@ class Rectangular:
 
 class MapToPage:
     """Simple class wrapping a QTransform to map rect and point to page coordinates."""
+    __slots__ = ("t")
+
     def __init__(self, transform):
         self.t = transform
 
