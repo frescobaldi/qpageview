@@ -51,6 +51,8 @@ class Rectangles:
     once. x should be < x2 and y should be < y2.
 
     """
+    __slots__ = ("_items", "_index")
+
     def __init__(self, objects=None):
         """Initializes the Rectangles object.
 
