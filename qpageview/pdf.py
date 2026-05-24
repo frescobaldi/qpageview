@@ -51,6 +51,8 @@ from . import render
 
 class Link(link.Link):
     """A link that encapsulates QPdfLinkModel data."""
+    __slots__ = ("_targetPage", "_url")
+
     def __init__(self, linkobj, index, pointSize):
         self._targetPage = linkobj.data(index, QPdfLinkModel.Role.Page.value)
         self._url = linkobj.data(index,
