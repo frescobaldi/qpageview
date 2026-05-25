@@ -304,6 +304,31 @@ def autoCropRect(image):
     return QRegion(QBitmap.fromImage(mask)).boundingRect()
 
 
+def oversampleFactor(key, pageSize):
+    """Return the optimal scale factor for oversampling.
+
+    Oversampling (rendering the image at higher resolution, then
+    downscaling) can help with readability at lower pixel densities.
+
+    The pageSize argument specifies the page dimensions in points as
+    returned by page.pageSize().
+
+    If this returns 1, render the image directly at your desired size.
+    Otherwise, multiply the page dimensions by the returned value before
+    rendering, then downscale to your desired size.
+
+    """
+    # the choice of threshold here is arbitrary, but was found to produce
+    # subjectively pleasing results across a variety of devices in testing
+    threshold = 96    # DPI of a standard PC screen
+    # calculate the effective pixel density at the current zoom level
+    # (key dimensions scale with zoom level, while pageSize is constant)
+    xres = 72.0 * key.width / pageSize.width()
+    yres = 72.0 * key.height / pageSize.height()
+    # recommend oversampling if we are below our threshold
+    return 2 if xres < threshold or yres < threshold else 1
+
+
 def tempdir():
     """Return a temporary directory that is erased on app quit."""
     import tempfile
