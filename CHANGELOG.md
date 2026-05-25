@@ -7,6 +7,20 @@ defined at the bottom of this file.
 
 All notable changes to the qpageview project are documented in this file.
 
+## [1.0.5] - 2026-05-27
+
+### Fixed
+
+* Paint the background once and only when necessary to do so (#54).
+For example, it's not necessary or desirable to paint the
+background when printing.
+Another consequence of this fix is that it's possible now to 
+render an image with a transparent background, for example in 
+Frescobaldi's copy-to-image dialog.
+* Optimize the cache size to avoid unnecessary re-rendering (#56)
+* Fix a memory leak caused by uncollected QPdfDocument garbage (#52)
+
+
 ## [1.0.4] - 2026-04-04
 
 ### Fixed
@@ -115,3 +129,4 @@ its own project, to make it easier to use this package in other applications.
 [1.0.2]: https://github.com/frescobaldi/qpageview/compare/v1.0.1...v1.0.2
 [1.0.3]: https://github.com/frescobaldi/qpageview/compare/v1.0.2...v1.0.3
 [1.0.4]: https://github.com/frescobaldi/qpageview/compare/v1.0.3...v1.0.4
+[1.0.5]: https://github.com/frescobaldi/qpageview/compare/v1.0.4...v1.0.5
