@@ -14,10 +14,11 @@ All notable changes to the qpageview project are documented in this file.
 * Paint the background once and only when necessary to do so (#54).
 For example, it's not necessary or desirable to paint the
 background when printing.
-Another consequence of this fix is that it's possible now to 
-render an image with a transparent background, for example in 
+Another consequence of this fix is that it's possible now to
+render an image with a transparent background, for example in
 Frescobaldi's copy-to-image dialog.
 * Optimize the cache size to avoid unnecessary re-rendering (#56)
+* Optimize PDF rendering to save memory (#58)
 * Fix a memory leak caused by uncollected QPdfDocument garbage (#52)
 
 
