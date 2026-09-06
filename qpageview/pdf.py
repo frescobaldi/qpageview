@@ -251,8 +251,11 @@ class PdfRenderer(render.AbstractRenderer):
         The painter is already at the right position and rotation.
 
         """
+        target = QRectF(0, 0, tile.w, tile.h)
         matrix = painter.deviceTransform()
-        painter.drawImage(0, 0, self._render(page, key, tile, matrix))
+        # We have to specify the full target rectangle, not just the position,
+        # so images will be correctly scaled when printing
+        painter.drawImage(target, self._render(page, key, tile, matrix))
 
     def _render(self, page, key, tile, matrix=None):
         """The actual rendering logic shared by render() and draw()."""
