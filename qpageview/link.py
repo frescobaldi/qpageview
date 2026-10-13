@@ -40,21 +40,16 @@ Area = collections.namedtuple("Area", "left top right bottom")
 
 
 class Link:
-    fileName = ""
-    isExternal = False
-    targetPage = -1
-    url = ""
-    tooltip = ""
-    area = Area(0, 0, 0, 0)
+    __slots__ = (
+        "fileName", "isExternal", "targetPage", "url", "tooltip", "area")
 
     def __init__(self, left, top, right, bottom, url=None, tooltip=None):
+        self.fileName = ""
         self.area = Area(left, top, right, bottom)
-        if url:
-            self.url = url
-            if "://" in url:
-                self.isExternal = True
-        if tooltip:
-            self.tooltip = tooltip
+        self.url = url or ""
+        self.isExternal = ("://" in self.url)
+        self.tooltip = tooltip or ""
+        self.targetPage = -1
 
     def rect(self):
         """Return the area attribute as a QRectF()."""

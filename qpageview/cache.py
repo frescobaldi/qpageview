@@ -28,6 +28,8 @@ import time
 
 
 class ImageEntry:
+    __slots__ = ("image", "bcount", "time")
+
     def __init__(self, image):
         self.image = image
         self.bcount = image.sizeInBytes()
